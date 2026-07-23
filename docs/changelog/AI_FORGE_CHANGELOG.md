@@ -1,5 +1,16 @@
 # AI Forge changelog
 
+## 2026-07-23 — Workflow multi-IA y onboarding MCP
+
+- Añadida `docs/workflows` con workflow, matriz de clientes, protocolo,
+  benchmark y oleadas.
+- Separados repo, MCP, Skills y task packets.
+- Añadido exportador local por cliente sin instalación automática.
+- Añadido `mcp-doctor.ps1` para validar bridge, política y tests.
+- Jules usa GitHub; Ollama/DeepSeek/Z.ai quedan detrás de un host.
+- Clientes cloud bloqueados hasta gateway HTTPS autenticado.
+- Cámaras/perfilado y face swap clasificados como carril rojo.
+
 ## 2026-07-23 — Frontend Hyper Boost
 
 ### Added

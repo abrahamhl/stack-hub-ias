@@ -28,7 +28,8 @@ stack-hub-IAs/
 │   ├── architecture/
 │   ├── audits/
 │   ├── changelog/
-│   └── runbooks/
+│   ├── runbooks/
+│   └── workflows/                     # operación multi-IA reproducible
 └── .openai/hosting.json               # identidad del proyecto Sites
 ```
 
@@ -57,6 +58,11 @@ extensión y no se versiona para evitar duplicar peso.
 - [Estrategia Sites, Vercel y GitHub](architecture/HOSTING_STRATEGY.md)
 - [Auditoría de referencias y capturas](audits/2026-07-23-frontend-hyper-boost-audit.md)
 - [Pasos que no debemos perder](runbooks/NEVER_LOSE_THE_PATH.md)
+- [Workflow maestro](workflows/00_MASTER_WORKFLOW.md)
+- [Matriz de conexión por cliente](workflows/01_CLIENT_ONBOARDING_MATRIX.md)
+- [Protocolo multi-IA](workflows/02_MULTI_AI_EXECUTION_PROTOCOL.md)
+- [Benchmark Claude + Fable 5](workflows/03_CLAUDE_FABLE_BENCHMARK.md)
+- [Oleadas, créditos y carriles rojos](workflows/04_PROJECT_WAVES_AND_GATES.md)
 - [Changelog](changelog/AI_FORGE_CHANGELOG.md)
 
 ## Aplicación
@@ -90,6 +96,8 @@ npm run build
 
 & ".skills\frontend-hyper-boost\scripts\audit-frontend.ps1" -Path "."
 & ".skills\frontend-hyper-boost\scripts\package-skill.ps1"
+& ".\scripts\mcp-doctor.ps1"
+& ".\scripts\export-mcp-client-configs.ps1"
 ```
 
 ## Regla de publicación

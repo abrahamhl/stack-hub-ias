@@ -27,6 +27,8 @@ use references to learn interaction grammar, never to clone code or branding.
 
 Read only the references needed for the current request:
 
+- Color, type, spacing, or theming decisions: `references/design-tokens.md`
+- React 19 / Next 15 / Tailwind v4 implementation code: `references/react-patterns.md`
 - Interaction or visual behavior: `references/interaction-patterns.md`
 - Stack and rendering choice: `references/stack-routing.md`
 - Responsive, accessibility, performance, commerce, or NSFW gates:

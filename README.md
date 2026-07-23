@@ -7,7 +7,7 @@ Centro de control Git-first para proyectos, agentes, Skills, auditorías y coste
 - Frontend responsive construido con React, Vinext y Sites.
 - Persistencia preparada con D1 + Drizzle para metadatos y eventos de auditoría.
 - MCP local con raíces permitidas, lectura segura y escritura limitada a notas de auditoría.
-- Cinco Skills canónicas en `.agents/skills`.
+- Seis Skills canónicas en `.agents/skills`, incluida la ruta segura de Stitch.
 - Inventario local reproducible de `C:\dev\02_PROJECTS`.
 - GitHub desconectado intencionadamente hasta configurar un repositorio privado y su remoto.
 
@@ -51,6 +51,7 @@ El resultado se guarda en `.ai-forge/audit/project-inventory.json`, fuera de Git
 - [Auditoría de saneamiento](docs/audits/2026-07-23-stack-sanitization.md)
 - [Política Git y sincronización](docs/runbooks/GITHUB_SYNC_POLICY.md)
 - [Runbook de despliegue](docs/runbooks/DEPLOY_RECOVERY.md)
+- [Conexión segura de Google Stitch](docs/runbooks/STITCH_SETUP.md)
 
 ## Límites de seguridad
 

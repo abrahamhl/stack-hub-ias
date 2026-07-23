@@ -167,6 +167,13 @@ const skills = [
     privacy: "safe",
   },
   {
+    name: "operating-google-stitch",
+    family: "design",
+    platforms: ["Codex", "Claude", "Gemini", "Cursor"],
+    state: "canonical",
+    privacy: "safe",
+  },
+  {
     name: "legacy-user-library",
     family: "private",
     platforms: ["Local"],
@@ -181,7 +188,7 @@ const navItems: Array<{ id: View; label: string; meta: string }> = [
   { id: "operators", label: "Operator Shelter", meta: "06" },
   { id: "skills", label: "Skill Registry", meta: "193" },
   { id: "git", label: "Git Auditor", meta: "LOCAL" },
-  { id: "bridge", label: "MCP Bridge", meta: "PLAN" },
+  { id: "bridge", label: "MCP Bridge", meta: "READY" },
 ];
 
 const heatmap = [
@@ -347,13 +354,13 @@ export function ForgeDashboard() {
                 <Metric
                   label="Git actual"
                   value="LOCAL"
-                  detail="1 commit, rama master, sin remoto."
+                  detail="Rama aislada y commit verificado; sin GitHub."
                   tone="cyan"
                 />
                 <Metric
                   label="Puente MCP"
-                  value="NEXT"
-                  detail="Allowlist de rutas y acciones auditadas."
+                  value="READY"
+                  detail="Allowlist, límites y smoke test local."
                   tone="violet"
                 />
               </div>
@@ -373,23 +380,23 @@ export function ForgeDashboard() {
                       </div>
                       <em>DONE</em>
                     </li>
-                    <li className="active">
+                    <li className="done">
                       <span>02</span>
                       <div>
                         <b>Construir control plane</b>
                         <small>Shell, proyectos, operadores y verdad.</small>
                       </div>
-                      <em>ACTIVE</em>
+                      <em>DONE</em>
                     </li>
-                    <li>
+                    <li className="done">
                       <span>03</span>
                       <div>
                         <b>Activar backend y MCP local</b>
                         <small>D1 remoto + bridge local con permisos.</small>
                       </div>
-                      <em>NEXT</em>
+                      <em>DONE</em>
                     </li>
-                    <li>
+                    <li className="active">
                       <span>04</span>
                       <div>
                         <b>Conectar GitHub privado</b>
@@ -559,7 +566,7 @@ export function ForgeDashboard() {
                 </div>
                 <div className="skill-stats">
                   <span><b>193</b> detectadas</span>
-                  <span><b>4</b> canónicas</span>
+                  <span><b>6</b> canónicas</span>
                   <span><b>1</b> cuarentena</span>
                 </div>
               </div>

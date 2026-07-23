@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "maxReadBytes": 262144,
+  "maxSearchResults": 80,
+  "roots": [
+    {
+      "id": "ai-forge",
+      "path": "C:\\dev\\02_PROJECTS\\SKILLS-FRONTEND\\stack-hub-IAs",
+      "mode": "audit-write"
+    },
+    {
+      "id": "abraham-os",
+      "path": "C:\\dev\\.ABRAHAM_OS",
+      "mode": "read-only"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Abraham MCP Operator"
+  short_description: "Opera el puente local con permisos"
+  default_prompt: "Use $operating-abraham-mcp to plan a safe, auditable local tool operation."

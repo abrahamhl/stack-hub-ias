@@ -1,9 +1,14 @@
 node_modules/
 .next/
+.vinext/
+dist/
 out/
 coverage/
 playwright-report/
 test-results/
+.wrangler/
+outputs/
+work/
 .env
 .env.*
 !.env.example
@@ -11,3 +16,18 @@ test-results/
 .DS_Store
 Thumbs.db
 
+# Local/private source libraries. Catalog metadata is promoted separately.
+/.skills/
+/src/
+*.zip
+
+# Legacy research and prototypes can contain personal account/context data.
+/AI_FORGE_CODEX_DESIGN_BRIEF.md
+/deep-research-report-for-stack-IAs.md
+/ai-forge-behance-mockup.html
+
+# Local MCP policy can expose exact private roots.
+mcp/abraham-os-bridge/config/policy.local.json
+
+# Local operational evidence may contain absolute paths and private project names.
+/.ai-forge/

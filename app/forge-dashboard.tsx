@@ -7,6 +7,8 @@ type View =
   | "projects"
   | "operators"
   | "skills"
+  | "frontend"
+  | "blueprint"
   | "git"
   | "bridge";
 
@@ -61,72 +63,96 @@ const operators = [
     glyph: "CX",
     name: "Codex",
     role: "Constructor",
+    mascot: "Stacky",
     status: "active",
     accent: "cyan",
     best: "Cambios reproducibles, repositorios, pruebas y arquitectura.",
     avoid: "Decisiones comerciales sin fuentes ni validación humana.",
     route: "Scope → Patch → Tests → Git audit",
-    skills: 12,
+    runtime: "Workspace local + Sites",
+    memory: "Archivos y memoria direccionable",
+    permission: "Workspace write / push gated",
+    skillState: "Skills instaladas por tarea",
   },
   {
     id: "claude",
     glyph: "CL",
     name: "Claude Code",
     role: "Revisor senior",
+    mascot: "Sin mascota técnica",
     status: "ready",
     accent: "forge",
     best: "Revisión, documentación, refactor y coherencia de producto.",
     avoid: "Publicar o sincronizar sin inspeccionar el diff.",
     route: "Review → Risks → Handoff",
-    skills: 15,
+    runtime: "Claude Code + Cowork",
+    memory: "Conversaciones + Skills",
+    permission: "MCP local configurable",
+    skillState: "Catálogo personal y oficial",
   },
   {
     id: "selene",
     glyph: "SE",
     name: "Selene / Grok",
     role: "Contrapunto",
+    mascot: "Identidad propia",
     status: "manual",
     accent: "violet",
     best: "Creatividad lateral, crítica y tensión conceptual.",
     avoid: "Cerrar hechos actuales sin una fuente primaria.",
     route: "Challenge → Alternatives → Claude review",
-    skills: 9,
+    runtime: "Chat + navegador",
+    memory: "Contexto por sesión",
+    permission: "Conectores explícitos",
+    skillState: "Prompts y herramientas",
   },
   {
     id: "gemini",
     glyph: "GM",
     name: "Gemini",
     role: "Archivista",
+    mascot: "Identidad propia",
     status: "ready",
     accent: "blue",
     best: "Contexto grande, documentos y ecosistema Google.",
     avoid: "Acceso indiscriminado a carpetas privadas.",
     route: "Ingest → Structure → Evidence",
-    skills: 11,
+    runtime: "Cloud + ecosistema Google",
+    memory: "Documentos seleccionados",
+    permission: "Drive/Stitch por conector",
+    skillState: "Skills por cliente",
   },
   {
     id: "manus",
     glyph: "MN",
     name: "Manus",
     role: "Ejecutor",
+    mascot: "Mano / avatar de producto",
     status: "manual",
     accent: "green",
     best: "Tareas por fases, navegador y producción controlada.",
     avoid: "Microtareas repetitivas que consumen créditos.",
     route: "Brief → Execute → Verify → Report",
-    skills: 7,
+    runtime: "Cloud computer + mensajería",
+    memory: "Perfil + conocimiento",
+    permission: "Apps, API y MCP",
+    skillState: "Habilidades activables",
   },
   {
     id: "local",
     glyph: "LM",
     name: "Local Models",
     role: "Zona privada",
+    mascot: "Null Signal",
     status: "offline",
     accent: "amber",
     best: "Procesamiento local, borradores y material sensible.",
     avoid: "Dar por buenas respuestas sin una revisión externa.",
     route: "Private ingest → Draft → Audit",
-    skills: 5,
+    runtime: "GPU/CPU local",
+    memory: "Vault local seleccionado",
+    permission: "Sin red por defecto",
+    skillState: "Paquetes locales revisados",
   },
 ];
 
@@ -146,8 +172,8 @@ const skills = [
     privacy: "safe",
   },
   {
-    name: "building-nextgen-frontends",
-    family: "frontend",
+    name: "frontend-hyper-boost",
+    family: "frontend-master",
     platforms: ["Codex", "Claude", "Gemini"],
     state: "canonical",
     privacy: "safe",
@@ -167,13 +193,6 @@ const skills = [
     privacy: "safe",
   },
   {
-    name: "operating-google-stitch",
-    family: "design",
-    platforms: ["Codex", "Claude", "Gemini", "Cursor"],
-    state: "canonical",
-    privacy: "safe",
-  },
-  {
     name: "legacy-user-library",
     family: "private",
     platforms: ["Local"],
@@ -186,10 +205,114 @@ const navItems: Array<{ id: View; label: string; meta: string }> = [
   { id: "command", label: "Daily Command", meta: "NOW" },
   { id: "projects", label: "Project Corkboard", meta: "04" },
   { id: "operators", label: "Operator Shelter", meta: "06" },
-  { id: "skills", label: "Skill Registry", meta: "193" },
+  { id: "skills", label: "Skill Registry", meta: "01 MASTER" },
+  { id: "frontend", label: "Frontend Lab", meta: "BOOST" },
+  { id: "blueprint", label: "Fork Blueprint", meta: "12 LAYERS" },
   { id: "git", label: "Git Auditor", meta: "LOCAL" },
   { id: "bridge", label: "MCP Bridge", meta: "READY" },
 ];
+
+const motionScenes = [
+  {
+    id: "material",
+    kicker: "SKIPER 12 / TRANSLATED",
+    name: "Material Field",
+    detail: "Una materia reactiva enmarca el producto sin bloquear el contenido.",
+    input: "pointer · focus · tap pulse",
+    fallback: "poster + gradient",
+  },
+  {
+    id: "relief",
+    kicker: "SKIPER 14 / TRANSLATED",
+    name: "ASCII Relief",
+    detail: "Volumen 3D convertido en terminal, píxel y relieve navegable.",
+    input: "drag · arrows · D-pad",
+    fallback: "static angle + alt",
+  },
+  {
+    id: "path",
+    kicker: "SKIPER 19 / TRANSLATED",
+    name: "Narrative Path",
+    detail: "La ruta visual enlaza hitos reales y hace visible el progreso.",
+    input: "scroll · headings · PageDown",
+    fallback: "full path + marker",
+  },
+] as const;
+
+const capabilityLayers = [
+  {
+    name: "Identidad",
+    benchmark: "Perfil, instrucciones, mascotas",
+    forge: "Avatar separado del contrato técnico",
+    state: "verified",
+  },
+  {
+    name: "Skills",
+    benchmark: "Skills personales, oficiales y plugins",
+    forge: ".skills canónica + adaptadores",
+    state: "verified",
+  },
+  {
+    name: "Agentes",
+    benchmark: "Cowork, subagentes, agente desplegable",
+    forge: "Roster con scope, runtime y evidencia",
+    state: "review",
+  },
+  {
+    name: "Conectores",
+    benchmark: "Apps, APIs y MCP personalizado",
+    forge: "Catálogo con permiso y estado real",
+    state: "review",
+  },
+  {
+    name: "Computadora",
+    benchmark: "Workspace, MCP local, cloud computer",
+    forge: "Puente local allowlisted",
+    state: "verified",
+  },
+  {
+    name: "Navegador",
+    benchmark: "Chrome integrado y navegador cloud",
+    forge: "Herramienta separada y auditable",
+    state: "review",
+  },
+  {
+    name: "Memoria",
+    benchmark: "Chats, conocimiento y archivos",
+    forge: "Vault direccionable, no prompt gigante",
+    state: "local",
+  },
+  {
+    name: "Git",
+    benchmark: "Worktrees, ramas y conector GitHub",
+    forge: "Diff → test → commit → sync gated",
+    state: "verified",
+  },
+  {
+    name: "Uso",
+    benchmark: "Límites, créditos y facturación",
+    forge: "Coste + resultado + valor por evento",
+    state: "review",
+  },
+  {
+    name: "Automatización",
+    benchmark: "Programado, hooks y mensajería",
+    forge: "Colas durables y avisos saneados",
+    state: "review",
+  },
+  {
+    name: "Datos",
+    benchmark: "Sandbox, privacidad y controles",
+    forge: "Policy gateway visible",
+    state: "verified",
+  },
+  {
+    name: "Deploy",
+    benchmark: "Sites, previews y cloud runtimes",
+    forge: "Sites staging + GitHub/Vercel production",
+    state: "review",
+  },
+] as const;
 
 const heatmap = [
   0, 0, 1, 0, 2, 0, 0, 1, 0, 0, 3, 1, 0, 0, 0, 2, 1, 0, 0, 4, 2, 1, 0,
@@ -232,6 +355,9 @@ export function ForgeDashboard() {
   const [operatorId, setOperatorId] = useState("codex");
   const [query, setQuery] = useState("");
   const [density, setDensity] = useState<"focus" | "dense">("focus");
+  const [scene, setScene] =
+    useState<(typeof motionScenes)[number]["id"]>("material");
+  const [quality, setQuality] = useState<"calm" | "boost" | "ultra">("boost");
   const [mobileMenu, setMobileMenu] = useState(false);
 
   const selectedOperator =
@@ -261,7 +387,10 @@ export function ForgeDashboard() {
   }, [query]);
 
   return (
-    <main className={`forge-app density-${density}`}>
+    <main
+      className={`forge-app density-${density} quality-${quality}`}
+      data-active-scene={view === "frontend" ? scene : undefined}
+    >
       <header className="topbar">
         <button
           className="mobile-menu"
@@ -323,7 +452,10 @@ export function ForgeDashboard() {
           </div>
         </nav>
 
-        <section className="canvas" aria-live="polite">
+        <section
+          className={view === "frontend" ? "canvas canvas-motion" : "canvas"}
+          aria-live="polite"
+        >
           {view === "command" && (
             <>
               <div className="section-heading">
@@ -515,11 +647,13 @@ export function ForgeDashboard() {
                 </div>
                 <article className={`operator-dossier accent-${selectedOperator.accent}`}>
                   <div className="dossier-title">
-                    <span className="operator-avatar large">{selectedOperator.glyph}</span>
+                    <span className="operator-avatar large" aria-hidden="true">
+                      {selectedOperator.glyph}
+                    </span>
                     <div>
                       <span>DOSSIER / {selectedOperator.id.toUpperCase()}</span>
                       <h2>{selectedOperator.name}</h2>
-                      <p>{selectedOperator.role}</p>
+                      <p>{selectedOperator.role} · {selectedOperator.mascot}</p>
                     </div>
                   </div>
                   <div className="dossier-grid">
@@ -536,8 +670,20 @@ export function ForgeDashboard() {
                       <p className="mono">{selectedOperator.route}</p>
                     </div>
                     <div>
-                      <span>COMPATIBLE SKILLS</span>
-                      <strong>{selectedOperator.skills}</strong>
+                      <span>RUNTIME</span>
+                      <p>{selectedOperator.runtime}</p>
+                    </div>
+                    <div>
+                      <span>MEMORY</span>
+                      <p>{selectedOperator.memory}</p>
+                    </div>
+                    <div>
+                      <span>PERMISSION</span>
+                      <p>{selectedOperator.permission}</p>
+                    </div>
+                    <div>
+                      <span>SKILL STATE</span>
+                      <p>{selectedOperator.skillState}</p>
                     </div>
                   </div>
                   <div className="dossier-footer">
@@ -550,7 +696,10 @@ export function ForgeDashboard() {
                             : "review"
                       }
                     />
-                    <span>La identidad humana nunca sustituye la identidad técnica.</span>
+                    <span>
+                      La mascota comunica presencia; nunca concede permisos, memoria ni
+                      capacidad.
+                    </span>
                   </div>
                 </article>
               </div>
@@ -565,11 +714,30 @@ export function ForgeDashboard() {
                   <h1>Una Skill canónica.<br />Adaptadores, no copias.</h1>
                 </div>
                 <div className="skill-stats">
-                  <span><b>193</b> detectadas</span>
-                  <span><b>6</b> canónicas</span>
+                  <span><b>01</b> frontend master</span>
+                  <span><b>04</b> system Skills</span>
                   <span><b>1</b> cuarentena</span>
                 </div>
               </div>
+              <article className="skill-source-map" aria-label="Modelo de distribución de la Skill">
+                <div>
+                  <span>AUTHOR ONCE</span>
+                  <b>.skills/frontend-hyper-boost</b>
+                  <small>SKILL.md · references · scripts · assets</small>
+                </div>
+                <i>→</i>
+                <div>
+                  <span>PACKAGE</span>
+                  <b>frontend-hyper-boost.skill</b>
+                  <small>contenedor ZIP local, fuera de Git</small>
+                </div>
+                <i>→</i>
+                <div>
+                  <span>DISCOVER</span>
+                  <b>.agents/skills adapter</b>
+                  <small>sin duplicar conocimiento</small>
+                </div>
+              </article>
               <article className="panel table-panel">
                 <div className="panel-head">
                   <span>REGISTRY / FILTERED</span>
@@ -630,6 +798,140 @@ export function ForgeDashboard() {
             </>
           )}
 
+          {view === "frontend" && (
+            <>
+              <div className="motion-atmosphere" aria-hidden="true">
+                <span className="motion-orb orb-a" />
+                <span className="motion-orb orb-b" />
+                <div className="ascii-relief">
+                  {`+ / \\ = # @ %\n\\ # AI FORGE /\n= HYPER BOOST =\n/ @ # % \\ +`}
+                </div>
+                <svg className="story-path" viewBox="0 0 800 520" role="presentation">
+                  <path
+                    pathLength={1}
+                    d="M65 60 C 245 10, 215 220, 390 170 S 575 110, 535 290 S 690 390, 745 470"
+                  />
+                </svg>
+              </div>
+
+              <div className="section-heading motion-heading">
+                <div>
+                  <span className="eyebrow">FRONTEND LAB / QUALITY {quality.toUpperCase()}</span>
+                  <h1>Una interfaz que cambia<br />sin perder al usuario.</h1>
+                </div>
+                <div className="motion-mode">
+                  <span>ACTIVE SCENE</span>
+                  <strong>{motionScenes.find((item) => item.id === scene)?.name}</strong>
+                  <small>hover previews · focus previews · tap pins</small>
+                </div>
+              </div>
+
+              <div className="scene-selector" aria-label="Escenas de interacción">
+                {motionScenes.map((item, index) => (
+                  <button
+                    type="button"
+                    key={item.id}
+                    aria-pressed={scene === item.id}
+                    onPointerEnter={() => setScene(item.id)}
+                    onFocus={() => setScene(item.id)}
+                    onClick={() => setScene(item.id)}
+                  >
+                    <span>{String(index + 1).padStart(2, "0")} / {item.kicker}</span>
+                    <b>{item.name}</b>
+                    <p>{item.detail}</p>
+                    <small>{item.input}</small>
+                    <em>{item.fallback}</em>
+                  </button>
+                ))}
+              </div>
+
+              <div className="lab-grid">
+                <article className="panel pattern-panel">
+                  <div className="panel-head">
+                    <span>INTERACTION CONTRACT</span>
+                    <TruthBadge truth="verified" />
+                  </div>
+                  <div className="pattern-contract">
+                    <div><span>POINTER</span><b>Preview without trapping</b></div>
+                    <div><span>KEYBOARD</span><b>Focus mirrors hover</b></div>
+                    <div><span>TOUCH</span><b>Tap selects explicitly</b></div>
+                    <div><span>TV</span><b>D-pad keeps targets visible</b></div>
+                    <div><span>REDUCED</span><b>Static story remains complete</b></div>
+                    <div><span>LOW POWER</span><b>Poster/CSS fallback first</b></div>
+                  </div>
+                </article>
+
+                <article className="panel never-lose-panel">
+                  <div className="panel-head">
+                    <span>DO NOT LOSE THE PATH</span>
+                    <span className="live-dot">12 GATES</span>
+                  </div>
+                  <ol>
+                    <li><b>01</b><span>SCOPE + PRIVACY</span></li>
+                    <li><b>02</b><span>SEMANTIC CALM CORE</span></li>
+                    <li><b>03</b><span>MOTION EQUIVALENTS</span></li>
+                    <li><b>04</b><span>PHONE · TABLET · TV</span></li>
+                    <li><b>05</b><span>TEST · DIFF · PREVIEW</span></li>
+                    <li><b>06</b><span>CHANGELOG + NEXT ACTION</span></li>
+                  </ol>
+                </article>
+              </div>
+            </>
+          )}
+
+          {view === "blueprint" && (
+            <>
+              <div className="section-heading compact">
+                <div>
+                  <span className="eyebrow">TUNED FORK / PRODUCT BLUEPRINT</span>
+                  <h1>El encanto arriba.<br />El contrato técnico debajo.</h1>
+                </div>
+                <TruthBadge truth="review" />
+              </div>
+
+              <div className="blueprint-intro">
+                <article>
+                  <span>MASCOT</span>
+                  <b>Presence shell</b>
+                  <p>Avatar, humor, color y estado percibido.</p>
+                </article>
+                <i>≠</i>
+                <article>
+                  <span>AGENT</span>
+                  <b>Accountable worker</b>
+                  <p>Objetivo, runtime, modelo, herramientas y ciclo.</p>
+                </article>
+                <i>+</i>
+                <article>
+                  <span>SKILL</span>
+                  <b>Reusable capability</b>
+                  <p>Instrucciones, referencias, scripts y templates.</p>
+                </article>
+              </div>
+
+              <div className="capability-grid">
+                {capabilityLayers.map((layer, index) => (
+                  <article className="capability-card" key={layer.name}>
+                    <div>
+                      <span>{String(index + 1).padStart(2, "0")}</span>
+                      <TruthBadge truth={layer.state as Truth} />
+                    </div>
+                    <h2>{layer.name}</h2>
+                    <p><small>BENCHMARK</small>{layer.benchmark}</p>
+                    <p><small>AI FORGE</small>{layer.forge}</p>
+                  </article>
+                ))}
+              </div>
+              <div className="warning-strip blueprint-rule">
+                <b>TRUTH RULE</b>
+                <span>
+                  Ningún avatar, toggle o tarjeta bonita convierte una integración en
+                  verificada. El estado requiere prueba observable.
+                </span>
+              </div>
+            </>
+          )}
+
           {view === "git" && (
             <>
               <div className="section-heading compact">
@@ -646,8 +948,8 @@ export function ForgeDashboard() {
                     <span className="flag flag-warn">NO REMOTE</span>
                   </div>
                   <dl className="repo-facts">
-                    <div><dt>Branch</dt><dd>master</dd></div>
-                    <div><dt>Tracked commits</dt><dd>1</dd></div>
+                    <div><dt>Branch</dt><dd>agent/ai-forge-control-plane</dd></div>
+                    <div><dt>Tracked commits</dt><dd>3</dd></div>
                     <div><dt>Legacy</dt><dd>preserved</dd></div>
                     <div><dt>GitHub CLI</dt><dd>missing</dd></div>
                     <div><dt>Publish gate</dt><dd>blocked</dd></div>
@@ -655,7 +957,7 @@ export function ForgeDashboard() {
                 </article>
                 <article className="panel heatmap-panel">
                   <div className="panel-head">
-                    <span>AUDIT HEATMAP / PREVIEW</span>
+                    <span>AUDIT HEATMAP / UNSYNCED PREVIEW</span>
                     <span>7 × 7</span>
                   </div>
                   <div className="heatmap" aria-label="Previsualización de actividad">
@@ -677,6 +979,18 @@ export function ForgeDashboard() {
                   <span>REVIEW</span><i>→</i><span>COMMIT</span><i>→</i>
                   <span>SYNC</span>
                 </div>
+              </article>
+              <article className="panel changelog-panel">
+                <div className="panel-head">
+                  <span>CHANGELOG / 2026-07-23</span>
+                  <TruthBadge truth="local" />
+                </div>
+                <ul>
+                  <li><b>ADDED</b><span>frontend-hyper-boost canonical Skill</span></li>
+                  <li><b>MERGED</b><span>frontend + Google Stitch workflows</span></li>
+                  <li><b>ADDED</b><span>Frontend Lab + tuned fork blueprint</span></li>
+                  <li><b>PENDING</b><span>real Git/MCP event heatmap</span></li>
+                </ul>
               </article>
             </>
           )}
@@ -776,6 +1090,25 @@ export function ForgeDashboard() {
             </div>
           </div>
           <div className="inspector-section">
+            <span className="inspector-label">MOTION QUALITY</span>
+            <div className="segmented quality-control">
+              {(["calm", "boost", "ultra"] as const).map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  aria-pressed={quality === mode}
+                  onClick={() => setQuality(mode)}
+                >
+                  {mode}
+                </button>
+              ))}
+            </div>
+            <p className="inspector-copy">
+              Calm conserva la historia sin parallax. Ultra nunca sustituye el
+              contenido semántico.
+            </p>
+          </div>
+          <div className="inspector-section">
             <span className="inspector-label">NON-NEGOTIABLE</span>
             <p className="inspector-copy">
               GitHub recibe código y metadatos saneados. Secretos, rutas privadas,
@@ -788,7 +1121,8 @@ export function ForgeDashboard() {
       <footer className="dock">
         <span><b>CTRL+K</b> command palette</span>
         <span><b>MODE</b> {density}</span>
-        <span><b>BACKEND</b> D1 planned</span>
+        <span><b>MOTION</b> {quality}</span>
+        <span><b>BACKEND</b> D1 connected</span>
         <span><b>MCP</b> allowlist first</span>
         <span className="dock-time">MASTER / stack-hub-IAs</span>
       </footer>

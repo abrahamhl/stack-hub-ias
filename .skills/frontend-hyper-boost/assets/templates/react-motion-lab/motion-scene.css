@@ -1,0 +1,97 @@
+.motion-scene {
+  --scene-accent: #c2f84f;
+  position: relative;
+  isolation: isolate;
+  min-height: min(760px, 90svh);
+  overflow: clip;
+  color: #f7f5ef;
+  background: #090a0c;
+}
+
+.motion-scene__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 70% 35%, color-mix(in srgb, var(--scene-accent) 42%, transparent), transparent 28%),
+    linear-gradient(145deg, transparent 35%, color-mix(in srgb, var(--scene-accent) 15%, transparent));
+  transform: scale(1.08);
+  transition: transform 700ms cubic-bezier(.2,.8,.2,1), filter 500ms ease;
+}
+
+.motion-scene[data-scene="relief"] { --scene-accent: #ad86ff; }
+.motion-scene[data-scene="path"] { --scene-accent: #ff5d4a; }
+
+.motion-scene:focus-within .motion-scene__backdrop,
+.motion-scene:hover .motion-scene__backdrop {
+  transform: scale(1);
+  filter: saturate(1.2);
+}
+
+.motion-scene__content {
+  width: min(1180px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: clamp(5rem, 12vw, 10rem) 0 3rem;
+}
+
+.motion-scene h2 {
+  max-width: 14ch;
+  margin: 0;
+  font: 700 clamp(2.8rem, 8vw, 7rem)/.92 system-ui, sans-serif;
+  letter-spacing: -.07em;
+}
+
+.motion-scene__eyebrow {
+  font: 700 .75rem/1.2 ui-monospace, monospace;
+  letter-spacing: .16em;
+  color: var(--scene-accent);
+}
+
+.motion-scene__choices {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .75rem;
+  margin-top: clamp(3rem, 8vw, 7rem);
+}
+
+.motion-scene__choices button {
+  min-height: 8rem;
+  padding: 1rem;
+  border: 1px solid #3a3b40;
+  color: inherit;
+  background: color-mix(in srgb, #111318 86%, transparent);
+  text-align: left;
+  cursor: pointer;
+}
+
+.motion-scene__choices button:is(:hover, :focus-visible, [aria-pressed="true"]) {
+  border-color: var(--scene-accent);
+  transform: translateY(-4px);
+}
+
+.motion-scene__choices strong,
+.motion-scene__choices span {
+  display: block;
+}
+
+.motion-scene__choices span {
+  margin-top: .5rem;
+  color: #b8bac2;
+}
+
+@media (max-width: 720px) {
+  .motion-scene__choices { grid-template-columns: 1fr; }
+  .motion-scene__choices button { min-height: 5.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-scene *,
+  .motion-scene *::before,
+  .motion-scene *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .motion-scene__backdrop { transform: none; }
+}

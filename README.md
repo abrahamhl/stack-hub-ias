@@ -7,7 +7,9 @@ Centro de control Git-first para proyectos, agentes, Skills, auditorías y coste
 - Frontend responsive construido con React, Vinext y Sites.
 - Persistencia preparada con D1 + Drizzle para metadatos y eventos de auditoría.
 - MCP local con raíces permitidas, lectura segura y escritura limitada a notas de auditoría.
-- Seis Skills canónicas en `.agents/skills`, incluida la ruta segura de Stitch.
+- Una Skill frontend canónica y portable en
+  `.skills/frontend-hyper-boost`, con adaptador mínimo en `.agents/skills`.
+- Cuatro Skills operativas del control plane en `.agents/skills`.
 - Inventario local reproducible de `C:\dev\02_PROJECTS`.
 - GitHub desconectado intencionadamente hasta configurar un repositorio privado y su remoto.
 
@@ -47,11 +49,18 @@ El resultado se guarda en `.ai-forge/audit/project-inventory.json`, fuera de Git
 
 ## Arquitectura y operación
 
+- [Índice maestro](docs/AI_FORGE_INDEX.md)
+- [Skill, agente, perfil y mascota](docs/architecture/SKILL_AGENT_MASCOT_MODEL.md)
+- [Matriz del fork tuneado](docs/architecture/FORK_CAPABILITY_MATRIX.md)
+- [Estrategia de hosting](docs/architecture/HOSTING_STRATEGY.md)
 - [Arquitectura de ejecución](docs/architecture/2026-07-23-ai-forge-runtime.md)
+- [Auditoría Frontend Hyper Boost](docs/audits/2026-07-23-frontend-hyper-boost-audit.md)
 - [Auditoría de saneamiento](docs/audits/2026-07-23-stack-sanitization.md)
 - [Política Git y sincronización](docs/runbooks/GITHUB_SYNC_POLICY.md)
+- [Camino que no debemos perder](docs/runbooks/NEVER_LOSE_THE_PATH.md)
 - [Runbook de despliegue](docs/runbooks/DEPLOY_RECOVERY.md)
 - [Conexión segura de Google Stitch](docs/runbooks/STITCH_SETUP.md)
+- [Changelog](docs/changelog/AI_FORGE_CHANGELOG.md)
 
 ## Límites de seguridad
 

@@ -1134,6 +1134,460 @@ td {
   color: #120b08;
 }
 
+.skill-source-map {
+  align-items: stretch;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  margin-bottom: 10px;
+}
+
+.skill-source-map > div {
+  background: rgba(18, 19, 16, 0.94);
+  border: 1px solid var(--line);
+  min-width: 0;
+  padding: 14px;
+}
+
+.skill-source-map > i {
+  align-self: center;
+  color: var(--forge);
+  font: 16px var(--mono);
+}
+
+.skill-source-map span,
+.motion-mode span,
+.scene-selector button > span,
+.scene-selector button > small,
+.scene-selector button > em,
+.pattern-contract span,
+.blueprint-intro span,
+.capability-card > div > span,
+.capability-card p small {
+  color: var(--muted);
+  display: block;
+  font: 700 8px/1.35 var(--mono);
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.skill-source-map b {
+  display: block;
+  font: 12px/1.35 var(--mono);
+  margin: 9px 0 5px;
+  overflow-wrap: anywhere;
+}
+
+.skill-source-map small {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.canvas-motion {
+  isolation: isolate;
+  min-height: calc(100svh - 124px);
+  position: relative;
+  transition:
+    background-color 500ms ease,
+    color 500ms ease;
+}
+
+.canvas-motion .panel {
+  color: var(--text);
+}
+
+.forge-app[data-active-scene="material"] .canvas-motion {
+  background-color: #050607;
+}
+
+.forge-app[data-active-scene="relief"] .canvas-motion {
+  background:
+    linear-gradient(rgba(173, 134, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(173, 134, 255, 0.055) 1px, transparent 1px),
+    #080711;
+  background-size: 24px 24px;
+}
+
+.forge-app[data-active-scene="path"] .canvas-motion {
+  background: #f1f0e6;
+  color: #173342;
+}
+
+.motion-atmosphere {
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
+}
+
+.motion-atmosphere::after {
+  background: linear-gradient(180deg, transparent, rgba(8, 9, 9, 0.64));
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+.forge-app[data-active-scene="path"] .motion-atmosphere::after {
+  background: linear-gradient(180deg, rgba(241, 240, 230, 0.08), rgba(241, 240, 230, 0.68));
+}
+
+.motion-orb {
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 42% 58% 67% 33% / 47% 35% 65% 53%;
+  filter: blur(1px);
+  opacity: 0;
+  position: absolute;
+  transition:
+    opacity 400ms ease,
+    transform 900ms cubic-bezier(.2,.8,.2,1);
+}
+
+.orb-a {
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.82), transparent 10%),
+    radial-gradient(circle at 68% 70%, rgba(99, 205, 215, 0.45), transparent 30%),
+    rgba(255, 255, 255, 0.03);
+  box-shadow:
+    inset 18px 10px 38px rgba(255, 255, 255, 0.14),
+    0 0 80px rgba(99, 205, 215, 0.18);
+  height: clamp(260px, 38vw, 610px);
+  right: 4%;
+  top: 4%;
+  transform: rotate(-12deg) scale(.82);
+  width: clamp(260px, 38vw, 610px);
+}
+
+.orb-b {
+  border-color: rgba(217, 119, 87, 0.36);
+  bottom: -12%;
+  height: 330px;
+  left: 20%;
+  transform: rotate(28deg) scale(.8);
+  width: 330px;
+}
+
+.forge-app[data-active-scene="material"] .motion-orb {
+  opacity: 1;
+  transform: rotate(0) scale(1);
+}
+
+.ascii-relief {
+  color: #bca5ff;
+  font: 800 clamp(19px, 4vw, 64px)/.88 var(--mono);
+  inset: 8% -6% auto 38%;
+  letter-spacing: -.12em;
+  opacity: 0;
+  position: absolute;
+  transform: perspective(700px) rotateY(-20deg) rotateX(10deg) scale(.9);
+  transition:
+    opacity 350ms ease,
+    transform 700ms cubic-bezier(.2,.8,.2,1);
+  white-space: pre;
+}
+
+.forge-app[data-active-scene="relief"] .ascii-relief {
+  opacity: .76;
+  transform: perspective(700px) rotateY(-9deg) rotateX(5deg) scale(1);
+}
+
+.story-path {
+  height: 110%;
+  opacity: 0;
+  position: absolute;
+  right: -4%;
+  top: -8%;
+  transform: translateX(3%);
+  transition:
+    opacity 350ms ease,
+    transform 650ms ease;
+  width: 74%;
+}
+
+.story-path path {
+  fill: none;
+  stroke: #b8ff37;
+  stroke-dasharray: 1;
+  stroke-dashoffset: .18;
+  stroke-linecap: round;
+  stroke-width: 18;
+}
+
+.forge-app[data-active-scene="path"] .story-path {
+  opacity: .9;
+  transform: translateX(0);
+}
+
+.motion-heading {
+  min-height: clamp(270px, 42vh, 500px);
+  position: relative;
+  z-index: 1;
+}
+
+.motion-heading h1 {
+  font-size: clamp(48px, 7.3vw, 112px);
+  max-width: 930px;
+}
+
+.motion-mode {
+  align-self: flex-start;
+  backdrop-filter: blur(12px);
+  background: rgba(10, 11, 10, 0.8);
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+  max-width: 230px;
+  min-width: 205px;
+  padding: 15px;
+}
+
+.motion-mode strong {
+  color: var(--cyan);
+  display: block;
+  font: 800 17px/1.2 var(--mono);
+  margin: 11px 0 8px;
+}
+
+.forge-app[data-active-scene="relief"] .motion-mode strong {
+  color: #bca5ff;
+}
+
+.forge-app[data-active-scene="path"] .motion-mode strong {
+  color: #b8ff37;
+}
+
+.motion-mode small {
+  color: var(--muted);
+  font: 9px/1.45 var(--mono);
+}
+
+.scene-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.scene-selector button {
+  background: rgba(13, 14, 13, 0.94);
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+  cursor: pointer;
+  flex: 1;
+  min-height: 210px;
+  padding: 16px;
+  position: relative;
+  text-align: left;
+}
+
+.scene-selector button:is(:hover, :focus-visible, [aria-pressed="true"]) {
+  border-color: var(--cyan);
+  flex: 1.35;
+}
+
+.scene-selector button:nth-child(2):is(:hover, :focus-visible, [aria-pressed="true"]) {
+  border-color: var(--violet);
+}
+
+.scene-selector button:nth-child(3):is(:hover, :focus-visible, [aria-pressed="true"]) {
+  border-color: #b8ff37;
+}
+
+.scene-selector button b {
+  display: block;
+  font-size: clamp(22px, 2.4vw, 36px);
+  letter-spacing: -.05em;
+  margin: 25px 0 10px;
+}
+
+.scene-selector button p {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+  margin: 0 0 20px;
+}
+
+.scene-selector button > em {
+  bottom: 14px;
+  color: var(--green);
+  font-style: normal;
+  position: absolute;
+  right: 14px;
+}
+
+.lab-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1.25fr .75fr;
+  position: relative;
+  z-index: 2;
+}
+
+.pattern-contract {
+  display: grid;
+  gap: 7px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.pattern-contract > div {
+  border: 1px solid var(--line);
+  min-height: 90px;
+  padding: 12px;
+}
+
+.pattern-contract b {
+  display: block;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 12px;
+}
+
+.never-lose-panel ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.never-lose-panel li {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 30px 1fr;
+  min-height: 52px;
+}
+
+.never-lose-panel li b {
+  color: var(--forge);
+  font: 12px var(--mono);
+}
+
+.never-lose-panel li span {
+  font: 700 10px var(--mono);
+}
+
+.blueprint-intro {
+  align-items: stretch;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  margin-bottom: 10px;
+}
+
+.blueprint-intro article {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 15px;
+}
+
+.blueprint-intro i {
+  align-self: center;
+  color: var(--forge);
+  font: 20px var(--mono);
+}
+
+.blueprint-intro b {
+  display: block;
+  font-size: 18px;
+  margin: 15px 0 8px;
+}
+
+.blueprint-intro p {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.capability-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.capability-card {
+  background: linear-gradient(145deg, rgba(23, 24, 20, 0.96), rgba(12, 13, 12, 0.96));
+  border: 1px solid var(--line);
+  min-height: 210px;
+  padding: 14px;
+}
+
+.capability-card > div {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.capability-card h2 {
+  font-size: clamp(20px, 2vw, 30px);
+  letter-spacing: -.04em;
+  margin: 26px 0 20px;
+}
+
+.capability-card p {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.45;
+  margin: 0 0 14px;
+}
+
+.capability-card p small {
+  color: var(--forge);
+  margin-bottom: 5px;
+}
+
+.blueprint-rule {
+  margin-top: 10px;
+}
+
+.changelog-panel {
+  margin-top: 10px;
+}
+
+.changelog-panel ul {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(2, 1fr);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.changelog-panel li {
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 10px;
+  grid-template-columns: auto 1fr;
+  padding: 11px;
+}
+
+.changelog-panel li b {
+  color: var(--cyan);
+  font: 800 9px var(--mono);
+}
+
+.changelog-panel li span {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.quality-control {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.quality-calm .motion-atmosphere {
+  opacity: .18;
+}
+
+.quality-calm .scene-selector button {
+  flex: 1 !important;
+}
+
+.quality-ultra .motion-orb {
+  filter: saturate(1.35);
+}
+
 .dock {
   align-items: center;
   background: #0a0b0a;
@@ -1237,8 +1691,21 @@ td {
   .command-grid,
   .git-grid,
   .bridge-grid,
-  .shelter {
+  .shelter,
+  .lab-grid {
     grid-template-columns: 1fr;
+  }
+
+  .capability-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .motion-heading {
+    min-height: 380px;
+  }
+
+  .story-path {
+    width: 95%;
   }
 }
 
@@ -1295,8 +1762,52 @@ td {
   .metric-grid,
   .project-grid,
   .operator-roster,
-  .dossier-grid {
+  .dossier-grid,
+  .pattern-contract,
+  .capability-grid,
+  .changelog-panel ul {
     grid-template-columns: 1fr;
+  }
+
+  .skill-source-map,
+  .blueprint-intro {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-source-map > i,
+  .blueprint-intro > i {
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+
+  .motion-heading {
+    min-height: 520px;
+  }
+
+  .motion-mode {
+    margin-top: 24px;
+  }
+
+  .scene-selector {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .scene-selector button,
+  .scene-selector button:is(:hover, :focus-visible, [aria-pressed="true"]) {
+    flex: initial;
+    min-height: 185px;
+  }
+
+  .ascii-relief {
+    inset: 18% auto auto 6%;
+  }
+
+  .story-path {
+    height: 78%;
+    right: -24%;
+    top: 3%;
+    width: 155%;
   }
 
   .metric-card {
@@ -1382,5 +1893,14 @@ td {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.001ms !important;
+  }
+
+  .motion-orb,
+  .ascii-relief {
+    transform: none !important;
+  }
+
+  .story-path path {
+    stroke-dashoffset: 0;
   }
 }

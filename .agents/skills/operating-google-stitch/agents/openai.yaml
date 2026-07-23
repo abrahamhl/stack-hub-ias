@@ -1,4 +1,0 @@
-interface:
-  display_name: "Operate Google Stitch"
-  short_description: "Route validated design work through Stitch MCP"
-  default_prompt: "Use Google Stitch as a bounded design workspace, preserve DESIGN.md as the portable contract, and return validated React-ready outputs."

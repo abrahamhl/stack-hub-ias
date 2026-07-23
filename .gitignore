@@ -16,10 +16,13 @@ work/
 .DS_Store
 Thumbs.db
 
-# Local/private source libraries. Catalog metadata is promoted separately.
-/.skills/
+# Local/private source libraries. Only the reviewed canonical frontend Skill is tracked.
+/.skills/*
+!/.skills/frontend-hyper-boost/
+!/.skills/frontend-hyper-boost/**
 /src/
 *.zip
+*.skill
 
 # Legacy research and prototypes can contain personal account/context data.
 /AI_FORGE_CODEX_DESIGN_BRIEF.md

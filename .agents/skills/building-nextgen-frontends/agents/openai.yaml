@@ -1,4 +1,0 @@
-interface:
-  display_name: "Next-Gen Frontend Builder"
-  short_description: "Crea frontend inmersivo y accesible"
-  default_prompt: "Use $building-nextgen-frontends to build this interface with adaptive motion and strong mobile UX."

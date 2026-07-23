@@ -51,3 +51,15 @@ Return:
 - exact blockers;
 - next three actions;
 - evidence and checks.
+
+## Record the audit
+
+Persist the final report through the abraham-os MCP bridge so it lands in
+`.ai-forge/audit/` with a timestamped, non-overwritable filename:
+
+```powershell
+scripts/write-audit-note.ps1 -Title "<audit title>" -Body "<report markdown>" -Actor "<who ran it>"
+```
+
+If the bridge denies the write (root not audit-write), report the denial —
+never write into `.ai-forge/audit/` by hand.

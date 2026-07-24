@@ -4,14 +4,22 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
-<title>AI FORGE — Fábrica de agentes</title>
+<meta name="description" content="AI Forge — Fallout Shelter Factory. Nodo git visual de agentes, skills y jobs vivos." />
+<title>AI FORGE — Vault Factory</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="hub.css" />
 </head>
 <body>
-<a class="skip" href="#canvas">Saltar al canvas</a>
+<a class="skip" href="#canvas">Saltar al vault</a>
+
+<!-- Atmosphere layers (refs #7 boxes, #16 wavy) -->
+<div class="atmos" aria-hidden="true">
+  <div class="bg-boxes"></div>
+  <div class="wave-layer"></div>
+  <canvas id="particle-field" class="particle-field"></canvas>
+</div>
 
 <div class="shell">
   <header class="bar" role="banner">
@@ -19,12 +27,13 @@
       <div class="mark" aria-hidden="true"></div>
       <div>
         <strong>AI <b>FORGE</b></strong>
-        <small>nodo git · fábrica de agentes</small>
+        <small>VAULT · SHELTER FACTORY · NODO GIT</small>
       </div>
     </div>
-    <input class="search" id="search" type="search" placeholder="⌘K · agente, skill, ruta, protocolo…" aria-label="Buscar en el hub" />
+    <input class="search" id="search" type="search" placeholder="Buscar sala, skill, job, ruta…" aria-label="Buscar en el vault" />
     <div class="bar-status">
       <span class="chip"><span class="d" id="dot-node"></span><span id="node-label">nodo</span></span>
+      <span class="chip"><span class="d live" id="dot-jobs"></span><span id="jobs-label">jobs —</span></span>
       <span class="chip"><span class="d" id="dot-mode"></span><span id="mode-label">público</span></span>
       <button type="button" class="ghost" id="cfg-btn">Config</button>
       <button type="button" class="hot" id="reset-btn" title="Copiar ritual RESET FORGE">RESET</button>
@@ -32,49 +41,55 @@
   </header>
 
   <div class="body">
-    <nav class="rail" aria-label="Mapa del hub">
-      <div class="rail-title">Fábrica</div>
-      <button type="button" class="navitem on" data-view="floor"><span>🏭 Factory Floor</span><span class="count">NOW</span></button>
-      <button type="button" class="navitem" data-view="skills"><span>⚡ Skill Registry</span><span class="count" id="nav-skills">—</span></button>
-      <button type="button" class="navitem" data-view="ops"><span>📊 Ops / Heatmap</span><span class="count">90d</span></button>
-      <button type="button" class="navitem" data-view="credits"><span>💳 Créditos</span><span class="count">€</span></button>
-      <button type="button" class="navitem" data-view="news"><span>📡 Novedades</span><span class="count">src</span></button>
-      <button type="button" class="navitem" data-view="gallery"><span>🖼 Referencias</span><span class="count">UX</span></button>
-      <button type="button" class="navitem" data-view="protocol"><span>📜 Protocolo</span><span class="count">boot</span></button>
-      <button type="button" class="navitem" data-view="audit"><span>🔴 Auditoría</span><span class="count">git</span></button>
-      <div class="rail-title">Agentes</div>
+    <nav class="rail" aria-label="Mapa del vault">
+      <div class="rail-title">Shelter</div>
+      <button type="button" class="navitem on" data-view="floor"><span>☢ Factory Floor</span><span class="count">LIVE</span></button>
+      <button type="button" class="navitem" data-view="skills"><span>⚡ Skill Vault</span><span class="count" id="nav-skills">—</span></button>
+      <button type="button" class="navitem" data-view="ops"><span>📊 Pulse / Bars</span><span class="count">90d</span></button>
+      <button type="button" class="navitem" data-view="credits"><span>💳 Power cells</span><span class="count">€</span></button>
+      <button type="button" class="navitem" data-view="news"><span>📡 Comms</span><span class="count">src</span></button>
+      <button type="button" class="navitem" data-view="gallery"><span>🖼 Archives</span><span class="count">UX</span></button>
+      <button type="button" class="navitem" data-view="protocol"><span>📜 Bootstrap</span><span class="count">boot</span></button>
+      <button type="button" class="navitem" data-view="audit"><span>🔴 Audit trail</span><span class="count">git</span></button>
+      <button type="button" class="navitem" data-view="taxonomy"><span>🗂 Taxonomy</span><span class="count">stack</span></button>
+      <div class="rail-title">Rooms</div>
       <div id="rail-agents"></div>
       <div class="rail-title">Nodo</div>
       <a class="navitem" href="https://github.com/kinkydisorder/stack-hub-ias" target="_blank" rel="noopener"><span>GitHub privado ↗</span></a>
-      <a class="navitem" href="https://github.com/kinkydisorder/stack-hub-ias-public" target="_blank" rel="noopener"><span>Catálogo público ↗</span></a>
     </nav>
 
-    <div>
-      <div class="mobile-tabs" id="mobile-tabs" aria-label="Vistas móviles"></div>
+    <div class="main-col">
+      <div class="mobile-tabs" id="mobile-tabs" aria-label="Vistas"></div>
       <main class="canvas" id="canvas" tabindex="-1">
-        <!-- views injected by hub.js -->
-        <p class="note">Cargando fábrica…</p>
+        <p class="note">Inicializando vault…</p>
       </main>
     </div>
 
-    <aside class="inspector" aria-label="Inspector contextual">
+    <aside class="inspector" aria-label="Inspector de sala">
       <div class="rail-title" style="margin-top:0">Inspector</div>
       <div class="block" id="insp-context">
-        <h3>Contexto vivo</h3>
-        <p class="note">Selecciona una sala de agente o una vista. El chat no es el nodo: este hub + git sí.</p>
+        <h3>Vault status</h3>
+        <p class="note">Fallout Shelter Factory · premium 21st.dev grammar. Selecciona una sala o un job vivo.</p>
+      </div>
+      <div class="block">
+        <h3>Fases de producción</h3>
+        <div class="phase-rings" id="insp-phases" aria-hidden="true">
+          <i class="on"></i><i></i><i></i><i></i>
+        </div>
+        <p class="note" id="insp-phase-label" style="margin-top:8px">Fase 0 · idle</p>
       </div>
       <div class="block">
         <h3>Truth model</h3>
         <div class="truth-grid">
-          <div class="truth"><b class="ok">Verified</b>API / docs</div>
-          <div class="truth"><b class="info">Manual</b>check humano</div>
-          <div class="truth"><b class="warn">Estimated</b>≠ uso real</div>
-          <div class="truth"><b class="err">Missing</b>rellenar</div>
+          <div class="truth"><b class="ok">Verified</b>API/docs</div>
+          <div class="truth"><b class="info">Manual</b>check</div>
+          <div class="truth"><b class="warn">Estimated</b>≠ real</div>
+          <div class="truth"><b class="err">Job live</b>visible</div>
         </div>
       </div>
       <div class="block">
         <h3>Una acción</h3>
-        <p class="note" id="insp-action">Entra en una sala → copia bootstrap → abre el agente en su superficie → trabaja solo desde el repo.</p>
+        <p class="note" id="insp-action">Entra en una sala activa → copia bootstrap → RESET FORGE en esa superficie.</p>
       </div>
     </aside>
   </div>
@@ -82,9 +97,10 @@
   <footer class="dock" role="contentinfo">
     <button type="button" class="hot-pill" data-view="floor">FLOOR</button>
     <button type="button" data-view="skills">/skills</button>
-    <button type="button" data-view="protocol">/bootstrap</button>
+    <button type="button" data-view="ops">/pulse</button>
+    <button type="button" data-view="protocol">/boot</button>
     <button type="button" id="dock-copy-boot">copiar bootstrap</button>
-    <span id="dock-status">listo · sin backend propio · solo api.github.com + hub/*</span>
+    <span id="dock-status">vault · premium grammar · fallout shelter</span>
   </footer>
 </div>
 
@@ -92,10 +108,10 @@
   <div class="lb-inner">
     <img id="lb-img" src="" alt="" />
     <div class="lb-toolbar">
-      <button type="button" class="ghost" id="lb-prev">← Anterior</button>
+      <button type="button" class="ghost" id="lb-prev">←</button>
       <span class="lb-title" id="lb-title"></span>
-      <button type="button" class="ghost" id="lb-next">Siguiente →</button>
-      <button type="button" class="hot" id="lb-close">Cerrar (Esc)</button>
+      <button type="button" class="ghost" id="lb-next">→</button>
+      <button type="button" class="hot" id="lb-close">Esc</button>
     </div>
   </div>
 </div>

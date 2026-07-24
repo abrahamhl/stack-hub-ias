@@ -2,6 +2,9 @@
   "generated_at": "2026-07-25",
   "source": "workflow catalog-extract + .skills/00_CLAUDE_LIVE/REGISTRY.md",
   "premium_registry": ".skills/frontend-hyper-boost/references/premium-21st-registry.md",
+  "taxonomy": "hub/taxonomy.json",
+  "hub_entry": "hub/index.html",
+  "metaphor": "fallout-shelter-factory",
   "skills": [
     { "name": "frontend-hyper-boost", "category": "frontend", "path": ".skills/frontend-hyper-boost/SKILL.md", "files": 15, "description": "Skill madre frontend PREMIUM: tokens, motion/3D, perfiles calm|boost|ultra, y registro obligatorio 21st.dev (shader cards, sphere/swirl de jobs, partículas de handoff, orrey, galerías). Rechaza admin panels planos." },
     { "name": "building-nextgen-frontends", "category": "frontend", "path": ".agents/skills/building-nextgen-frontends/SKILL.md", "files": 2, "description": "Implementación React 19 / Next 15 / Tailwind v4 al listón premium del registry 21st.dev: app-shell, islas cliente, motion, handoff ref#→zona." },

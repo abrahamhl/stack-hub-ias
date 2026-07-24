@@ -4,9 +4,16 @@
   "description": "Mapa de agentes del nodo. Cada sala = un operador. Entrar = ver su stack (skills, tools, rutas del repo), no arrastrar chat.",
   "shared": {
     "node": "kinkydisorder/stack-hub-ias",
-    "protocol_files": ["AGENTS.md", "SOUL.md", "docs/workflows/UNIVERSAL_BOOTSTRAP_PROMPT.md"],
+    "protocol_files": [
+      "AGENTS.md",
+      "SOUL.md",
+      "docs/workflows/UNIVERSAL_BOOTSTRAP_PROMPT.md"
+    ],
     "reset_keyword": "RESET FORGE",
-    "skills_canonical": [".skills/", ".agents/skills/"],
+    "skills_canonical": [
+      ".skills/",
+      ".agents/skills/"
+    ],
     "tools_manifest": ".agents/tools.json"
   },
   "agents": [
@@ -20,8 +27,16 @@
       "accent": "forge",
       "glyph": "◆",
       "status": "active",
-      "best_for": ["arquitectura", "skills", "frontend visual", "handoffs", "auditoría de decisiones"],
-      "avoid_for": ["fan-out masivo de subagentes sin justificación"],
+      "best_for": [
+        "arquitectura",
+        "skills",
+        "frontend visual",
+        "handoffs",
+        "auditoría de decisiones"
+      ],
+      "avoid_for": [
+        "fan-out masivo de subagentes sin justificación"
+      ],
       "repo_paths": [
         "CLAUDE.md",
         ".claude/skills/",
@@ -39,9 +54,18 @@
         "operating-abraham-mcp",
         "routing-model-workflows"
       ],
-      "tools": ["git", "mcp:abraham-os", "write_audit_note", "subagents (solo justificados)"],
+      "tools": [
+        "git",
+        "mcp:abraham-os",
+        "write_audit_note",
+        "subagents (solo justificados)"
+      ],
       "deep_link": null,
-      "notes": "Emisor del work order HUB-V2. Superficie principal de dirección."
+      "notes": "Emisor del work order HUB-V2. Superficie principal de dirección.",
+      "job_state": "directing",
+      "job_label": "orquestando / review",
+      "phase": 3,
+      "intensity": 0.82
     },
     {
       "id": "codex",
@@ -53,8 +77,15 @@
       "accent": "green",
       "glyph": "▣",
       "status": "active",
-      "best_for": ["scaffolding", "control-plane", "migraciones", "scripts"],
-      "avoid_for": ["dirección visual hyper-boost sin skill"],
+      "best_for": [
+        "scaffolding",
+        "control-plane",
+        "migraciones",
+        "scripts"
+      ],
+      "avoid_for": [
+        "dirección visual hyper-boost sin skill"
+      ],
       "repo_paths": [
         "AGENTS.md",
         ".ai-forge/client-configs/codex-config.toml",
@@ -68,9 +99,17 @@
         "operating-abraham-mcp",
         "building-nextgen-frontends"
       ],
-      "tools": ["git", "mcp:abraham-os", "scripts/*.ps1"],
+      "tools": [
+        "git",
+        "mcp:abraham-os",
+        "scripts/*.ps1"
+      ],
       "deep_link": null,
-      "notes": "Lee AGENTS.md de serie al abrir el repo."
+      "notes": "Lee AGENTS.md de serie al abrir el repo.",
+      "job_state": "idle",
+      "job_label": "en espera de tarea",
+      "phase": 0,
+      "intensity": 0.15
     },
     {
       "id": "grok",
@@ -82,8 +121,16 @@
       "accent": "cyan",
       "glyph": "◈",
       "status": "active",
-      "best_for": ["contraste", "búsqueda", "implementación hub cuando se delega", "X/web pulse"],
-      "avoid_for": ["inventar datos de facturación", "omitir truth model"],
+      "best_for": [
+        "contraste",
+        "búsqueda",
+        "implementación hub cuando se delega",
+        "X/web pulse"
+      ],
+      "avoid_for": [
+        "inventar datos de facturación",
+        "omitir truth model"
+      ],
       "repo_paths": [
         "AGENTS.md",
         "hub/",
@@ -96,9 +143,17 @@
         "orchestrating-ai-forge",
         "routing-model-workflows"
       ],
-      "tools": ["git", "web_search", "GitHub API (hub)"],
+      "tools": [
+        "git",
+        "web_search",
+        "GitHub API (hub)"
+      ],
       "deep_link": null,
-      "notes": "Ejecutor HUB-V2. Debe resetear contexto desde el nodo, no desde el chat."
+      "notes": "Ejecutor HUB-V2. Debe resetear contexto desde el nodo, no desde el chat.",
+      "job_state": "processing",
+      "job_label": "hub premium rebuild",
+      "phase": 2,
+      "intensity": 0.9
     },
     {
       "id": "gemini",
@@ -110,8 +165,15 @@
       "accent": "blue",
       "glyph": "⬡",
       "status": "active",
-      "best_for": ["docs largos", "research", "Vertex", "contexto amplio"],
-      "avoid_for": ["publicar secretos del nodo privado"],
+      "best_for": [
+        "docs largos",
+        "research",
+        "Vertex",
+        "contexto amplio"
+      ],
+      "avoid_for": [
+        "publicar secretos del nodo privado"
+      ],
       "repo_paths": [
         "AGENTS.md",
         ".ai-forge/client-configs/gemini-settings.json",
@@ -123,9 +185,17 @@
         "routing-model-workflows",
         "auditing-project-readiness"
       ],
-      "tools": ["git", "Vertex (pending)", "Drive (artefactos)"],
+      "tools": [
+        "git",
+        "Vertex (pending)",
+        "Drive (artefactos)"
+      ],
       "deep_link": null,
-      "notes": "Brazo de investigación. Créditos Vertex: ver panel créditos (estimated hasta verificar)."
+      "notes": "Brazo de investigación. Créditos Vertex: ver panel créditos (estimated hasta verificar).",
+      "job_state": "idle",
+      "job_label": "research standby",
+      "phase": 0,
+      "intensity": 0.12
     },
     {
       "id": "sah",
@@ -137,16 +207,32 @@
       "accent": "red",
       "glyph": "⬢",
       "status": "planned",
-      "best_for": ["AST local", "refactors deterministas", "antes de gastar tokens"],
-      "avoid_for": ["UI hyper-boost", "orquestación multi-agente de producto"],
+      "best_for": [
+        "AST local",
+        "refactors deterministas",
+        "antes de gastar tokens"
+      ],
+      "avoid_for": [
+        "UI hyper-boost",
+        "orquestación multi-agente de producto"
+      ],
       "repo_paths": [
         "docs/architecture/HUB_ROADMAP.md",
         ".agents/tools.json"
       ],
-      "skills": ["routing-model-workflows"],
-      "tools": ["Tree-sitter (plan)", "Vertex € credit (plan)"],
+      "skills": [
+        "routing-model-workflows"
+      ],
+      "tools": [
+        "Tree-sitter (plan)",
+        "Vertex € credit (plan)"
+      ],
       "deep_link": null,
-      "notes": "Fase 4 del roadmap. No inventar que ya está cableado."
+      "notes": "Fase 4 del roadmap. No inventar que ya está cableado.",
+      "job_state": "planned",
+      "job_label": "AST engine (fase 4)",
+      "phase": 0,
+      "intensity": 0.05
     },
     {
       "id": "manus",
@@ -158,29 +244,106 @@
       "accent": "purple",
       "glyph": "✦",
       "status": "optional",
-      "best_for": ["tareas multi-paso en navegador", "investigación por fases"],
-      "avoid_for": ["ser el nodo central", "guardar secretos del forge"],
-      "repo_paths": ["hub/bootstrap.txt", "docs/workflows/templates/HANDOFF_PACKET.md"],
-      "skills": ["orchestrating-ai-forge"],
-      "tools": ["browser agent (plataforma)"],
+      "best_for": [
+        "tareas multi-paso en navegador",
+        "investigación por fases"
+      ],
+      "avoid_for": [
+        "ser el nodo central",
+        "guardar secretos del forge"
+      ],
+      "repo_paths": [
+        "hub/bootstrap.txt",
+        "docs/workflows/templates/HANDOFF_PACKET.md"
+      ],
+      "skills": [
+        "orchestrating-ai-forge"
+      ],
+      "tools": [
+        "browser agent (plataforma)"
+      ],
       "deep_link": null,
-      "notes": "Objetivo declarado: superar a Manus con orquestación frugal, no copiarlo."
+      "notes": "Objetivo declarado: superar a Manus con orquestación frugal, no copiarlo.",
+      "job_state": "optional",
+      "job_label": "no en pipeline activo",
+      "phase": 0,
+      "intensity": 0.08
     }
   ],
   "lanes": [
-    { "from": "claude", "to": "grok", "label": "handoff frontend", "via": "docs/workflows/handoffs/" },
-    { "from": "claude", "to": "codex", "label": "co-orquestación", "via": "AGENTS.md" },
-    { "from": "grok", "to": "claude", "label": "review / merge", "via": "feat/* → hyper-boost" },
-    { "from": "gemini", "to": "claude", "label": "research packet", "via": "docs/" },
-    { "from": "codex", "to": "sah", "label": "AST local (plan)", "via": "HUB_ROADMAP Fase 4" }
+    {
+      "from": "claude",
+      "to": "grok",
+      "label": "handoff frontend",
+      "via": "docs/workflows/handoffs/"
+    },
+    {
+      "from": "claude",
+      "to": "codex",
+      "label": "co-orquestación",
+      "via": "AGENTS.md"
+    },
+    {
+      "from": "grok",
+      "to": "claude",
+      "label": "review / merge",
+      "via": "feat/* → hyper-boost"
+    },
+    {
+      "from": "gemini",
+      "to": "claude",
+      "label": "research packet",
+      "via": "docs/"
+    },
+    {
+      "from": "codex",
+      "to": "sah",
+      "label": "AST local (plan)",
+      "via": "HUB_ROADMAP Fase 4"
+    }
   ],
   "skill_owners": {
-    "frontend-hyper-boost": ["claude", "grok"],
-    "building-nextgen-frontends": ["claude", "codex", "grok"],
-    "operating-google-stitch": ["claude"],
-    "auditing-project-readiness": ["claude", "codex", "gemini"],
-    "orchestrating-ai-forge": ["claude", "codex", "grok", "gemini", "manus"],
-    "routing-model-workflows": ["claude", "codex", "grok", "gemini", "sah"],
-    "operating-abraham-mcp": ["claude", "codex"]
+    "frontend-hyper-boost": [
+      "claude",
+      "grok"
+    ],
+    "building-nextgen-frontends": [
+      "claude",
+      "codex",
+      "grok"
+    ],
+    "operating-google-stitch": [
+      "claude"
+    ],
+    "auditing-project-readiness": [
+      "claude",
+      "codex",
+      "gemini"
+    ],
+    "orchestrating-ai-forge": [
+      "claude",
+      "codex",
+      "grok",
+      "gemini",
+      "manus"
+    ],
+    "routing-model-workflows": [
+      "claude",
+      "codex",
+      "grok",
+      "gemini",
+      "sah"
+    ],
+    "operating-abraham-mcp": [
+      "claude",
+      "codex"
+    ]
+  },
+  "job_states_legend": {
+    "idle": "sin job activo en el nodo",
+    "processing": "ejecutando trabajo (visible aunque la app del proveedor esté cerrada)",
+    "directing": "orquestando / revisando entregas",
+    "planned": "previsto en roadmap, no cableado",
+    "optional": "disponible, no en el carril principal"
   }
 }

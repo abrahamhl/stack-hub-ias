@@ -1,10 +1,11 @@
 {
-  "generated_at": "2026-07-24",
+  "generated_at": "2026-07-25",
   "source": "workflow catalog-extract + .skills/00_CLAUDE_LIVE/REGISTRY.md",
+  "premium_registry": ".skills/frontend-hyper-boost/references/premium-21st-registry.md",
   "skills": [
-    { "name": "frontend-hyper-boost", "category": "frontend", "path": ".skills/frontend-hyper-boost/SKILL.md", "files": 14, "description": "Skill madre frontend: dirección visual dark-premium, tokens codificados, motion/parallax/3D, perfiles calm|boost|ultra, gates de accesibilidad y rendimiento, bucle Google Stitch." },
-    { "name": "building-nextgen-frontends", "category": "frontend", "path": ".agents/skills/building-nextgen-frontends/SKILL.md", "files": 2, "description": "Implementación React 19 / Next 15 / Tailwind v4: app-shell cockpit, server-first, islas cliente, panel primitive, scroll-driven motion y view transitions." },
-    { "name": "operating-google-stitch", "category": "frontend", "path": ".agents/skills/operating-google-stitch/SKILL.md", "files": 1, "description": "Bucle design-to-code con Google Stitch: explorar en Stitch, evaluar contra el design system y re-implementar con los tokens del stack." },
+    { "name": "frontend-hyper-boost", "category": "frontend", "path": ".skills/frontend-hyper-boost/SKILL.md", "files": 15, "description": "Skill madre frontend PREMIUM: tokens, motion/3D, perfiles calm|boost|ultra, y registro obligatorio 21st.dev (shader cards, sphere/swirl de jobs, partículas de handoff, orrey, galerías). Rechaza admin panels planos." },
+    { "name": "building-nextgen-frontends", "category": "frontend", "path": ".agents/skills/building-nextgen-frontends/SKILL.md", "files": 2, "description": "Implementación React 19 / Next 15 / Tailwind v4 al listón premium del registry 21st.dev: app-shell, islas cliente, motion, handoff ref#→zona." },
+    { "name": "operating-google-stitch", "category": "frontend", "path": ".agents/skills/operating-google-stitch/SKILL.md", "files": 1, "description": "Bucle Stitch→código evaluado contra design system + premium-21st-registry (no elegir mocks admin)." },
     { "name": "auditing-project-readiness", "category": "audit", "path": ".agents/skills/auditing-project-readiness/SKILL.md", "files": 5, "description": "Auditoría de preparación real: alcance, build, tests, Git, deploy, privacidad y docs. Clasificación P0–P3 y registro vía MCP write_audit_note." },
     { "name": "orchestrating-ai-forge", "category": "control-plane", "path": ".agents/skills/orchestrating-ai-forge/SKILL.md", "files": 3, "description": "Orquestación del stack: proyectos, operadores IA, skills, evidencia Git y handoffs como un único sistema de entrega enfocado." },
     { "name": "routing-model-workflows", "category": "control-plane", "path": ".agents/skills/routing-model-workflows/SKILL.md", "files": 3, "description": "Enrutado de trabajo entre modelos cloud, suscripciones, APIs, locales y agentes según evidencia, privacidad, latencia, coste y créditos." },

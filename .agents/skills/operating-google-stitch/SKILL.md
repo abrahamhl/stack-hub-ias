@@ -16,7 +16,12 @@ completely and follow it. Setup runbook: `../../../docs/runbooks/STITCH_SETUP.md
    of frontend-hyper-boost.
 2. Prompt Stitch with one design direction at a time (see `design-directions.md`);
    record the prompt + chosen variant in the project's docs before implementing.
-3. Verify licensing/attribution of any asset Stitch embeds before committing it.
-4. After translation, run the frontend audit script
+3. **Premium bar REQUIRED for AI Forge:** prompts and evaluation must target the
+   21st.dev grammar in
+   `../../../.skills/frontend-hyper-boost/references/premium-21st-registry.md`
+   (shader cards, futuristic hero, live agent orbs, particle handoffs, orrey,
+   galleries, phase circles). Reject flat admin explorations as “chosen”.
+4. Verify licensing/attribution of any asset Stitch embeds before committing it.
+5. After translation, run the frontend audit script
    (`.skills/frontend-hyper-boost/scripts/audit-frontend.ps1`) and record the
-   result as an audit note.
+   result as an audit note including `ref # → zone` mapping.

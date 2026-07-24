@@ -75,6 +75,11 @@
 
   function showError(el, title, detail) {
     if (!el) return;
+    const isFeed = el.classList.contains("feed");
+    if (isFeed) {
+      el.innerHTML = `<div class="item err-box" role="listitem"><strong>${escapeHtml(title)}</strong> ${escapeHtml(detail)}</div>`;
+      return;
+    }
     el.innerHTML = `<div class="err-box" role="alert"><strong>${escapeHtml(title)}</strong>${escapeHtml(detail)}</div>`;
   }
 
@@ -100,18 +105,19 @@
 
       const feed = $("#commit-feed");
       if (!commits30.length) {
-        feed.innerHTML = '<li class="note">Sin commits en los últimos 30 días (o repo vacío).</li>';
+        feed.innerHTML =
+          '<div class="item note" role="listitem">Sin commits en los últimos 30 días (o repo vacío).</div>';
       } else {
         feed.innerHTML = commits30
           .slice(0, 12)
           .map((c) => {
             const msg = escapeHtml(c.commit.message.split("\n")[0]);
             const who = escapeHtml(c.commit.author?.name || c.author?.login || "?");
-            return `<li>
+            return `<div class="item" role="listitem">
               <span class="sha"><a href="${escapeHtml(c.html_url)}" target="_blank" rel="noopener">${escapeHtml(c.sha.slice(0, 7))}</a></span>
               <span>${msg}</span>
               <span class="when">${who} · ${rel(c.commit.author.date)}</span>
-            </li>`;
+            </div>`;
           })
           .join("");
       }
@@ -119,17 +125,17 @@
       const issuesFeed = $("#issues-feed");
       if (!issues.length) {
         issuesFeed.innerHTML =
-          '<li class="note">Sin issues abiertas. El corcho está limpio.</li>';
+          '<div class="item note" role="listitem">Sin issues abiertas. El corcho está limpio.</div>';
       } else {
         issuesFeed.innerHTML = issues
           .slice(0, 8)
           .map((i) => {
             const labels = (i.labels || []).map((l) => l.name).join(" ") || "sin etiqueta";
-            return `<li>
+            return `<div class="item" role="listitem">
               <span class="sha">#${i.number}</span>
               <span><a href="${escapeHtml(i.html_url)}" target="_blank" rel="noopener">${escapeHtml(i.title)}</a></span>
               <span class="when">${escapeHtml(labels)} · ${rel(i.updated_at)}</span>
-            </li>`;
+            </div>`;
           })
           .join("");
       }
@@ -332,6 +338,13 @@
     return String(p.usage);
   }
 
+  function truthLabel(vs) {
+    if (vs === "estimated") return "estimated · no es uso real";
+    if (vs === "manual") return "manual";
+    if (vs === "verified") return "verified";
+    return vs;
+  }
+
   function renderCredits() {
     const root = $("#credits-grid");
     if (!creditsData?.providers) {
@@ -342,12 +355,17 @@
     root.innerHTML = creditsData.providers
       .map((p) => {
         const vs = p.verification_status || "estimated";
+        const estimatedWarn =
+          vs === "estimated"
+            ? `<p class="note truth-warn" role="note">Truth model: estimación o placeholder — no presentar como consumo real.</p>`
+            : "";
         return `<article class="card credit-card" data-id="${escapeHtml(p.id)}">
           <div class="meta">
             <h3>${escapeHtml(p.name)}</h3>
-            <span class="tag ${escapeHtml(vs)}" title="verification_status">${escapeHtml(vs)}</span>
+            <span class="tag ${escapeHtml(vs)}" title="verification_status">${escapeHtml(truthLabel(vs))}</span>
           </div>
-          <div class="usage">${escapeHtml(formatUsage(p))}<span class="unit">${escapeHtml(p.unit || "")}</span></div>
+          <div class="usage" aria-label="uso ${escapeHtml(vs)}">${escapeHtml(formatUsage(p))}<span class="unit">${escapeHtml(p.unit || "")}</span></div>
+          ${estimatedWarn}
           <p class="note">plan: ${escapeHtml(p.plan || "—")} · checked: ${escapeHtml(p.last_checked_at || "—")}</p>
           <p class="src">source: ${escapeHtml(p.source || "—")}</p>
           <div class="row" style="margin-top:12px">
@@ -442,7 +460,7 @@
   function renderSources() {
     const root = $("#sources-feed");
     if (!sourcesData?.channels?.length) {
-      root.innerHTML = '<li class="note">Sin canales configurados.</li>';
+      root.innerHTML = '<div class="item note" role="listitem">Sin canales configurados.</div>';
       return;
     }
     root.innerHTML = sourcesData.channels
@@ -450,7 +468,7 @@
         const checked = ch.last_checked_at
           ? escapeHtml(ch.last_checked_at)
           : "nunca";
-        return `<li>
+        return `<div class="item" role="listitem">
           <span class="sha">${escapeHtml(ch.kind || "link")}</span>
           <span>
             <a href="${escapeHtml(ch.url)}" target="_blank" rel="noopener">${escapeHtml(ch.name)}</a>
@@ -461,7 +479,7 @@
             · check: ${checked}
             <button type="button" class="ghost btn-check-source" data-id="${escapeHtml(ch.id)}" style="margin-left:8px;padding:4px 10px">Marcar check</button>
           </span>
-        </li>`;
+        </div>`;
       })
       .join("");
   }
@@ -489,6 +507,7 @@
   /* ── Gallery + lightbox ── */
   let galleryItems = [];
   let lbIndex = 0;
+  let lbLastFocus = null;
 
   async function loadGallery() {
     const root = $("#gallery-grid");
@@ -520,13 +539,18 @@
     }
   }
 
+  function lbFocusables() {
+    return $$("#lightbox button:not([disabled]), #lightbox a[href]");
+  }
+
   function openLightbox(i) {
     if (!galleryItems.length) return;
+    if ($("#lightbox").hidden) lbLastFocus = document.activeElement;
     lbIndex = ((i % galleryItems.length) + galleryItems.length) % galleryItems.length;
     const it = galleryItems[lbIndex];
     const lb = $("#lightbox");
     $("#lb-img").src = it.src;
-    $("#lb-img").alt = it.title;
+    $("#lb-img").alt = it.title || "Referencia visual";
     $("#lb-title").textContent = `${it.title} (${lbIndex + 1}/${galleryItems.length})`;
     lb.hidden = false;
     $("#lb-close").focus();
@@ -537,7 +561,10 @@
     const lb = $("#lightbox");
     lb.hidden = true;
     $("#lb-img").src = "";
+    $("#lb-img").alt = "";
     document.body.style.overflow = "";
+    if (lbLastFocus && typeof lbLastFocus.focus === "function") lbLastFocus.focus();
+    lbLastFocus = null;
   }
 
   function lbNav(delta) {
@@ -661,18 +688,33 @@
 
     document.addEventListener("keydown", (e) => {
       const lb = $("#lightbox");
-      if (!lb.hidden) {
-        if (e.key === "Escape") {
+      if (lb.hidden) return;
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeLightbox();
+        return;
+      }
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        lbNav(-1);
+        return;
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        lbNav(1);
+        return;
+      }
+      if (e.key === "Tab") {
+        const nodes = lbFocusables();
+        if (!nodes.length) return;
+        const first = nodes[0];
+        const last = nodes[nodes.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
           e.preventDefault();
-          closeLightbox();
-        }
-        if (e.key === "ArrowLeft") {
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
           e.preventDefault();
-          lbNav(-1);
-        }
-        if (e.key === "ArrowRight") {
-          e.preventDefault();
-          lbNav(1);
+          first.focus();
         }
       }
     });

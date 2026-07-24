@@ -1,4 +1,4 @@
-/* AI Forge Hub v2 — static cockpit, GitHub API only */
+/* AI Forge Hub — Fallout Shelter Factory / Operator Arena */
 (() => {
   "use strict";
 
@@ -6,6 +6,18 @@
   const PRIV = "kinkydisorder/stack-hub-ias";
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  const state = {
+    view: "floor",
+    agentId: null,
+    agentsData: null,
+    catalog: null,
+    credits: null,
+    sources: null,
+    gallery: [],
+    bootstrap: "",
+    commits: [],
+  };
 
   const pat = () => localStorage.getItem("forge_pat") || "";
   const repo = () => (pat() ? PRIV : PUB);
@@ -31,23 +43,6 @@
     return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`;
   };
 
-  const AGENT_RULES = [
-    { re: /claude|anthropic|fable/i, label: "Claude", color: "var(--purple)" },
-    { re: /codex|chatgpt|openai/i, label: "Codex", color: "var(--green)" },
-    { re: /gemini|google/i, label: "Gemini", color: "var(--blue)" },
-    { re: /grok|xai/i, label: "Grok", color: "var(--cyan)" },
-    { re: /manus/i, label: "Manus", color: "var(--yellow)" },
-    { re: /sah|vertex/i, label: "SAH/Vertex", color: "var(--red)" },
-  ];
-
-  const mapAgent = (name) => {
-    const n = name || "unknown";
-    for (const r of AGENT_RULES) {
-      if (r.re.test(n)) return { label: r.label, color: r.color, raw: n };
-    }
-    return { label: n, color: "var(--dim)", raw: n };
-  };
-
   async function gh(path) {
     const headers = { Accept: "application/vnd.github+json" };
     if (pat()) headers.Authorization = `Bearer ${pat()}`;
@@ -60,172 +55,629 @@
     return r.json();
   }
 
-  async function fetchCommitsSince(iso, maxPages = 8) {
+  async function fetchCommitsSince(iso, maxPages = 6) {
     const all = [];
     for (let page = 1; page <= maxPages; page++) {
       const batch = await gh(
         `/commits?per_page=100&since=${encodeURIComponent(iso)}&page=${page}`
       );
-      if (!Array.isArray(batch) || batch.length === 0) break;
+      if (!Array.isArray(batch) || !batch.length) break;
       all.push(...batch);
       if (batch.length < 100) break;
     }
     return all;
   }
 
-  function showError(el, title, detail) {
-    if (!el) return;
-    const isFeed = el.classList.contains("feed");
-    if (isFeed) {
-      el.innerHTML = `<div class="item err-box" role="listitem"><strong>${escapeHtml(title)}</strong> ${escapeHtml(detail)}</div>`;
-      return;
-    }
-    el.innerHTML = `<div class="err-box" role="alert"><strong>${escapeHtml(title)}</strong>${escapeHtml(detail)}</div>`;
+  function setInspector(title, html, action) {
+    $("#insp-context").innerHTML = `<h3>${escapeHtml(title)}</h3>${html}`;
+    if (action) $("#insp-action").textContent = action;
   }
 
-  /* ── Command center + audit feed + issues ── */
-  async function loadState() {
-    $("#mode-label").textContent = pat() ? "privado" : "público";
-    $("#dot-mode").className = "dot " + (pat() ? "on" : "live");
-    if (pat()) $("#pat").value = pat();
+  function setNav(view, agentId = null) {
+    state.view = view;
+    state.agentId = agentId;
+    $$(".navitem[data-view]").forEach((b) => {
+      b.classList.toggle("on", b.dataset.view === view && !agentId);
+    });
+    $$(".navitem[data-agent]").forEach((b) => {
+      b.classList.toggle("on", b.dataset.agent === agentId);
+    });
+    const hash = agentId ? `agent/${agentId}` : view;
+    if (location.hash.replace(/^#/, "") !== hash) {
+      history.replaceState(null, "", `#${hash}`);
+    }
+    render();
+  }
 
+  /* ── Views ── */
+  function render() {
+    const canvas = $("#canvas");
+    if (state.view === "agent" && state.agentId) {
+      canvas.innerHTML = viewAgent(state.agentId);
+      wireView();
+      return;
+    }
+    const map = {
+      floor: viewFloor,
+      skills: viewSkills,
+      ops: viewOps,
+      credits: viewCredits,
+      news: viewNews,
+      gallery: viewGallery,
+      protocol: viewProtocol,
+      audit: viewAudit,
+      config: viewConfig,
+    };
+    const fn = map[state.view] || viewFloor;
+    canvas.innerHTML = fn();
+    wireView();
+  }
+
+  function viewFloor() {
+    const agents = state.agentsData?.agents || [];
+    const lanes = state.agentsData?.lanes || [];
+    setInspector(
+      "Factory Floor",
+      `<p class="note">Cada sala es un agente. Entra para ver su stack (skills, rutas del repo, tools). No arrastres memoria del chat: <b>RESET FORGE</b> + este mapa.</p>
+       <p class="note" style="margin-top:8px">${agents.length} salas · ${lanes.length} carriles de handoff</p>`,
+      "Click en una sala → copiar bootstrap de esa superficie → trabajar solo con rutas del repo."
+    );
+
+    const rooms = agents
+      .map((a) => {
+        const load = Math.min(95, 30 + (a.skills?.length || 0) * 8);
+        return `<button type="button" class="room" data-agent="${escapeHtml(a.id)}" data-accent="${escapeHtml(a.accent)}" aria-label="Entrar en sala ${escapeHtml(a.name)}">
+          <div class="room-top">
+            <div class="avatar" aria-hidden="true">${escapeHtml(a.glyph || "•")}</div>
+            <span class="status-pill ${escapeHtml(a.status)}">${escapeHtml(a.status)}</span>
+          </div>
+          <h2>${escapeHtml(a.short || a.name)}</h2>
+          <p>${escapeHtml(a.role)}</p>
+          <div class="meter" aria-hidden="true" style="--w:${load}%"><i></i></div>
+          <span class="note">${(a.skills || []).length} skills · ${(a.repo_paths || []).length} rutas</span>
+        </button>`;
+      })
+      .join("");
+
+    const laneLabels = lanes
+      .map(
+        (l) =>
+          `<span>${escapeHtml(l.from)} → ${escapeHtml(l.to)} · ${escapeHtml(l.label)}</span>`
+      )
+      .join("");
+
+    // SVG lanes as decorative production lines (not blocking hit targets)
+    const svgLanes = `
+      <svg class="lanes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="15" y1="30" x2="50" y2="55" />
+        <line x1="50" y1="55" x2="85" y2="30" />
+        <line x1="20" y1="70" x2="80" y2="70" />
+        <line x1="50" y1="20" x2="50" y2="80" />
+      </svg>`;
+
+    return `
+      <div class="view-head">
+        <div>
+          <div class="caption">00 · Fallout Shelter Factory</div>
+          <h1>Entra en la <em>sala</em>.<br />No en el chat.</h1>
+        </div>
+        <p class="lead">GitHub es la lista de código. Esto es el mapa: agentes generalistas arriba, al pulsar → su repositorio lógico (skills, tools, paths). RESET FORGE limpia memoria arrastrada.</p>
+      </div>
+      <div class="factory">
+        <div class="factory-map" role="region" aria-label="Mapa de salas de agentes">
+          ${svgLanes}
+          <div class="rooms">${rooms || '<p class="note">agents.json no cargado</p>'}</div>
+        </div>
+        <div class="lane-legend" aria-label="Carriles de handoff">${laneLabels}</div>
+        <div class="kpis" style="margin-top:8px">
+          <div class="kpi"><div class="v" id="k-commits">—</div><div class="k">commits 30d</div></div>
+          <div class="kpi"><div class="v" id="k-branches">—</div><div class="k">ramas</div></div>
+          <div class="kpi"><div class="v" id="k-issues">—</div><div class="k">issues</div></div>
+          <div class="kpi"><div class="v" id="k-updated">—</div><div class="k">último push</div></div>
+        </div>
+      </div>`;
+  }
+
+  function viewAgent(id) {
+    const a = state.agentsData?.agents?.find((x) => x.id === id);
+    if (!a) {
+      return `<div class="err-box"><strong>Sala no encontrada</strong>No hay agente «${escapeHtml(id)}» en agents.json.</div>
+        <p style="margin-top:12px"><button type="button" data-view="floor">← Volver al floor</button></p>`;
+    }
+    const catalogSkills = state.catalog?.skills || [];
+    const skillCards = (a.skills || [])
+      .map((name) => {
+        const meta = catalogSkills.find((s) => s.name === name);
+        return `<li>
+          <strong>${escapeHtml(name)}</strong>
+          ${meta ? escapeHtml(meta.description) : "ver SKILL.md en el repo"}
+          ${meta ? `<br /><span style="color:var(--cyan)">${escapeHtml(meta.path)}</span>` : ""}
+        </li>`;
+      })
+      .join("");
+
+    const paths = (a.repo_paths || [])
+      .map((p) => `<li>${escapeHtml(p)}</li>`)
+      .join("");
+    const tools = (a.tools || [])
+      .map((t) => `<span class="tag">${escapeHtml(t)}</span>`)
+      .join("");
+    const best = (a.best_for || []).map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("");
+    const avoid = (a.avoid_for || []).map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("");
+    const lanes = (state.agentsData?.lanes || []).filter(
+      (l) => l.from === id || l.to === id
+    );
+    const laneHtml = lanes.length
+      ? lanes
+          .map(
+            (l) =>
+              `<div class="item"><span class="sha">${escapeHtml(l.from)}→${escapeHtml(l.to)}</span><span>${escapeHtml(l.label)}</span><span class="when">${escapeHtml(l.via || "")}</span></div>`
+          )
+          .join("")
+      : `<div class="item note">Sin carriles declarados.</div>`;
+
+    setInspector(
+      a.name,
+      `<p class="note"><b>Superficie:</b> ${escapeHtml(a.surface)}</p>
+       <p class="note"><b>Protocolo:</b> ${escapeHtml(a.protocol)}</p>
+       <p class="note" style="margin-top:8px">${escapeHtml(a.notes || "")}</p>`,
+      `Copia el bootstrap, escribe RESET FORGE en ${a.surface}, pega el bloque, abre las rutas de esta sala.`
+    );
+
+    const agentBoot = buildAgentBootstrap(a);
+
+    return `
+      <div class="row" style="margin-bottom:14px">
+        <button type="button" class="ghost" data-view="floor">← Factory Floor</button>
+        <span class="chip">sala / ${escapeHtml(a.id)}</span>
+        <span class="status-pill ${escapeHtml(a.status)}">${escapeHtml(a.status)}</span>
+      </div>
+      <div class="dossier-hero" data-accent="${escapeHtml(a.accent)}">
+        <div class="avatar" style="--room:var(--${escapeHtml(a.accent)})" aria-hidden="true">${escapeHtml(a.glyph || "•")}</div>
+        <div>
+          <div class="caption">Dossier · operador</div>
+          <h1>${escapeHtml(a.name)}</h1>
+          <p class="lead" style="margin-top:8px">${escapeHtml(a.role)}</p>
+          <div class="tagrow">${best}</div>
+        </div>
+      </div>
+      <div class="dossier-grid">
+        <div class="panel">
+          <div class="caption">Stack de skills en esta sala</div>
+          <ul class="stack-list" style="margin-top:10px">${skillCards || "<li class='note'>Sin skills mapeadas</li>"}</ul>
+          <div class="caption" style="margin-top:16px">Tools de la sala</div>
+          <div class="tagrow" style="margin-top:8px">${tools}</div>
+        </div>
+        <div class="panel">
+          <div class="caption">Rutas del repositorio (subdirectorios lógicos)</div>
+          <ul class="path-list" style="margin-top:10px">${paths}</ul>
+          <div class="caption" style="margin-top:16px">Evitar</div>
+          <div class="tagrow" style="margin-top:8px">${avoid || '<span class="note">—</span>'}</div>
+          <div class="caption" style="margin-top:16px">Carriles (handoffs)</div>
+          <div class="feed" style="margin-top:8px">${laneHtml}</div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:14px">
+        <div class="row" style="justify-content:space-between;margin-bottom:10px">
+          <div>
+            <div class="caption">Terminal de la sala · bootstrap</div>
+            <p class="note">Pega esto en ${escapeHtml(a.surface)} tras RESET FORGE. No arrastres el chat anterior.</p>
+          </div>
+          <button type="button" class="hot" id="copy-agent-boot" data-boot="1">Copiar bootstrap de sala</button>
+        </div>
+        <pre class="boot-box" id="agent-boot">${escapeHtml(agentBoot)}</pre>
+      </div>`;
+  }
+
+  function buildAgentBootstrap(a) {
+    const shared = state.agentsData?.shared || {};
+    return `[AI FORGE · SALA ${a.short || a.name} · ${a.id}]
+
+1. RESET FORGE — descarta memoria de chats previos.
+2. Nodo: ${shared.node || PRIV}
+3. Protocolo de esta superficie: ${a.protocol}
+4. Lee también: ${(shared.protocol_files || []).join(", ")}
+5. Tu rol: ${a.role}
+6. Skills a cargar (archivos del repo, no inventes):
+${(a.skills || []).map((s) => `   - ${s}`).join("\n")}
+7. Rutas de tu sala:
+${(a.repo_paths || []).map((p) => `   - ${p}`).join("\n")}
+8. Tools: ${(a.tools || []).join(", ")}
+9. Truth model: estimated ≠ uso real. Nada sin source + verification_status + fecha.
+10. Entrega: commit atómico + nota .ai-forge/audit/ (actor: ${a.id}-*)
+
+Confirma: nombre de agente, qué puedes leer/escribir, próxima acción única.`;
+  }
+
+  function viewSkills() {
+    const skills = state.catalog?.skills || [];
+    const owners = state.agentsData?.skill_owners || {};
+    setInspector(
+      "Skill Registry",
+      `<p class="note">Skills canónicas viven en el repo. Este panel solo las lista y dice qué agentes las usan.</p>`,
+      "Edita la skill en su path del repo, no en el chat."
+    );
+    const cards = skills
+      .map((s) => {
+        const who = owners[s.name] || [];
+        return `<article class="card">
+          <div class="row" style="justify-content:space-between;margin-bottom:6px">
+            <span class="tag ${escapeHtml(s.category)}">${escapeHtml(s.category)}</span>
+            <a class="note" href="https://github.com/${PRIV}/blob/hyper-boost/${escapeHtml(s.path)}" target="_blank" rel="noopener">repo ↗</a>
+          </div>
+          <h3>${escapeHtml(s.name)}</h3>
+          <p>${escapeHtml(s.description)}</p>
+          <div class="tagrow" style="margin-top:8px">${who.map((w) => `<span class="tag">${escapeHtml(w)}</span>`).join("") || '<span class="note">sin owner map</span>'}</div>
+        </article>`;
+      })
+      .join("");
+    return `
+      <div class="view-head">
+        <div><div class="caption">01 · Skill Registry Matrix</div><h1>Una skill,<br /><em>muchas salas</em>.</h1></div>
+        <p class="lead">Generalistas en el floor. Dentro de cada agente solo ves su stack. Aquí ves el mapa completo.</p>
+      </div>
+      <div class="grid c3" id="skill-grid">${cards || '<p class="note">catalog.json no disponible</p>'}</div>`;
+  }
+
+  function viewOps() {
+    setInspector(
+      "Ops",
+      `<p class="note">Heatmap y KPIs desde GitHub API. Sin PAT, el catálogo público puede 404.</p>`,
+      "Si falla el público: Config → PAT solo lectura del privado."
+    );
+    return `
+      <div class="view-head">
+        <div><div class="caption">02 · Activity</div><h1>Señales del <em>nodo</em>.</h1></div>
+        <p class="lead">Commits = qué cambió. Notas de auditoría = por qué. El heatmap es el pulso de la fábrica.</p>
+      </div>
+      <div class="panel" id="heatmap-root"><p class="note">Cargando heatmap…</p></div>
+      <div class="panel" style="margin-top:14px">
+        <div class="caption">Commits recientes</div>
+        <div class="feed" id="commit-feed" role="list" aria-live="polite"><div class="item note" role="listitem">Cargando…</div></div>
+      </div>
+      <div class="panel" style="margin-top:14px">
+        <div class="caption">Issues abiertas (tableros)</div>
+        <div class="feed" id="issues-feed" role="list"><div class="item note" role="listitem">Cargando…</div></div>
+      </div>`;
+  }
+
+  function viewCredits() {
+    setInspector(
+      "Créditos",
+      `<p class="note">Truth model obligatorio. Estimated nunca se presenta como gasto real.</p>`,
+      "Edita → Exportar credits.json → commit en hub/credits.json"
+    );
+    return `
+      <div class="view-head">
+        <div><div class="caption">03 · Credit Monitor</div><h1>Dinero visible.<br /><em>Sin inventar.</em></h1></div>
+        <p class="lead">Placeholders estimated hasta que rellenes datos verificados. Export JSON listo para commit.</p>
+      </div>
+      <div class="row" style="margin-bottom:12px">
+        <button type="button" class="hot" id="export-credits">Exportar credits.json</button>
+        <span class="note">Actualizado en archivo: <span id="credits-updated">—</span></span>
+      </div>
+      <div class="grid c3" id="credits-grid"><p class="note">Cargando…</p></div>`;
+  }
+
+  function viewNews() {
+    setInspector("Novedades", `<p class="note">Canales oficiales. Check manual, sin scraping.</p>`, "Marca check tras leer el changelog.");
+    return `
+      <div class="view-head">
+        <div><div class="caption">04 · Fuentes oficiales</div><h1>Qué cambió <em>fuera</em>.</h1></div>
+        <p class="lead">Cada IA tiene su canal. El check queda en este navegador (localStorage).</p>
+      </div>
+      <div class="panel"><div class="feed" id="sources-feed" role="list"><div class="item note">Cargando…</div></div></div>`;
+  }
+
+  function viewGallery() {
+    setInspector("Referencias", `<p class="note">Capturas de dirección visual en src/. Lightbox con teclado.</p>`, "Úsalas para no diseñar de memoria.");
+    return `
+      <div class="view-head">
+        <div><div class="caption">05 · Galería UX</div><h1>Referencias, no <em>copias</em>.</h1></div>
+        <p class="lead">Gramática visual del stack. Enter / Esc / flechas en lightbox.</p>
+      </div>
+      <div class="gal" id="gallery-grid"><p class="note">Cargando…</p></div>`;
+  }
+
+  function viewProtocol() {
+    setInspector(
+      "Protocolo",
+      `<p class="note">Bootstrap universal. RESET FORGE = reconstruir solo desde el repo.</p>`,
+      "Copia → pega en cualquier IA sin carpeta del repo."
+    );
+    return `
+      <div class="view-head">
+        <div><div class="caption">06 · Protocolo universal</div><h1>Una pasta.<br /><em>Todas las IAs.</em></h1></div>
+        <p class="lead">Sustituye la memoria de plataforma. El nodo es el repo.</p>
+      </div>
+      <div class="panel">
+        <pre class="boot-box" id="proto-block">${escapeHtml(state.bootstrap || "Cargando bootstrap.txt…")}</pre>
+        <div class="row" style="margin-top:12px">
+          <button type="button" class="hot" id="copy-proto">Copiar bloque</button>
+          <button type="button" id="reset-btn-2">Copiar ritual RESET FORGE</button>
+        </div>
+      </div>`;
+  }
+
+  function viewAudit() {
+    setInspector("Auditoría", `<p class="note">Commits = qué. Notas .ai-forge/audit = por qué.</p>`, "Sin commit no existe.");
+    return `
+      <div class="view-head">
+        <div><div class="caption">07 · Git Auditor</div><h1>Evidencia, no <em>relato</em>.</h1></div>
+        <p class="lead">Feed vivo de commits del repo activo (público o privado con PAT).</p>
+      </div>
+      <div class="panel"><div class="feed" id="commit-feed" role="list"><div class="item note">Cargando…</div></div></div>`;
+  }
+
+  function viewConfig() {
+    setInspector("Config", `<p class="note">PAT solo en localStorage de este navegador.</p>`, "Nunca commits de tokens.");
+    return `
+      <div class="view-head">
+        <div><div class="caption">Config local</div><h1>Token de <em>solo lectura</em>.</h1></div>
+        <p class="lead">Para leer el nodo privado cuando el catálogo público aún no existe.</p>
+      </div>
+      <div class="panel">
+        <p class="note" style="margin-bottom:10px">GitHub fine-grained PAT · contents:read. Se guarda solo aquí.</p>
+        <div class="row">
+          <input type="password" id="pat" placeholder="github_pat_…" style="max-width:420px" autocomplete="off" />
+          <button type="button" class="hot" id="save-pat">Guardar</button>
+          <button type="button" class="ghost" id="clear-pat">Borrar</button>
+        </div>
+      </div>`;
+  }
+
+  /* ── Wire interactions inside canvas ── */
+  function wireView() {
+    $$("[data-view]", $("#canvas")).forEach((el) => {
+      el.addEventListener("click", () => setNav(el.dataset.view));
+    });
+    $$("[data-agent]", $("#canvas")).forEach((el) => {
+      el.addEventListener("click", () => setNav("agent", el.dataset.agent));
+    });
+
+    const copyBoot = $("#copy-agent-boot");
+    if (copyBoot) {
+      copyBoot.onclick = async () => {
+        const t = $("#agent-boot")?.textContent || "";
+        try {
+          await navigator.clipboard.writeText(t);
+          copyBoot.textContent = "Copiado ✓";
+          setTimeout(() => (copyBoot.textContent = "Copiar bootstrap de sala"), 1600);
+        } catch {
+          copyBoot.textContent = "Fallo al copiar";
+        }
+      };
+    }
+
+    $("#copy-proto")?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(state.bootstrap || $("#proto-block")?.textContent || "");
+        $("#copy-proto").textContent = "Copiado ✓";
+        setTimeout(() => ($("#copy-proto").textContent = "Copiar bloque"), 1600);
+      } catch { /* ignore */ }
+    });
+    $("#reset-btn-2")?.addEventListener("click", copyReset);
+
+    if (state.view === "ops" || state.view === "audit" || state.view === "floor") {
+      loadGithubPanels();
+    }
+    if (state.view === "ops") loadHeatmap();
+    if (state.view === "credits") renderCredits();
+    if (state.view === "news") renderSources();
+    if (state.view === "gallery") renderGallery();
+    if (state.view === "config") {
+      if (pat()) $("#pat").value = pat();
+      $("#save-pat").onclick = () => {
+        localStorage.setItem("forge_pat", $("#pat").value.trim());
+        updateModeChips();
+        loadGithubPanels();
+      };
+      $("#clear-pat").onclick = () => {
+        localStorage.removeItem("forge_pat");
+        $("#pat").value = "";
+        updateModeChips();
+        loadGithubPanels();
+      };
+    }
+
+    // credit edit handlers
+    $$(".btn-edit-credit").forEach((b) => {
+      b.onclick = () => {
+        $$(".credit-card.editing").forEach((c) => c.classList.remove("editing"));
+        b.closest(".credit-card")?.classList.add("editing");
+      };
+    });
+    $$(".btn-cancel-credit").forEach((b) => {
+      b.onclick = () => b.closest(".credit-card")?.classList.remove("editing");
+    });
+    $$(".btn-save-credit").forEach((b) => {
+      b.onclick = () => applyCreditEdit(b.dataset.id, b.closest(".credit-card"));
+    });
+    $("#export-credits")?.addEventListener("click", exportCredits);
+    $$(".btn-check-source").forEach((b) => {
+      b.onclick = () => markSourceCheck(b.dataset.id);
+    });
+    $$(".gal-item").forEach((b) => {
+      b.onclick = () => openLightbox(Number(b.dataset.i));
+    });
+  }
+
+  /* ── Data loads ── */
+  async function loadStatic() {
+    const [agents, catalog, credits, sources, gallery, boot] = await Promise.all([
+      fetch("agents.json").then((r) => r.json()).catch(() => null),
+      fetch("catalog.json").then((r) => r.json()).catch(() => null),
+      fetch("credits.json").then((r) => r.json()).catch(() => null),
+      fetch("sources.json").then((r) => r.json()).catch(() => null),
+      fetch("gallery.json").then((r) => r.json()).catch(() => null),
+      fetch("bootstrap.txt").then((r) => (r.ok ? r.text() : "")).catch(() => ""),
+    ]);
+    state.agentsData = agents;
+    state.catalog = catalog;
+    state.credits = credits;
+    state.sources = sources;
+    // merge source checks
+    if (state.sources?.channels) {
+      const saved = JSON.parse(localStorage.getItem("forge_sources_checks") || "{}");
+      for (const ch of state.sources.channels) {
+        if (saved[ch.id]) {
+          ch.last_checked_at = saved[ch.id].last_checked_at;
+          ch.last_note = saved[ch.id].last_note;
+        }
+      }
+    }
+    state.gallery = gallery?.items || [];
+    state.bootstrap = boot;
+    $("#nav-skills").textContent = String(catalog?.skills?.length || "—");
+    renderRailAgents();
+    renderMobileTabs();
+  }
+
+  function renderRailAgents() {
+    const box = $("#rail-agents");
+    if (!box) return;
+    const agents = state.agentsData?.agents || [];
+    box.innerHTML = agents
+      .map(
+        (a) =>
+          `<button type="button" class="navitem" data-agent="${escapeHtml(a.id)}"><span>${escapeHtml(a.glyph || "•")} ${escapeHtml(a.short || a.name)}</span><span class="count">${escapeHtml(a.status)}</span></button>`
+      )
+      .join("");
+    box.querySelectorAll("[data-agent]").forEach((b) => {
+      b.addEventListener("click", () => setNav("agent", b.dataset.agent));
+    });
+  }
+
+  function renderMobileTabs() {
+    const tabs = $("#mobile-tabs");
+    if (!tabs) return;
+    const items = [
+      ["floor", "Floor"],
+      ["skills", "Skills"],
+      ["ops", "Ops"],
+      ["credits", "€"],
+      ["protocol", "Boot"],
+      ["audit", "Git"],
+    ];
+    tabs.innerHTML = items
+      .map(([v, l]) => `<button type="button" data-view="${v}">${l}</button>`)
+      .join("");
+    tabs.querySelectorAll("[data-view]").forEach((b) => {
+      b.addEventListener("click", () => setNav(b.dataset.view));
+    });
+  }
+
+  function updateModeChips() {
+    $("#mode-label").textContent = pat() ? "privado" : "público";
+    $("#dot-mode").className = "d " + (pat() ? "on" : "live");
+    if (pat()) $("#pat") && ($("#pat").value = pat());
+  }
+
+  async function loadGithubPanels() {
+    updateModeChips();
     try {
       const since30 = new Date(Date.now() - 30 * 864e5).toISOString();
       const [commits30, branches, issues] = await Promise.all([
         gh(`/commits?per_page=100&since=${encodeURIComponent(since30)}`),
         gh("/branches?per_page=50"),
-        gh("/issues?state=open&per_page=30").catch(() => []),
+        gh("/issues?state=open&per_page=20").catch(() => []),
       ]);
-      $("#dot-node").className = "dot on";
-      $("#k-commits").textContent = Array.isArray(commits30) ? commits30.length : "—";
-      $("#k-branches").textContent = Array.isArray(branches) ? branches.length : "—";
-      $("#k-issues").textContent = Array.isArray(issues) ? issues.length : "—";
-      $("#k-updated").textContent =
-        commits30[0] ? rel(commits30[0].commit.author.date) : "—";
+      $("#dot-node").className = "d on";
+      $("#node-label").textContent = repo().split("/")[1] || "nodo";
+      if ($("#k-commits")) $("#k-commits").textContent = commits30.length;
+      if ($("#k-branches")) $("#k-branches").textContent = branches.length;
+      if ($("#k-issues")) $("#k-issues").textContent = issues.length;
+      if ($("#k-updated")) $("#k-updated").textContent = commits30[0] ? rel(commits30[0].commit.author.date) : "—";
+      state.commits = commits30;
 
-      const feed = $("#commit-feed");
-      if (!commits30.length) {
-        feed.innerHTML =
-          '<div class="item note" role="listitem">Sin commits en los últimos 30 días (o repo vacío).</div>';
-      } else {
-        feed.innerHTML = commits30
-          .slice(0, 12)
-          .map((c) => {
-            const msg = escapeHtml(c.commit.message.split("\n")[0]);
-            const who = escapeHtml(c.commit.author?.name || c.author?.login || "?");
-            return `<div class="item" role="listitem">
-              <span class="sha"><a href="${escapeHtml(c.html_url)}" target="_blank" rel="noopener">${escapeHtml(c.sha.slice(0, 7))}</a></span>
-              <span>${msg}</span>
-              <span class="when">${who} · ${rel(c.commit.author.date)}</span>
-            </div>`;
-          })
-          .join("");
-      }
+      const feedHtml = commits30.length
+        ? commits30
+            .slice(0, 12)
+            .map((c) => {
+              const msg = escapeHtml(c.commit.message.split("\n")[0]);
+              const who = escapeHtml(c.commit.author?.name || c.author?.login || "?");
+              return `<div class="item" role="listitem">
+                <span class="sha"><a href="${escapeHtml(c.html_url)}" target="_blank" rel="noopener">${escapeHtml(c.sha.slice(0, 7))}</a></span>
+                <span>${msg}</span>
+                <span class="when">${who} · ${rel(c.commit.author.date)}</span>
+              </div>`;
+            })
+            .join("")
+        : `<div class="item note" role="listitem">Sin commits recientes.</div>`;
+
+      $$("#commit-feed").forEach((el) => {
+        el.innerHTML = feedHtml;
+      });
 
       const issuesFeed = $("#issues-feed");
-      if (!issues.length) {
-        issuesFeed.innerHTML =
-          '<div class="item note" role="listitem">Sin issues abiertas. El corcho está limpio.</div>';
-      } else {
-        issuesFeed.innerHTML = issues
-          .slice(0, 8)
-          .map((i) => {
-            const labels = (i.labels || []).map((l) => l.name).join(" ") || "sin etiqueta";
-            return `<div class="item" role="listitem">
+      if (issuesFeed) {
+        issuesFeed.innerHTML = issues.length
+          ? issues
+              .slice(0, 8)
+              .map(
+                (i) => `<div class="item" role="listitem">
               <span class="sha">#${i.number}</span>
               <span><a href="${escapeHtml(i.html_url)}" target="_blank" rel="noopener">${escapeHtml(i.title)}</a></span>
-              <span class="when">${escapeHtml(labels)} · ${rel(i.updated_at)}</span>
-            </div>`;
-          })
-          .join("");
+              <span class="when">${rel(i.updated_at)}</span>
+            </div>`
+              )
+              .join("")
+          : `<div class="item note" role="listitem">Sin issues abiertas.</div>`;
       }
+      $("#dock-status").textContent = `repo ${repo()} · ${commits30.length} commits/30d · ok`;
     } catch (e) {
-      $("#dot-node").className = "dot err";
+      $("#dot-node").className = "d err";
       const hint = pat()
-        ? "Revisa el token en Config (scope read-only de repos)."
-        : "El repo público puede no existir o estar vacío — añade un PAT en Config para leer el privado.";
-      showError(
-        $("#commit-feed"),
-        `No se pudo leer ${repo()} (HTTP ${e.message})`,
-        hint
-      );
-      showError(
-        $("#issues-feed"),
-        "Tableros no disponibles",
-        "Misma causa que la auditoría o sin red."
-      );
-      $("#k-commits").textContent = "—";
-      $("#k-branches").textContent = "—";
-      $("#k-issues").textContent = "—";
-      $("#k-updated").textContent = "—";
+        ? "Revisa el PAT (solo lectura)."
+        : "Público 404 o vacío — Config → PAT del privado.";
+      const err = `<div class="item err-box" role="listitem"><strong>No se pudo leer ${escapeHtml(repo())} (HTTP ${escapeHtml(e.message)})</strong>${escapeHtml(hint)}</div>`;
+      $$("#commit-feed").forEach((el) => {
+        el.innerHTML = err;
+      });
+      const issuesFeed = $("#issues-feed");
+      if (issuesFeed) issuesFeed.innerHTML = err;
+      $("#dock-status").textContent = `error ${e.message} · ${repo()}`;
     }
   }
 
-  /* ── Heatmap 90d ── */
   async function loadHeatmap() {
     const root = $("#heatmap-root");
-    const offline = !navigator.onLine;
-    if (offline) {
-      showError(
-        root,
-        "Sin red",
-        "El heatmap necesita la API de GitHub. Reintenta cuando haya conexión."
-      );
+    if (!root) return;
+    if (!navigator.onLine) {
+      root.innerHTML = `<div class="err-box"><strong>Sin red</strong>El heatmap necesita api.github.com.</div>`;
       return;
     }
-
     try {
       const since = new Date(Date.now() - 90 * 864e5).toISOString();
       const commits = await fetchCommitsSince(since);
-      $("#k-commits-90").textContent = String(commits.length);
-
-      // Build day → { count, authors: Map }
       const byDay = new Map();
-      const authorTotals = new Map();
+      const authors = new Map();
       for (const c of commits) {
-        const date = c.commit?.author?.date || c.commit?.committer?.date;
+        const date = c.commit?.author?.date;
         if (!date) continue;
-        const key = dayKey(date);
-        const authorName =
-          c.author?.login || c.commit?.author?.name || "unknown";
-        const agent = mapAgent(authorName);
-        if (!byDay.has(key)) byDay.set(key, { count: 0, authors: new Map() });
-        const cell = byDay.get(key);
-        cell.count += 1;
-        cell.authors.set(agent.label, (cell.authors.get(agent.label) || 0) + 1);
-        authorTotals.set(agent.label, (authorTotals.get(agent.label) || 0) + 1);
+        const k = dayKey(date);
+        byDay.set(k, (byDay.get(k) || 0) + 1);
+        const who = c.author?.login || c.commit?.author?.name || "?";
+        authors.set(who, (authors.get(who) || 0) + 1);
       }
-
-      // 13 weeks ending today (Sun-Sat grid like GitHub: Sun first)
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const end = new Date(today);
-      // align end to end of week (Saturday = 6)
-      const endDow = end.getDay(); // 0 Sun
-      // we show columns as weeks Sun→Sat
+      const endDow = end.getDay();
       const start = new Date(end);
       start.setDate(start.getDate() - (12 * 7 + endDow));
-
       const weeks = [];
       const cursor = new Date(start);
       while (cursor <= end) {
         const week = [];
         for (let d = 0; d < 7; d++) {
           const k = dayKey(cursor);
-          const data = byDay.get(k) || { count: 0, authors: new Map() };
-          week.push({
-            key: k,
-            date: new Date(cursor),
-            count: data.count,
-            authors: data.authors,
-            future: cursor > today,
-          });
+          week.push({ key: k, count: byDay.get(k) || 0, future: cursor > today });
           cursor.setDate(cursor.getDate() + 1);
         }
         weeks.push(week);
       }
-
-      const max = Math.max(1, ...[...byDay.values()].map((v) => v.count));
+      const max = Math.max(1, ...byDay.values(), 1);
       const level = (n) => {
         if (n <= 0) return "";
         if (n <= max * 0.25) return "l1";
@@ -233,166 +685,76 @@
         if (n <= max * 0.75) return "l3";
         return "l4";
       };
-
-      const months = [];
-      let lastM = -1;
-      weeks.forEach((w, wi) => {
-        const m = w[0].date.getMonth();
-        if (m !== lastM) {
-          months.push({
-            label: w[0].date.toLocaleString("es", { month: "short" }),
-            col: wi,
-          });
-          lastM = m;
-        }
-      });
-
-      const dayLabels = ["D", "L", "M", "X", "J", "V", "S"];
-      const monthsHtml = months
-        .map((m, i) => {
-          const next = months[i + 1]?.col ?? weeks.length;
-          const span = Math.max(1, next - m.col);
-          return `<span style="flex:0 0 ${span * 15}px">${escapeHtml(m.label)}</span>`;
-        })
-        .join("");
-
       const cells = weeks
-        .flatMap((week) =>
-          week.map((cell) => {
-            if (cell.future) {
-              return `<button type="button" class="hm-cell" disabled aria-hidden="true" tabindex="-1"></button>`;
-            }
-            const authors = [...cell.authors.entries()]
-              .map(([a, n]) => `${a}: ${n}`)
-              .join(", ");
-            const title = `${cell.key}: ${cell.count} commit${cell.count === 1 ? "" : "s"}${authors ? " · " + authors : ""}`;
-            return `<button type="button" class="hm-cell ${level(cell.count)}" title="${escapeHtml(title)}" aria-label="${escapeHtml(title)}" data-day="${escapeHtml(cell.key)}"></button>`;
-          })
+        .flatMap((w) =>
+          w.map((c) =>
+            c.future
+              ? `<span class="hm-cell"></span>`
+              : `<button type="button" class="hm-cell ${level(c.count)}" title="${escapeHtml(c.key)}: ${c.count}" aria-label="${escapeHtml(c.key)}: ${c.count} commits"></button>`
+          )
         )
         .join("");
-
-      const agentsSorted = [...authorTotals.entries()].sort((a, b) => b[1] - a[1]);
-      const authorsHtml = agentsSorted.length
-        ? agentsSorted
-            .map(([label, n]) => {
-              const color = mapAgent(label).color;
-              return `<span class="pill"><span class="dot-a" style="background:${color}"></span>${escapeHtml(label)} <b>${n}</b></span>`;
-            })
-            .join("")
-        : '<span class="note">Sin commits en 90 días (o sin acceso al repo).</span>';
-
+      const authorPills = [...authors.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 8)
+        .map(([n, c]) => `<span class="tag">${escapeHtml(n)} · ${c}</span>`)
+        .join("");
       root.innerHTML = `
-        <div class="hm-wrap">
-          <div class="hm" role="img" aria-label="Heatmap de commits de los últimos 90 días">
-            <div class="hm-days" aria-hidden="true">${dayLabels.map((d) => `<span>${d}</span>`).join("")}</div>
-            <div class="hm-body">
-              <div class="hm-months">${monthsHtml}</div>
-              <div class="hm-grid">${cells}</div>
-            </div>
-          </div>
-        </div>
-        <div class="hm-legend" aria-hidden="true">
-          <span class="note">Menos</span>
-          <span class="sw"></span>
-          <span class="sw l1" style="background:rgba(255,138,76,.22)"></span>
-          <span class="sw l2" style="background:rgba(255,138,76,.42)"></span>
-          <span class="sw l3" style="background:rgba(255,138,76,.68)"></span>
-          <span class="sw l4" style="background:var(--forge)"></span>
-          <span class="note">Más · repo ${escapeHtml(repo())} · ${commits.length} commits / 90d</span>
-        </div>
-        <div class="hm-authors" aria-label="Commits por autor/agente">${authorsHtml}</div>
-        <p class="note" style="margin-top:12px">Hover o foco en una celda para ver el desglose. Intensidad = commits/día. Autor mapeado a agente cuando el nombre lo permite.</p>
-      `;
+        <div class="caption">Heatmap · 90 días · ${commits.length} commits · ${escapeHtml(repo())}</div>
+        <div class="hm-wrap" style="margin-top:12px"><div class="hm-grid">${cells}</div></div>
+        <div class="tagrow" style="margin-top:12px">${authorPills || '<span class="note">Sin commits</span>'}</div>`;
     } catch (e) {
-      $("#k-commits-90").textContent = "—";
-      const hint = pat()
-        ? "Token inválido o sin permiso de lectura."
-        : "Sin PAT se intenta el catálogo público. Si falla, abre Config y pega un token de solo lectura.";
-      showError(root, `Heatmap no disponible (HTTP ${e.message})`, hint);
+      root.innerHTML = `<div class="err-box"><strong>Heatmap no disponible (HTTP ${escapeHtml(e.message)})</strong>${pat() ? "Token inválido." : "Añade PAT en Config o publica el catálogo."}</div>`;
     }
-  }
-
-  /* ── Credits panel ── */
-  let creditsData = null;
-
-  async function loadCredits() {
-    const root = $("#credits-grid");
-    try {
-      const r = await fetch("credits.json", { cache: "no-store" });
-      if (!r.ok) throw new Error(String(r.status));
-      creditsData = await r.json();
-      renderCredits();
-    } catch {
-      showError(
-        root,
-        "credits.json no disponible",
-        "Coloca hub/credits.json junto a esta página. Sin red local el panel no carga."
-      );
-    }
-  }
-
-  function formatUsage(p) {
-    if (p.usage === null || p.usage === undefined || p.usage === "") {
-      return p.verification_status === "estimated" ? "sin dato" : "—";
-    }
-    return String(p.usage);
-  }
-
-  function truthLabel(vs) {
-    if (vs === "estimated") return "estimated · no es uso real";
-    if (vs === "manual") return "manual";
-    if (vs === "verified") return "verified";
-    return vs;
   }
 
   function renderCredits() {
     const root = $("#credits-grid");
-    if (!creditsData?.providers) {
-      showError(root, "Datos de créditos inválidos", "Revisa el schema de credits.json.");
+    if (!root) return;
+    if (!state.credits?.providers) {
+      root.innerHTML = `<div class="err-box"><strong>credits.json no disponible</strong></div>`;
       return;
     }
-    $("#credits-updated").textContent = creditsData.last_updated || "—";
-    root.innerHTML = creditsData.providers
+    if ($("#credits-updated")) $("#credits-updated").textContent = state.credits.last_updated || "—";
+    root.innerHTML = state.credits.providers
       .map((p) => {
         const vs = p.verification_status || "estimated";
-        const estimatedWarn =
+        const usage =
+          p.usage === null || p.usage === undefined || p.usage === ""
+            ? vs === "estimated"
+              ? "sin dato"
+              : "—"
+            : String(p.usage);
+        const warn =
           vs === "estimated"
-            ? `<p class="note truth-warn" role="note">Truth model: estimación o placeholder — no presentar como consumo real.</p>`
+            ? `<p class="truth-warn">Truth model: estimación/placeholder — no es consumo real.</p>`
             : "";
         return `<article class="card credit-card" data-id="${escapeHtml(p.id)}">
           <div class="meta">
             <h3>${escapeHtml(p.name)}</h3>
-            <span class="tag ${escapeHtml(vs)}" title="verification_status">${escapeHtml(truthLabel(vs))}</span>
+            <span class="tag ${escapeHtml(vs)}">${escapeHtml(vs === "estimated" ? "estimated · no real" : vs)}</span>
           </div>
-          <div class="usage" aria-label="uso ${escapeHtml(vs)}">${escapeHtml(formatUsage(p))}<span class="unit">${escapeHtml(p.unit || "")}</span></div>
-          ${estimatedWarn}
-          <p class="note">plan: ${escapeHtml(p.plan || "—")} · checked: ${escapeHtml(p.last_checked_at || "—")}</p>
-          <p class="src">source: ${escapeHtml(p.source || "—")}</p>
-          <div class="row" style="margin-top:12px">
-            <button type="button" class="ghost btn-edit-credit" data-id="${escapeHtml(p.id)}">Editar</button>
-          </div>
+          <div class="usage">${escapeHtml(usage)}<span class="unit">${escapeHtml(p.unit || "")}</span></div>
+          ${warn}
+          <p class="note">plan: ${escapeHtml(p.plan || "—")} · ${escapeHtml(p.last_checked_at || "—")}</p>
+          <p class="note">source: ${escapeHtml(p.source || "—")}</p>
+          <div class="row" style="margin-top:10px"><button type="button" class="ghost btn-edit-credit" data-id="${escapeHtml(p.id)}">Editar</button></div>
           <div class="fields">
-            <label>Uso / gasto</label>
-            <input type="text" data-f="usage" value="${escapeHtml(p.usage ?? "")}" placeholder="ej. 12.40 o vacío" />
-            <label>Límite</label>
-            <input type="text" data-f="limit" value="${escapeHtml(p.limit ?? "")}" placeholder="opcional" />
-            <label>Plan</label>
-            <input type="text" data-f="plan" value="${escapeHtml(p.plan ?? "")}" />
-            <label>Unidad</label>
-            <input type="text" data-f="unit" value="${escapeHtml(p.unit ?? "")}" />
+            <label>Uso</label><input type="text" data-f="usage" value="${escapeHtml(p.usage ?? "")}" />
+            <label>Límite</label><input type="text" data-f="limit" value="${escapeHtml(p.limit ?? "")}" />
+            <label>Plan</label><input type="text" data-f="plan" value="${escapeHtml(p.plan ?? "")}" />
+            <label>Unidad</label><input type="text" data-f="unit" value="${escapeHtml(p.unit ?? "")}" />
             <label>verification_status</label>
             <select data-f="verification_status">
               <option value="verified" ${vs === "verified" ? "selected" : ""}>verified</option>
               <option value="manual" ${vs === "manual" ? "selected" : ""}>manual</option>
               <option value="estimated" ${vs === "estimated" ? "selected" : ""}>estimated</option>
             </select>
-            <label>source</label>
-            <input type="text" data-f="source" value="${escapeHtml(p.source ?? "")}" />
-            <label>notes</label>
-            <textarea data-f="notes">${escapeHtml(p.notes ?? "")}</textarea>
+            <label>source</label><input type="text" data-f="source" value="${escapeHtml(p.source ?? "")}" />
+            <label>notes</label><textarea data-f="notes">${escapeHtml(p.notes ?? "")}</textarea>
             <div class="row" style="margin-top:10px">
-              <button type="button" class="btn-save-credit" data-id="${escapeHtml(p.id)}">Aplicar</button>
-              <button type="button" class="ghost btn-cancel-credit" data-id="${escapeHtml(p.id)}">Cerrar</button>
+              <button type="button" class="hot btn-save-credit" data-id="${escapeHtml(p.id)}">Aplicar</button>
+              <button type="button" class="ghost btn-cancel-credit">Cerrar</button>
             </div>
           </div>
         </article>`;
@@ -401,8 +763,8 @@
   }
 
   function applyCreditEdit(id, card) {
-    const p = creditsData.providers.find((x) => x.id === id);
-    if (!p) return;
+    const p = state.credits.providers.find((x) => x.id === id);
+    if (!p || !card) return;
     const get = (f) => card.querySelector(`[data-f="${f}"]`)?.value ?? "";
     const usageRaw = get("usage").trim();
     p.usage = usageRaw === "" ? null : usageRaw;
@@ -414,13 +776,14 @@
     p.source = get("source").trim() || "manual in-page";
     p.notes = get("notes");
     p.last_checked_at = new Date().toISOString().slice(0, 10);
-    creditsData.last_updated = p.last_checked_at;
+    state.credits.last_updated = p.last_checked_at;
     renderCredits();
+    wireView();
   }
 
   function exportCredits() {
-    if (!creditsData) return;
-    const blob = new Blob([JSON.stringify(creditsData, null, 2) + "\n"], {
+    if (!state.credits) return;
+    const blob = new Blob([JSON.stringify(state.credits, null, 2) + "\n"], {
       type: "application/json",
     });
     const a = document.createElement("a");
@@ -430,54 +793,23 @@
     URL.revokeObjectURL(a.href);
   }
 
-  /* ── Sources / news feed ── */
-  let sourcesData = null;
-
-  async function loadSources() {
-    const root = $("#sources-feed");
-    try {
-      const r = await fetch("sources.json", { cache: "no-store" });
-      if (!r.ok) throw new Error(String(r.status));
-      sourcesData = await r.json();
-      // merge localStorage manual checks
-      const saved = JSON.parse(localStorage.getItem("forge_sources_checks") || "{}");
-      for (const ch of sourcesData.channels || []) {
-        if (saved[ch.id]) {
-          ch.last_checked_at = saved[ch.id].last_checked_at;
-          ch.last_note = saved[ch.id].last_note;
-        }
-      }
-      renderSources();
-    } catch {
-      showError(
-        root,
-        "sources.json no disponible",
-        "Coloca hub/sources.json junto a esta página."
-      );
-    }
-  }
-
   function renderSources() {
     const root = $("#sources-feed");
-    if (!sourcesData?.channels?.length) {
-      root.innerHTML = '<div class="item note" role="listitem">Sin canales configurados.</div>';
+    if (!root) return;
+    if (!state.sources?.channels?.length) {
+      root.innerHTML = `<div class="item note">sources.json no disponible</div>`;
       return;
     }
-    root.innerHTML = sourcesData.channels
+    root.innerHTML = state.sources.channels
       .map((ch) => {
-        const checked = ch.last_checked_at
-          ? escapeHtml(ch.last_checked_at)
-          : "nunca";
+        const checked = ch.last_checked_at ? escapeHtml(ch.last_checked_at) : "nunca";
         return `<div class="item" role="listitem">
           <span class="sha">${escapeHtml(ch.kind || "link")}</span>
-          <span>
-            <a href="${escapeHtml(ch.url)}" target="_blank" rel="noopener">${escapeHtml(ch.name)}</a>
-            <span class="note"> — ${escapeHtml(ch.last_note || "")}</span>
-          </span>
-          <span class="when">
-            <span class="tag manual">${escapeHtml(ch.verification_status || "manual")}</span>
-            · check: ${checked}
-            <button type="button" class="ghost btn-check-source" data-id="${escapeHtml(ch.id)}" style="margin-left:8px;padding:4px 10px">Marcar check</button>
+          <span><a href="${escapeHtml(ch.url)}" target="_blank" rel="noopener">${escapeHtml(ch.name)}</a>
+            <span class="note"> — ${escapeHtml(ch.last_note || "")}</span></span>
+          <span class="when"><span class="tag manual">${escapeHtml(ch.verification_status || "manual")}</span>
+            · ${checked}
+            <button type="button" class="ghost btn-check-source" data-id="${escapeHtml(ch.id)}" style="margin-left:6px;padding:4px 8px">Check</button>
           </span>
         </div>`;
       })
@@ -485,269 +817,150 @@
   }
 
   function markSourceCheck(id) {
-    const ch = sourcesData?.channels?.find((c) => c.id === id);
+    const ch = state.sources?.channels?.find((c) => c.id === id);
     if (!ch) return;
-    const note = window.prompt(
-      `Nota breve del check de «${ch.name}» (qué hay de nuevo):`,
-      ch.last_note && ch.last_note !== "Sin check manual aún" ? ch.last_note : ""
-    );
+    const note = window.prompt(`Nota del check «${ch.name}»:`, ch.last_note || "");
     if (note === null) return;
     ch.last_checked_at = new Date().toISOString().slice(0, 10);
-    ch.last_note = note.trim() || "Revisado, sin novedad anotada";
+    ch.last_note = note.trim() || "Revisado";
     ch.verification_status = "manual";
     const saved = JSON.parse(localStorage.getItem("forge_sources_checks") || "{}");
-    saved[id] = {
-      last_checked_at: ch.last_checked_at,
-      last_note: ch.last_note,
-    };
+    saved[id] = { last_checked_at: ch.last_checked_at, last_note: ch.last_note };
     localStorage.setItem("forge_sources_checks", JSON.stringify(saved));
     renderSources();
+    wireView();
   }
 
-  /* ── Gallery + lightbox ── */
-  let galleryItems = [];
-  let lbIndex = 0;
-  let lbLastFocus = null;
-
-  async function loadGallery() {
+  function renderGallery() {
     const root = $("#gallery-grid");
-    try {
-      const r = await fetch("gallery.json", { cache: "no-store" });
-      if (!r.ok) throw new Error(String(r.status));
-      const data = await r.json();
-      galleryItems = data.items || [];
-      if (!galleryItems.length) {
-        root.innerHTML = '<p class="note">Galería vacía.</p>';
-        return;
-      }
-      root.innerHTML = galleryItems
-        .map(
-          (it, i) => `
-        <button type="button" class="gal-item" data-i="${i}" aria-label="Abrir ${escapeHtml(it.title)}">
-          <img src="${escapeHtml(it.src)}" alt="" loading="lazy" decoding="async"
-            onerror="this.closest('button').classList.add('err'); this.replaceWith(Object.assign(document.createElement('span'),{className:'note',style:'padding:16px;display:block',textContent:'Imagen no encontrada'}))" />
-          <span class="cap">${escapeHtml(it.title)}</span>
-        </button>`
-        )
-        .join("");
-    } catch {
-      showError(
-        root,
-        "gallery.json no disponible",
-        "Rutas relativas a ../src/. Si solo subes hub/ a Hostinger, sube también src/ o copia las capturas."
-      );
+    if (!root) return;
+    if (!state.gallery.length) {
+      root.innerHTML = `<div class="err-box"><strong>gallery.json vacío</strong>Rutas a ../src/</div>`;
+      return;
     }
+    root.innerHTML = state.gallery
+      .map(
+        (it, i) => `<button type="button" class="gal-item" data-i="${i}" aria-label="Abrir ${escapeHtml(it.title)}">
+        <img src="${escapeHtml(it.src)}" alt="" loading="lazy" onerror="this.style.opacity=.3" />
+        <span class="cap">${escapeHtml(it.title)}</span>
+      </button>`
+      )
+      .join("");
   }
 
-  function lbFocusables() {
-    return $$("#lightbox button:not([disabled]), #lightbox a[href]");
-  }
-
+  /* lightbox */
+  let lbIndex = 0;
+  let lbLast = null;
   function openLightbox(i) {
-    if (!galleryItems.length) return;
-    if ($("#lightbox").hidden) lbLastFocus = document.activeElement;
-    lbIndex = ((i % galleryItems.length) + galleryItems.length) % galleryItems.length;
-    const it = galleryItems[lbIndex];
-    const lb = $("#lightbox");
+    if (!state.gallery.length) return;
+    if ($("#lightbox").hidden) lbLast = document.activeElement;
+    lbIndex = ((i % state.gallery.length) + state.gallery.length) % state.gallery.length;
+    const it = state.gallery[lbIndex];
     $("#lb-img").src = it.src;
-    $("#lb-img").alt = it.title || "Referencia visual";
-    $("#lb-title").textContent = `${it.title} (${lbIndex + 1}/${galleryItems.length})`;
-    lb.hidden = false;
+    $("#lb-img").alt = it.title || "Referencia";
+    $("#lb-title").textContent = `${it.title} (${lbIndex + 1}/${state.gallery.length})`;
+    $("#lightbox").hidden = false;
     $("#lb-close").focus();
     document.body.style.overflow = "hidden";
   }
-
   function closeLightbox() {
-    const lb = $("#lightbox");
-    lb.hidden = true;
+    $("#lightbox").hidden = true;
     $("#lb-img").src = "";
-    $("#lb-img").alt = "";
     document.body.style.overflow = "";
-    if (lbLastFocus && typeof lbLastFocus.focus === "function") lbLastFocus.focus();
-    lbLastFocus = null;
+    lbLast?.focus?.();
   }
 
-  function lbNav(delta) {
-    openLightbox(lbIndex + delta);
-  }
+  async function copyReset() {
+    const text = `RESET FORGE
 
-  /* ── Catalog + protocol ── */
-  async function loadCatalog() {
+Descarta toda memoria de chats previos sobre este stack.
+Reconstruye SOLO desde el nodo git:
+- AGENTS.md (o CLAUDE.md)
+- SOUL.md
+- hub/agents.json (mapa de salas)
+- docs/workflows/UNIVERSAL_BOOTSTRAP_PROMPT.md
+- skill que toque en .agents/skills/ o .skills/
+
+Confirma listando archivos cargados y próxima acción única.`;
     try {
-      const r = await fetch("catalog.json");
-      const data = await r.json();
-      $("#skill-grid").innerHTML = data.skills
-        .map(
-          (s) => `
-        <article class="card">
-          <div class="row" style="justify-content:space-between;margin-bottom:6px">
-            <span class="tag ${escapeHtml(s.category)}">${escapeHtml(s.category)}</span>
-            <a class="note" href="https://github.com/${PRIV}/edit/hyper-boost/${escapeHtml(s.path)}" target="_blank" rel="noopener">editar ↗</a>
-          </div>
-          <h3>${escapeHtml(s.name)}</h3>
-          <p>${escapeHtml(s.description)}</p>
-        </article>`
-        )
-        .join("");
+      await navigator.clipboard.writeText(text);
+      $("#dock-status").textContent = "RESET FORGE copiado al portapapeles";
     } catch {
-      showError(
-        $("#skill-grid"),
-        "catalog.json no disponible",
-        "Debe estar junto a index.html en hub/."
-      );
+      $("#dock-status").textContent = "No se pudo copiar RESET";
     }
   }
 
-  async function loadProto() {
-    try {
-      const r = await fetch("bootstrap.txt");
-      if (!r.ok) throw new Error("missing");
-      $("#proto-block").textContent = await r.text();
-    } catch {
-      $("#proto-block").textContent =
-        "Sube hub/bootstrap.txt junto a esta página (se genera desde docs/workflows/UNIVERSAL_BOOTSTRAP_PROMPT.md).";
+  function parseHash() {
+    const h = location.hash.replace(/^#/, "");
+    if (h.startsWith("agent/")) {
+      state.view = "agent";
+      state.agentId = h.slice(6);
+    } else if (h) {
+      state.view = h;
+      state.agentId = null;
     }
   }
 
-  /* ── Keyboard / nav ── */
-  function setupNav() {
-    const links = $$(".rail a[href^='#'], .mobile-nav a[href^='#']");
-    const sections = links
-      .map((a) => $(a.getAttribute("href")))
-      .filter(Boolean);
-
-    const setCurrent = () => {
-      let current = sections[0];
-      for (const s of sections) {
-        if (s.getBoundingClientRect().top <= 100) current = s;
-      }
-      links.forEach((a) => {
-        const on = a.getAttribute("href") === `#${current?.id}`;
-        if (a.closest(".rail")) a.setAttribute("aria-current", on ? "true" : "false");
-      });
-    };
-    window.addEventListener("scroll", setCurrent, { passive: true });
-    setCurrent();
-  }
-
-  function wireEvents() {
-    $("#cfg-btn").onclick = () => {
-      const s = $("#cfg");
-      s.hidden = !s.hidden;
-      if (!s.hidden) {
-        s.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-        $("#pat").focus();
-      }
-    };
-    $("#save-pat").onclick = () => {
-      localStorage.setItem("forge_pat", $("#pat").value.trim());
-      loadState();
-      loadHeatmap();
-    };
-    $("#clear-pat").onclick = () => {
-      localStorage.removeItem("forge_pat");
-      $("#pat").value = "";
-      loadState();
-      loadHeatmap();
-    };
-    $("#copy-proto").onclick = async () => {
+  function wireGlobal() {
+    $$(".rail .navitem[data-view], .dock [data-view]").forEach((b) => {
+      b.addEventListener("click", () => setNav(b.dataset.view));
+    });
+    $("#cfg-btn").onclick = () => setNav("config");
+    $("#reset-btn").onclick = copyReset;
+    $("#dock-copy-boot").onclick = async () => {
       try {
-        await navigator.clipboard.writeText($("#proto-block").textContent);
-        $("#copy-proto").textContent = "Copiado ✓";
-        setTimeout(() => ($("#copy-proto").textContent = "Copiar bloque"), 1800);
+        await navigator.clipboard.writeText(state.bootstrap || "");
+        $("#dock-status").textContent = "bootstrap universal copiado";
       } catch {
-        $("#copy-proto").textContent = "Fallo al copiar";
+        $("#dock-status").textContent = "fallo al copiar bootstrap";
       }
     };
-    $("#export-credits")?.addEventListener("click", exportCredits);
-
-    document.addEventListener("click", (e) => {
-      const t = e.target.closest("button, .gal-item");
-      if (!t) return;
-      if (t.classList.contains("btn-edit-credit")) {
-        const card = t.closest(".credit-card");
-        $$(".credit-card.editing").forEach((c) => c.classList.remove("editing"));
-        card?.classList.add("editing");
-      }
-      if (t.classList.contains("btn-cancel-credit")) {
-        t.closest(".credit-card")?.classList.remove("editing");
-      }
-      if (t.classList.contains("btn-save-credit")) {
-        applyCreditEdit(t.dataset.id, t.closest(".credit-card"));
-      }
-      if (t.classList.contains("btn-check-source")) {
-        markSourceCheck(t.dataset.id);
-      }
-      if (t.classList.contains("gal-item")) {
-        openLightbox(Number(t.dataset.i));
-      }
-      if (t.id === "lb-close") closeLightbox();
-      if (t.id === "lb-prev") lbNav(-1);
-      if (t.id === "lb-next") lbNav(1);
+    $("#search").addEventListener("keydown", (e) => {
+      if (e.key !== "Enter") return;
+      const q = e.target.value.trim().toLowerCase();
+      if (!q) return;
+      const agent = state.agentsData?.agents?.find(
+        (a) =>
+          a.id.includes(q) ||
+          a.name.toLowerCase().includes(q) ||
+          a.short?.toLowerCase().includes(q)
+      );
+      if (agent) return setNav("agent", agent.id);
+      const skill = state.catalog?.skills?.find((s) => s.name.toLowerCase().includes(q));
+      if (skill) return setNav("skills");
+      if (q.includes("credit") || q.includes("€")) return setNav("credits");
+      if (q.includes("heat") || q.includes("ops")) return setNav("ops");
+      if (q.includes("boot") || q.includes("proto")) return setNav("protocol");
+      setNav("floor");
     });
 
-    document.addEventListener("keydown", (e) => {
-      const lb = $("#lightbox");
-      if (lb.hidden) return;
-      if (e.key === "Escape") {
-        e.preventDefault();
-        closeLightbox();
-        return;
-      }
-      if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        lbNav(-1);
-        return;
-      }
-      if (e.key === "ArrowRight") {
-        e.preventDefault();
-        lbNav(1);
-        return;
-      }
-      if (e.key === "Tab") {
-        const nodes = lbFocusables();
-        if (!nodes.length) return;
-        const first = nodes[0];
-        const last = nodes[nodes.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    });
-
-    $("#lightbox")?.addEventListener("click", (e) => {
+    $("#lb-close").onclick = closeLightbox;
+    $("#lb-prev").onclick = () => openLightbox(lbIndex - 1);
+    $("#lb-next").onclick = () => openLightbox(lbIndex + 1);
+    $("#lightbox").addEventListener("click", (e) => {
       if (e.target.id === "lightbox") closeLightbox();
     });
-
-    window.addEventListener("offline", () => {
-      $("#dot-node").className = "dot err";
+    document.addEventListener("keydown", (e) => {
+      if ($("#lightbox").hidden) return;
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") openLightbox(lbIndex - 1);
+      if (e.key === "ArrowRight") openLightbox(lbIndex + 1);
     });
-    window.addEventListener("online", () => {
-      loadState();
-      loadHeatmap();
+    window.addEventListener("hashchange", () => {
+      parseHash();
+      render();
     });
   }
 
-  /* ── boot ── */
-  function boot() {
-    wireEvents();
-    setupNav();
-    loadState();
-    loadHeatmap();
-    loadCatalog();
-    loadProto();
-    loadCredits();
-    loadSources();
-    loadGallery();
+  async function boot() {
+    wireGlobal();
+    updateModeChips();
+    parseHash();
+    await loadStatic();
+    render();
+    loadGithubPanels();
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
-  } else {
-    boot();
-  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
 })();

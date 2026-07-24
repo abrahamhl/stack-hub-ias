@@ -4,182 +4,98 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
-<title>AI FORGE — Hub v2</title>
+<title>AI FORGE — Fábrica de agentes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="hub.css" />
 </head>
 <body>
-<a class="skip" href="#main">Saltar al contenido</a>
+<a class="skip" href="#canvas">Saltar al canvas</a>
+
 <div class="shell">
   <header class="bar" role="banner">
-    <span class="brand">AI <b>FORGE</b></span>
-    <span class="micro">abraham_os / hub v2</span>
-    <span class="status">
-      <span class="micro"><span class="dot" id="dot-node"></span>nodo</span>
-      <span class="micro"><span class="dot" id="dot-mode"></span><span id="mode-label">público</span></span>
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+      <div>
+        <strong>AI <b>FORGE</b></strong>
+        <small>nodo git · fábrica de agentes</small>
+      </div>
+    </div>
+    <input class="search" id="search" type="search" placeholder="⌘K · agente, skill, ruta, protocolo…" aria-label="Buscar en el hub" />
+    <div class="bar-status">
+      <span class="chip"><span class="d" id="dot-node"></span><span id="node-label">nodo</span></span>
+      <span class="chip"><span class="d" id="dot-mode"></span><span id="mode-label">público</span></span>
       <button type="button" class="ghost" id="cfg-btn">Config</button>
-    </span>
+      <button type="button" class="hot" id="reset-btn" title="Copiar ritual RESET FORGE">RESET</button>
+    </div>
   </header>
-  <div class="cols">
-    <nav class="rail" aria-label="Ventanas del hub">
-      <span class="micro sep">Ventanas</span>
-      <a href="#command">01 · Command Center</a>
-      <a href="#heatmap">02 · Heatmap</a>
-      <a href="#credits">03 · Créditos</a>
-      <a href="#news">04 · Novedades</a>
-      <a href="#gallery">05 · Galería</a>
-      <a href="#skills">06 · Skill Registry</a>
-      <a href="#boards">07 · Tableros</a>
-      <a href="#protocol">08 · Protocolo</a>
-      <a href="#audit">09 · Auditoría</a>
-      <span class="micro sep">Nodo</span>
-      <a href="https://github.com/kinkydisorder/stack-hub-ias" target="_blank" rel="noopener">GitHub privado ↗</a>
-      <a href="https://github.com/kinkydisorder/stack-hub-ias-public" target="_blank" rel="noopener">Catálogo público ↗</a>
+
+  <div class="body">
+    <nav class="rail" aria-label="Mapa del hub">
+      <div class="rail-title">Fábrica</div>
+      <button type="button" class="navitem on" data-view="floor"><span>🏭 Factory Floor</span><span class="count">NOW</span></button>
+      <button type="button" class="navitem" data-view="skills"><span>⚡ Skill Registry</span><span class="count" id="nav-skills">—</span></button>
+      <button type="button" class="navitem" data-view="ops"><span>📊 Ops / Heatmap</span><span class="count">90d</span></button>
+      <button type="button" class="navitem" data-view="credits"><span>💳 Créditos</span><span class="count">€</span></button>
+      <button type="button" class="navitem" data-view="news"><span>📡 Novedades</span><span class="count">src</span></button>
+      <button type="button" class="navitem" data-view="gallery"><span>🖼 Referencias</span><span class="count">UX</span></button>
+      <button type="button" class="navitem" data-view="protocol"><span>📜 Protocolo</span><span class="count">boot</span></button>
+      <button type="button" class="navitem" data-view="audit"><span>🔴 Auditoría</span><span class="count">git</span></button>
+      <div class="rail-title">Agentes</div>
+      <div id="rail-agents"></div>
+      <div class="rail-title">Nodo</div>
+      <a class="navitem" href="https://github.com/kinkydisorder/stack-hub-ias" target="_blank" rel="noopener"><span>GitHub privado ↗</span></a>
+      <a class="navitem" href="https://github.com/kinkydisorder/stack-hub-ias-public" target="_blank" rel="noopener"><span>Catálogo público ↗</span></a>
     </nav>
+
     <div>
-      <nav class="mobile-nav" aria-label="Navegación móvil">
-        <a href="#command">Command</a>
-        <a href="#heatmap">Heatmap</a>
-        <a href="#credits">Créditos</a>
-        <a href="#news">Novedades</a>
-        <a href="#gallery">Galería</a>
-        <a href="#skills">Skills</a>
-        <a href="#boards">Tableros</a>
-        <a href="#protocol">Protocolo</a>
-        <a href="#audit">Auditoría</a>
-      </nav>
-      <main id="main" tabindex="-1">
-        <p class="micro">Construir la fábrica. No otra wiki rota.</p>
-        <h1>Un nodo. Todas las IAs.<br /><em>Todo registrado.</em></h1>
-        <p class="sub">Este hub es una vista del nodo git. No guarda nada en servidor: lee GitHub en vivo
-        y archivos locales del propio <code>hub/</code>. Truth model visible en créditos y novedades —
-        <strong>estimated ≠ uso real</strong>. Sin PAT, el catálogo público puede no existir aún:
-        usa Config para leer el nodo privado.</p>
-
-        <section id="command" aria-labelledby="h-command">
-          <h2 id="h-command">Command Center <span class="micro">estado en vivo</span></h2>
-          <div class="panel">
-            <div class="kpis">
-              <div class="kpi"><div class="v" id="k-commits">—</div><div class="k">commits (30d)</div></div>
-              <div class="kpi"><div class="v" id="k-commits-90">—</div><div class="k">commits (90d)</div></div>
-              <div class="kpi"><div class="v" id="k-branches">—</div><div class="k">ramas</div></div>
-              <div class="kpi"><div class="v" id="k-issues">—</div><div class="k">issues abiertas</div></div>
-              <div class="kpi"><div class="v" id="k-updated">—</div><div class="k">último push</div></div>
-            </div>
-          </div>
-        </section>
-
-        <section id="heatmap" aria-labelledby="h-heatmap">
-          <h2 id="h-heatmap">Heatmap de actividad <span class="micro">commits · 90 días</span></h2>
-          <div class="panel" id="heatmap-root">
-            <p class="note">Cargando heatmap…</p>
-          </div>
-        </section>
-
-        <section id="credits" aria-labelledby="h-credits">
-          <h2 id="h-credits">Créditos / usos <span class="micro">truth model</span></h2>
-          <div class="panel" style="margin-bottom:14px">
-            <p class="note">Cada tarjeta lleva <code>verification_status</code> (<span class="tag verified">verified</span>
-            <span class="tag manual">manual</span> <span class="tag estimated">estimated</span>) y
-            <code>last_checked_at</code>. Edita in-page y exporta JSON listo para commit en
-            <code>hub/credits.json</code>. Actualizado en archivo: <span id="credits-updated">—</span>.</p>
-            <div class="row" style="margin-top:12px">
-              <button type="button" id="export-credits">Exportar credits.json</button>
-              <span class="note">No se sube solo: descarga el archivo y haz commit.</span>
-            </div>
-          </div>
-          <div class="grid c3" id="credits-grid">
-            <p class="note">Cargando créditos…</p>
-          </div>
-        </section>
-
-        <section id="news" aria-labelledby="h-news">
-          <h2 id="h-news">Novedades oficiales <span class="micro">sin scraping</span></h2>
-          <div class="panel">
-            <p class="note" style="margin-bottom:10px">Canales desde <code>hub/sources.json</code>. El check es manual
-            (se guarda en localStorage de este navegador). No hay scrape automático en v2.</p>
-            <div class="feed" id="sources-feed" role="list" aria-live="polite">
-              <div class="item note" role="listitem">Cargando canales…</div>
-            </div>
-          </div>
-        </section>
-
-        <section id="gallery" aria-labelledby="h-gallery">
-          <h2 id="h-gallery">Galería de referencias <span class="micro">src/ · lightbox</span></h2>
-          <div class="panel">
-            <p class="note" style="margin-bottom:12px">Capturas de diseño enlazables a decisiones visuales.
-            Teclado: Enter en miniatura · Esc cierra · ← → navega.</p>
-            <div class="gal" id="gallery-grid">
-              <p class="note">Cargando galería…</p>
-            </div>
-          </div>
-        </section>
-
-        <section id="skills" aria-labelledby="h-skills">
-          <h2 id="h-skills">Skill Registry Matrix <span class="micro">catálogo desde el repo</span></h2>
-          <div class="grid c3" id="skill-grid"><p class="note">Cargando catálogo…</p></div>
-        </section>
-
-        <section id="boards" aria-labelledby="h-boards">
-          <h2 id="h-boards">Tableros <span class="micro">github issues = corcho</span></h2>
-          <div class="panel">
-            <div class="feed" id="issues-feed" role="list" aria-live="polite"><div class="item note" role="listitem">Cargando…</div></div>
-            <div class="row" style="margin-top:14px">
-              <a href="https://github.com/kinkydisorder/stack-hub-ias/issues/new?labels=idea&title=Idea%3A%20" target="_blank" rel="noopener"><button type="button">+ Nueva idea</button></a>
-              <a href="https://github.com/kinkydisorder/stack-hub-ias/issues/new?labels=delegacion&title=Delegar%3A%20" target="_blank" rel="noopener"><button type="button" class="ghost">+ Delegar trabajo</button></a>
-              <span class="note">Cada IA se asigna una issue antes de tocar un proyecto (HANDOFF_PACKET).</span>
-            </div>
-          </div>
-        </section>
-
-        <section id="protocol" aria-labelledby="h-protocol">
-          <h2 id="h-protocol">Protocolo <span class="micro">pega esto una vez en cualquier IA</span></h2>
-          <div class="panel">
-            <pre class="proto" id="proto-block">Cargando protocolo…</pre>
-            <div class="row" style="margin-top:12px">
-              <button type="button" id="copy-proto">Copiar bloque</button>
-              <span class="note">Fuente: docs/workflows/UNIVERSAL_BOOTSTRAP_PROMPT.md (repo privado). El bloque sustituye a la memoria de plataforma.</span>
-            </div>
-          </div>
-        </section>
-
-        <section id="audit" aria-labelledby="h-audit">
-          <h2 id="h-audit">Auditoría <span class="micro">commits = qué · notas = por qué</span></h2>
-          <div class="panel"><div class="feed" id="commit-feed" role="list" aria-live="polite"><div class="item note" role="listitem">Cargando…</div></div></div>
-        </section>
-
-        <section id="cfg" hidden aria-labelledby="h-cfg">
-          <h2 id="h-cfg">Config <span class="micro">solo en este navegador</span></h2>
-          <div class="panel">
-            <p class="note" style="margin-bottom:10px">Token GitHub de grano fino (solo lectura de repos) para ver el nodo privado.
-            Se guarda en <b>localStorage de este navegador</b>, jamás en el código ni en el repo.</p>
-            <div class="row">
-              <input type="password" id="pat" placeholder="github_pat_… (opcional)" style="max-width:420px" autocomplete="off" />
-              <button type="button" id="save-pat">Guardar</button>
-              <button type="button" class="ghost" id="clear-pat">Borrar</button>
-            </div>
-          </div>
-        </section>
-
-        <footer>
-          AI Forge · hub v2 · vista estática del nodo git · tokens frontend-hyper-boost ·
-          sin analítica, sin cookies, sin backend propio · solo api.github.com + archivos locales.
-        </footer>
+      <div class="mobile-tabs" id="mobile-tabs" aria-label="Vistas móviles"></div>
+      <main class="canvas" id="canvas" tabindex="-1">
+        <!-- views injected by hub.js -->
+        <p class="note">Cargando fábrica…</p>
       </main>
     </div>
+
+    <aside class="inspector" aria-label="Inspector contextual">
+      <div class="rail-title" style="margin-top:0">Inspector</div>
+      <div class="block" id="insp-context">
+        <h3>Contexto vivo</h3>
+        <p class="note">Selecciona una sala de agente o una vista. El chat no es el nodo: este hub + git sí.</p>
+      </div>
+      <div class="block">
+        <h3>Truth model</h3>
+        <div class="truth-grid">
+          <div class="truth"><b class="ok">Verified</b>API / docs</div>
+          <div class="truth"><b class="info">Manual</b>check humano</div>
+          <div class="truth"><b class="warn">Estimated</b>≠ uso real</div>
+          <div class="truth"><b class="err">Missing</b>rellenar</div>
+        </div>
+      </div>
+      <div class="block">
+        <h3>Una acción</h3>
+        <p class="note" id="insp-action">Entra en una sala → copia bootstrap → abre el agente en su superficie → trabaja solo desde el repo.</p>
+      </div>
+    </aside>
   </div>
+
+  <footer class="dock" role="contentinfo">
+    <button type="button" class="hot-pill" data-view="floor">FLOOR</button>
+    <button type="button" data-view="skills">/skills</button>
+    <button type="button" data-view="protocol">/bootstrap</button>
+    <button type="button" id="dock-copy-boot">copiar bootstrap</button>
+    <span id="dock-status">listo · sin backend propio · solo api.github.com + hub/*</span>
+  </footer>
 </div>
 
 <div class="lb" id="lightbox" hidden role="dialog" aria-modal="true" aria-labelledby="lb-title">
   <div class="lb-inner">
     <img id="lb-img" src="" alt="" />
     <div class="lb-toolbar">
-      <button type="button" class="ghost" id="lb-prev" aria-label="Imagen anterior">← Anterior</button>
+      <button type="button" class="ghost" id="lb-prev">← Anterior</button>
       <span class="lb-title" id="lb-title"></span>
-      <button type="button" class="ghost" id="lb-next" aria-label="Imagen siguiente">Siguiente →</button>
-      <button type="button" id="lb-close">Cerrar (Esc)</button>
+      <button type="button" class="ghost" id="lb-next">Siguiente →</button>
+      <button type="button" class="hot" id="lb-close">Cerrar (Esc)</button>
     </div>
   </div>
 </div>

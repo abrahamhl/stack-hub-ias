@@ -1,38 +1,41 @@
-# Handoff
+# Handoff — Hub Vault Factory (premium apply)
 
-- Task ID: HUB-V2-001 + corrección de dirección (Factory Floor)
-- Agente: grok-cli · grok-4.5
-- Rama: `feat/hub-v2`
-- Tiempo: 2026-07-25
+- Task: aplicar premium-21st-registry al hub real (no solo docs de skills)
+- Actor: grok-cli · rama `feat/hub-v2`
+- Nivel: **PREMIUM** · metáfora **Fallout Shelter Factory**
 
 ## Resultado
 
-Abraham rechazó el hub “admin panel” (baja calidad vs skills hyper-boost / mockup Behance).
-Se reorientó a la metáfora real del roadmap:
+`hub/index.html` reescrito como **Vault Factory**:
 
-**Fallout Shelter Factory / Operator Arena**
+| Zona | Gramática 21st (reimplementada vanilla) |
+|---|---|
+| Hero | #2 futuristic + #16 wavy + #6 core |
+| Factory map | #11 orrey + #10 interactive nodes |
+| Room cards | #1 shader depth + #3 spotlight pointer |
+| Jobs vivos | #4 sphere + #5 swirl + #17 phase rings |
+| Handoffs / atmósfera | #8 particle field + lanes live |
+| Pulse | #15 vertical bars (no tabla gris) |
+| Gallery | #13 circular orbit + #14 grid |
+| Taxonomy view | conversación → nodo contado |
 
-1. **Factory Floor** — salas clicables por agente (Claude, Codex, Grok, Gemini, SAH, Manus).
-2. **Dossier de sala** — al entrar: rol, skills del stack, tools, rutas del repo (subdirectorios lógicos), handoff lanes, bootstrap de sala + RESET FORGE.
-3. **Shell de cabina** — command bar + rail 276px + canvas + inspector + dock (como app-shell / mockup).
-4. Modos secundarios: Skill Registry (con owners), Ops/heatmap, créditos truth-model, novedades, galería, protocolo, auditoría, config PAT.
-5. Datos: `hub/agents.json` (mapa de agentes), catálogo, credits, sources, gallery.
+## Taxonomía
 
-Esto es lo que pedías: **no una lista de GitHub**, sino el mapa donde cada agente tiene “su repositorio lógico” para no arrastrar memoria de chat.
+- `hub/taxonomy.json` — registry map + conversation_taxonomy (esta charla cuenta)
+- `hub/agents.json` — `job_state` / `job_label` / `phase` / `intensity` por sala
+- `hub/catalog.json` — apunta taxonomy + metaphor
 
-## Archivos clave
+## Cómo abrir
 
-- `hub/index.html` — shell
-- `hub/hub.css` — dirección visual dark-premium / factory
-- `hub/hub.js` — router de vistas + GitHub API + dossiers
-- `hub/agents.json` — **fuente del mapa de salas**
+```powershell
+cd C:\dev\02_PROJECTS\SKILLS-FRONTEND\stack-hub-IAs
+npx --yes serve . -l 4180
+```
 
-## Verificación
+→ http://localhost:4180/hub/
 
-- `node --check hub/hub.js` OK
-- `agents.json` 6 agentes
-- serve `http://localhost:4180/hub/` 200
+PAT en Config si el repo público 404.
 
-## Siguiente acción única (Abraham)
+## Confirmación Abraham
 
-Abre `http://localhost:4180/hub/` (o `npx serve . -l 4180` desde la raíz del repo), entra en **Claude** y en **Grok**, copia el bootstrap de sala, y di qué falta en el mapa (más agentes, skills por sala, avatares, etc.).
+Sí: lo hablado (skills premium, fallout, jobs vivos, no admin plano, stacks por agente, RESET) está en **git + taxonomy + audit**, no solo en el chat.

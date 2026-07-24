@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "updated": "2026-07-25",
+  "purpose": "Taxonomía viva del stack AI Forge. Todo lo que Abraham discute con las IAs debe acabar aquí o en git + audit — no solo en el chat.",
+  "node": {
+    "repo": "kinkydisorder/stack-hub-ias",
+    "branch_work": "feat/hub-v2",
+    "default_branch": "hyper-boost",
+    "hub_entry": "hub/index.html",
+    "soul": "SOUL.md",
+    "protocol": ["AGENTS.md", "CLAUDE.md", "docs/workflows/UNIVERSAL_BOOTSTRAP_PROMPT.md"]
+  },
+  "premium_orientation": {
+    "status": "REQUIRED",
+    "level": "PREMIUM",
+    "registry": ".skills/frontend-hyper-boost/references/premium-21st-registry.md",
+    "metaphor": "fallout-shelter-factory",
+    "reject": ["admin-flat", "grey-list-dashboard", "generic-saas-settings"]
+  },
+  "ref_map_hub_v2": [
+    { "ref": 1, "zone": "agent-room shader cards", "impl": "hub CSS .room.shader + spotlight" },
+    { "ref": 2, "zone": "hero factory entry", "impl": "hub .hero-vault" },
+    { "ref": 3, "zone": "spotlight on room/focus", "impl": "pointer-tracked --mx/--my on .room" },
+    { "ref": 4, "zone": "live AI sphere / busy", "impl": ".orb + agent.job_state" },
+    { "ref": 5, "zone": "process swirl", "impl": ".orb.swirl when processing" },
+    { "ref": 6, "zone": "node core globe", "impl": ".orrey-core" },
+    { "ref": 7, "zone": "depth boxes background", "impl": ".bg-boxes" },
+    { "ref": 8, "zone": "handoff particle field", "impl": "canvas#particle-field" },
+    { "ref": 9, "zone": "lane particles", "impl": "orrey edge particles" },
+    { "ref": 10, "zone": "interactive agent dots", "impl": ".orrey-node buttons" },
+    { "ref": 11, "zone": "celestial orrey map", "impl": ".orrey stage" },
+    { "ref": 12, "zone": "orbit gallery mode", "impl": "view gallery circular" },
+    { "ref": 13, "zone": "circular UX gallery", "impl": "view gallery" },
+    { "ref": 14, "zone": "portfolio refs", "impl": "view gallery grid" },
+    { "ref": 15, "zone": "vertical bars heatmap", "impl": ".vbars metrics" },
+    { "ref": 16, "zone": "wavy atmosphere", "impl": ".wave-layer" },
+    { "ref": 17, "zone": "production phase rings", "impl": ".phase-rings + job phases" }
+  ],
+  "conversation_taxonomy": {
+    "description": "Temas de esta conversación ya registrados en el nodo",
+    "items": [
+      { "topic": "Hub v2 work order HUB-V2-001", "where": "docs/workflows/handoffs/" },
+      { "topic": "Factory floor agent map (not flat admin)", "where": "hub/ + agents.json" },
+      { "topic": "Premium 21st.dev orientation REQUIRED", "where": ".skills/frontend-hyper-boost/references/premium-21st-registry.md" },
+      { "topic": "Fallout shelter metaphor", "where": "HUB_ROADMAP + design-directions + hub UI" },
+      { "topic": "RESET FORGE / no chat memory drag", "where": "bootstrap + agent room terminals" },
+      { "topic": "Truth model credits", "where": "hub/credits.json" },
+      { "topic": "Live AI job visibility independent of provider app", "where": "agents.job_state + phase rings" }
+    ]
+  },
+  "skills": {
+    "canonical_roots": [".skills/", ".agents/skills/"],
+    "mirrors": [".claude/skills/"],
+    "catalog": "hub/catalog.json"
+  }
+}

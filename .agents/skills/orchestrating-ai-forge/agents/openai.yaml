@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Forge Orchestrator"
+  short_description: "Orquesta misiones y entregas multi-IA"
+  default_prompt: "Use $orchestrating-ai-forge to turn this request into one audited AI Forge mission."

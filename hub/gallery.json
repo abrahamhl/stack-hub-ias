@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "description": "Referencias visuales locales (rutas relativas al hub). Sin rutas absolutas ni material personal.",
+  "items": [
+    {
+      "id": "ux-style",
+      "src": "../src/referencia-diseño-visual-estilo-UX.webp",
+      "title": "Estilo visual UX",
+      "tags": ["ux", "direction"]
+    },
+    {
+      "id": "scenarios",
+      "src": "../src/referencias de diseño de escenarios y backgrounds.webp",
+      "title": "Escenarios y backgrounds",
+      "tags": ["bg", "environment"]
+    },
+    {
+      "id": "ux-1",
+      "src": "../src/referencias-visuales-de-ux (1).png",
+      "title": "Referencia UX 01",
+      "tags": ["ux"]
+    },
+    {
+      "id": "ux-2",
+      "src": "../src/referencias-visuales-de-ux (2).png",
+      "title": "Referencia UX 02",
+      "tags": ["ux"]
+    },
+    {
+      "id": "ux-3",
+      "src": "../src/referencias-visuales-de-ux (3).png",
+      "title": "Referencia UX 03",
+      "tags": ["ux"]
+    },
+    {
+      "id": "ux-4",
+      "src": "../src/referencias-visuales-de-ux (4).png",
+      "title": "Referencia UX 04",
+      "tags": ["ux"]
+    },
+    {
+      "id": "ux-5",
+      "src": "../src/referencias-visuales-de-ux (5).png",
+      "title": "Referencia UX 05",
+      "tags": ["ux"]
+    },
+    {
+      "id": "ux-6",
+      "src": "../src/referencias-visuales-de-ux (6).png",
+      "title": "Referencia UX 06",
+      "tags": ["ux"]
+    },
+    {
+      "id": "ux-7",
+      "src": "../src/referencias-visuales-de-ux (7).png",
+      "title": "Referencia UX 07",
+      "tags": ["ux"]
+    },
+    {
+      "id": "ux-8",
+      "src": "../src/referencias-visuales-de-ux (8).png",
+      "title": "Referencia UX 08",
+      "tags": ["ux"]
+    },
+    {
+      "id": "ux-9",
+      "src": "../src/referencias-visuales-de-ux (9).png",
+      "title": "Referencia UX 09",
+      "tags": ["ux"]
+    },
+    {
+      "id": "ux-10",
+      "src": "../src/referencias-visuales-de-ux (10).png",
+      "title": "Referencia UX 10",
+      "tags": ["ux"]
+    },
+    {
+      "id": "ux-11",
+      "src": "../src/referencias-visuales-de-ux (11).png",
+      "title": "Referencia UX 11",
+      "tags": ["ux"]
+    }
+  ]
+}

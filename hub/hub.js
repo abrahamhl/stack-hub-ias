@@ -2,7 +2,8 @@
 (() => {
   "use strict";
 
-  const PUB = "kinkydisorder/stack-hub-ias-public";
+  // Nodo real = privado. El catálogo público AÚN NO EXISTE (404). Sin PAT
+  // usamos live-snapshot.json generado en tu PC con gh — no pegamos errores rojos.
   const PRIV = "kinkydisorder/stack-hub-ias";
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -17,11 +18,15 @@
     sources: null,
     gallery: [],
     bootstrap: "",
+    snapshot: null,
+    live: null, // { commits, branches, issues, source: 'api'|'snapshot' }
+    loadErrors: [],
     reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
+    isFileProtocol: location.protocol === "file:",
   };
 
   const pat = () => localStorage.getItem("forge_pat") || "";
-  const repo = () => (pat() ? PRIV : PUB);
+  const repoLabel = () => PRIV;
   const esc = (s) =>
     String(s ?? "")
       .replace(/&/g, "&amp;")
@@ -38,10 +43,19 @@
     return `${Math.round(m / 1440)}d`;
   };
 
-  async function gh(path) {
-    const headers = { Accept: "application/vnd.github+json" };
-    if (pat()) headers.Authorization = `Bearer ${pat()}`;
-    const r = await fetch(`https://api.github.com/repos/${repo()}${path}`, { headers });
+  /** Solo API del repo PRIVADO (requiere PAT en el navegador). */
+  async function ghPrivate(path) {
+    const token = pat();
+    if (!token) {
+      const e = new Error("NO_PAT");
+      e.status = 0;
+      throw e;
+    }
+    const headers = {
+      Accept: "application/vnd.github+json",
+      Authorization: `Bearer ${token}`,
+    };
+    const r = await fetch(`https://api.github.com/repos/${PRIV}${path}`, { headers });
     if (!r.ok) {
       const e = new Error(String(r.status));
       e.status = r.status;
@@ -50,15 +64,60 @@
     return r.json();
   }
 
-  async function fetchCommitsSince(iso, maxPages = 6) {
+  async function fetchCommitsSinceApi(iso, maxPages = 6) {
     const all = [];
     for (let page = 1; page <= maxPages; page++) {
-      const batch = await gh(`/commits?per_page=100&since=${encodeURIComponent(iso)}&page=${page}`);
+      const batch = await ghPrivate(
+        `/commits?per_page=100&sha=feat/hub-v2&since=${encodeURIComponent(iso)}&page=${page}`
+      );
       if (!Array.isArray(batch) || !batch.length) break;
       all.push(...batch);
       if (batch.length < 100) break;
     }
     return all;
+  }
+
+  function normalizeApiCommits(raw) {
+    return (raw || []).map((c) => ({
+      sha: c.sha,
+      html_url: c.html_url,
+      message: c.commit?.message || c.message || "",
+      author: c.commit?.author?.name || c.author?.login || c.author || "?",
+      date: c.commit?.author?.date || c.date || null,
+      login: c.author?.login || c.login || null,
+    }));
+  }
+
+  function setupBannerHtml() {
+    if (state.isFileProtocol) {
+      return `<div class="err-box setup-banner" role="alert" style="margin-bottom:14px;border-color:rgba(255,138,76,.45);background:rgba(255,138,76,.08)">
+        <strong style="color:var(--forge)">No abras index.html con doble clic</strong>
+        El protocolo file:// bloquea taxonomy, bootstrap, agents y GitHub.
+        En PowerShell: <code>cd C:\\dev\\02_PROJECTS\\SKILLS-FRONTEND\\stack-hub-IAs</code>
+        y luego <code>.\\hub\\start-hub.ps1</code> → abre
+        <b>http://localhost:4180/hub/</b>
+      </div>`;
+    }
+    const src = state.live?.source;
+    if (src === "snapshot") {
+      const when = state.snapshot?.generated_at
+        ? rel(state.snapshot.generated_at)
+        : "?";
+      return `<div class="panel" style="margin-bottom:14px;padding:14px 16px">
+        <div class="caption">Datos GitHub</div>
+        <p class="note" style="margin-top:6px">Modo <b>snapshot local</b> (hace ${esc(when)}).
+        El repo es <b>privado</b> — sin PAT el navegador no puede leerlo en vivo.
+        Opcional: <b>Config</b> → pega un token solo-lectura → Guardar.
+        Refrescar snapshot: <code>.\\hub\\refresh-snapshot.ps1</code></p>
+      </div>`;
+    }
+    if (src === "api") {
+      return `<div class="panel" style="margin-bottom:14px;padding:12px 16px">
+        <p class="note"><span class="chip"><span class="d on"></span>API privada en vivo</span>
+        · ${esc(PRIV)} · PAT en este navegador</p>
+      </div>`;
+    }
+    return "";
   }
 
   /* ── Particles (ref #8) ── */
@@ -230,14 +289,16 @@
       .join("");
 
     return `
+      ${setupBannerHtml()}
       <section class="hero-vault">
-        <span class="kicker"><span class="d live" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--cyan);margin-right:6px"></span>VAULT ONLINE · PREMIUM GRAMMAR</span>
+        <span class="kicker"><span class="d live" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--cyan);margin-right:6px"></span>VAULT · ${esc(state.live?.source === "api" ? "LIVE API" : "SNAPSHOT LOCAL")}</span>
         <h1>Shelter factory.<br /><em>Not a wiki.</em></h1>
-        <p class="lead">Nodo git visual: salas de agentes, stacks, handoffs como vault Obsidian, jobs vivos con orbes. RESET FORGE limpia memoria de chat. Taxonomía del stack registrada en <code>hub/taxonomy.json</code>.</p>
+        <p class="lead">Nodo git visual: salas de agentes, stacks, handoffs, jobs vivos. Abre siempre con <code>start-hub.ps1</code> (http://localhost:4180/hub/), no con doble clic. Taxonomía en <code>hub/taxonomy.json</code>.</p>
         <div class="row" style="margin-top:14px">
-          <button type="button" class="hot" data-view="protocol">Copiar bootstrap</button>
-          <button type="button" class="ghost" data-view="taxonomy">Ver taxonomía</button>
-          <button type="button" class="ghost" data-view="ops">Pulse / barras</button>
+          <button type="button" class="hot" data-view="protocol">Bootstrap</button>
+          <button type="button" class="ghost" data-view="taxonomy">Taxonomía</button>
+          <button type="button" class="ghost" data-view="config">Config PAT</button>
+          <button type="button" class="ghost" data-view="ops">Pulse</button>
         </div>
       </section>
 
@@ -403,11 +464,20 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
   }
 
   function viewOps() {
-    setInspector("Pulse", `<p class="note">Barras verticales + commits. Ref #15 vertical-bars, #4 sphere.</p>`, "PAT en Config si el público 404.", 2, true);
+    setInspector(
+      "Pulse",
+      `<p class="note">Barras + commits. Fuente: ${esc(state.live?.source || "…")}. Ref #15.</p>`,
+      state.live?.source === "api"
+        ? "API privada en vivo."
+        : "Snapshot local. Opcional: Config → PAT para vivo.",
+      2,
+      true
+    );
     return `
+      ${setupBannerHtml()}
       <div class="view-head">
         <div><div class="caption">Pulse · 90d</div><h1>Señal del <em>nodo</em>.</h1></div>
-        <p class="lead">Heatmap como barras de reactor, no tabla gris.</p>
+        <p class="lead">Sin muro 404: snapshot local o API privada con PAT.</p>
       </div>
       <div class="panel" id="heatmap-root"><p class="note">Cargando pulse…</p></div>
       <div class="panel" style="margin-top:14px">
@@ -458,6 +528,7 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
   function viewProtocol() {
     setInspector("Bootstrap", `<p class="note">Protocolo universal + RESET FORGE.</p>`, "Copia y pega en cualquier IA.", 0, false);
     return `
+      ${setupBannerHtml()}
       <div class="view-head">
         <div><div class="caption">Bootstrap</div><h1>Una pasta.<br/><em>Todas las IAs.</em></h1></div>
         <p class="lead">El chat no es el nodo. Esto sí.</p>
@@ -472,11 +543,18 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
   }
 
   function viewAudit() {
-    setInspector("Audit trail", `<p class="note">Commits = qué. Audit notes = por qué.</p>`, "Sin commit no existe.", 1, false);
+    setInspector(
+      "Audit trail",
+      `<p class="note">Commits = qué. Notas .ai-forge/audit = por qué. Fuente: ${esc(state.live?.source || "…")}</p>`,
+      "Sin commit no existe.",
+      1,
+      false
+    );
     return `
+      ${setupBannerHtml()}
       <div class="view-head">
         <div><div class="caption">Audit trail</div><h1>Evidencia, no <em>relato</em>.</h1></div>
-        <p class="lead">Feed git del repo activo.</p>
+        <p class="lead">Feed desde snapshot o API privada — no desde un repo público fantasma.</p>
       </div>
       <div class="panel"><div class="feed" id="commit-feed" role="list"></div></div>`;
   }
@@ -491,7 +569,11 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
       false
     );
     if (!t) {
-      return `<div class="err-box"><strong>taxonomy.json missing</strong></div>`;
+      return `${setupBannerHtml()}
+        <div class="err-box"><strong>taxonomy.json no cargó</strong>
+        ${state.isFileProtocol ? "Estás en file:// — usa start-hub.ps1." : "Falta el archivo junto a index.html."}
+        ${state.loadErrors.length ? `<br/>${esc(state.loadErrors.join(" · "))}` : ""}
+        </div>`;
     }
     const refs = (t.ref_map_hub_v2 || [])
       .map(
@@ -531,18 +613,31 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
   }
 
   function viewConfig() {
-    setInspector("Config", `<p class="note">PAT solo en localStorage.</p>`, "Nunca en git.", 0, false);
+    setInspector(
+      "Config",
+      `<p class="note">PAT solo en localStorage de ESTE navegador. Nunca en git.</p>`,
+      "Sin PAT el vault usa live-snapshot.json (correcto y sin errores).",
+      0,
+      false
+    );
     return `
+      ${setupBannerHtml()}
       <div class="view-head">
-        <div><div class="caption">Config</div><h1>Token <em>read-only</em>.</h1></div>
-        <p class="lead">Para el nodo privado si el público 404.</p>
+        <div><div class="caption">Config</div><h1>Conectar <em>privado</em> en vivo.</h1></div>
+        <p class="lead">El repo <b>${esc(PRIV)}</b> es privado. No hay catálogo público todavía (por eso fallaba el 404).</p>
       </div>
       <div class="panel">
+        <ol class="note" style="margin:0 0 12px 18px;line-height:1.7">
+          <li>GitHub → Settings → Developer settings → Fine-grained token</li>
+          <li>Solo repo <code>stack-hub-ias</code> · permiso <b>Contents: Read</b> (Issues Read si quieres tableros)</li>
+          <li>Pega aquí → Guardar · recarga Pulse / Floor</li>
+        </ol>
         <div class="row">
-          <input type="password" id="pat" placeholder="github_pat_…" style="max-width:420px" autocomplete="off" />
+          <input type="password" id="pat" placeholder="github_pat_… (opcional)" style="max-width:420px" autocomplete="off" />
           <button type="button" class="hot" id="save-pat">Guardar</button>
           <button type="button" class="ghost" id="clear-pat">Borrar</button>
         </div>
+        <p class="note" style="margin-top:12px">Sin token: ejecuta <code>.\\hub\\refresh-snapshot.ps1</code> (usa tu <code>gh auth</code> de consola) y recarga. Eso es “GitHub activado en la consola” → snapshot para el navegador.</p>
       </div>`;
   }
 
@@ -609,16 +704,16 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
     if (state.view === "gallery") renderGallery();
     if (state.view === "config") {
       if (pat()) $("#pat").value = pat();
-      $("#save-pat").onclick = () => {
+      $("#save-pat").onclick = async () => {
         localStorage.setItem("forge_pat", $("#pat").value.trim());
-        updateMode();
-        loadGithubPanels();
+        await loadGithubPanels();
+        render();
       };
-      $("#clear-pat").onclick = () => {
+      $("#clear-pat").onclick = async () => {
         localStorage.removeItem("forge_pat");
         $("#pat").value = "";
-        updateMode();
-        loadGithubPanels();
+        await loadGithubPanels();
+        render();
       };
     }
     $$(".btn-edit-credit").forEach((b) => {
@@ -642,16 +737,44 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
     });
   }
 
+  async function loadJson(name) {
+    try {
+      const r = await fetch(name, { cache: "no-store" });
+      if (!r.ok) throw new Error(String(r.status));
+      return await r.json();
+    } catch (e) {
+      state.loadErrors.push(`${name}: ${e.message || e}`);
+      return null;
+    }
+  }
+
+  async function loadText(name) {
+    try {
+      const r = await fetch(name, { cache: "no-store" });
+      if (!r.ok) throw new Error(String(r.status));
+      return await r.text();
+    } catch (e) {
+      state.loadErrors.push(`${name}: ${e.message || e}`);
+      return "";
+    }
+  }
+
   async function loadStatic() {
-    const [agents, catalog, credits, sources, gallery, boot, taxonomy] = await Promise.all([
-      fetch("agents.json").then((r) => r.json()).catch(() => null),
-      fetch("catalog.json").then((r) => r.json()).catch(() => null),
-      fetch("credits.json").then((r) => r.json()).catch(() => null),
-      fetch("sources.json").then((r) => r.json()).catch(() => null),
-      fetch("gallery.json").then((r) => r.json()).catch(() => null),
-      fetch("bootstrap.txt").then((r) => (r.ok ? r.text() : "")).catch(() => ""),
-      fetch("taxonomy.json").then((r) => r.json()).catch(() => null),
-    ]);
+    state.loadErrors = [];
+    if (state.isFileProtocol) {
+      state.loadErrors.push("file:// bloquea fetch local — usa start-hub.ps1");
+    }
+    const [agents, catalog, credits, sources, gallery, boot, taxonomy, snapshot] =
+      await Promise.all([
+        loadJson("agents.json"),
+        loadJson("catalog.json"),
+        loadJson("credits.json"),
+        loadJson("sources.json"),
+        loadJson("gallery.json"),
+        loadText("bootstrap.txt"),
+        loadJson("taxonomy.json"),
+        loadJson("live-snapshot.json"),
+      ]);
     state.agentsData = agents;
     state.catalog = catalog;
     state.credits = credits;
@@ -663,8 +786,19 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
       }
     }
     state.gallery = gallery?.items || [];
-    state.bootstrap = boot;
+    state.bootstrap =
+      boot ||
+      "[Bootstrap no cargado — abre http://localhost:4180/hub/ con start-hub.ps1]";
     state.taxonomy = taxonomy;
+    state.snapshot = snapshot;
+    if (snapshot?.commits) {
+      state.live = {
+        source: "snapshot",
+        commits: snapshot.commits,
+        branches: snapshot.branches || [],
+        issues: snapshot.issues || [],
+      };
+    }
     $("#nav-skills").textContent = String(catalog?.skills?.length || "—");
     renderRail();
     renderMobile();
@@ -705,116 +839,178 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
   }
 
   function updateMode() {
-    $("#mode-label").textContent = pat() ? "privado" : "público";
-    $("#dot-mode").className = "d " + (pat() ? "on" : "live");
+    const src = state.live?.source;
+    if (src === "api") {
+      $("#mode-label").textContent = "privado·vivo";
+      $("#dot-mode").className = "d on";
+    } else if (src === "snapshot") {
+      $("#mode-label").textContent = "snapshot";
+      $("#dot-mode").className = "d live";
+    } else {
+      $("#mode-label").textContent = "sin datos";
+      $("#dot-mode").className = "d err";
+    }
+  }
+
+  function renderCommitFeed(commits) {
+    if (!commits?.length) {
+      return `<div class="item note">Sin commits en la fuente actual.</div>`;
+    }
+    return commits
+      .slice(0, 14)
+      .map((c) => {
+        const msg = esc(String(c.message || "").split("\n")[0]);
+        const who = esc(c.author || c.login || "?");
+        const sha = esc((c.sha || "").slice(0, 7));
+        const url = esc(c.html_url || "#");
+        return `<div class="item" role="listitem">
+          <span class="sha"><a href="${url}" target="_blank" rel="noopener">${sha}</a></span>
+          <span>${msg}</span>
+          <span class="when">${who} · ${rel(c.date)}</span>
+        </div>`;
+      })
+      .join("");
+  }
+
+  function renderIssuesFeed(issues) {
+    if (!issues?.length) {
+      return `<div class="item note">Sin issues abiertas (o no en snapshot).</div>`;
+    }
+    return issues
+      .slice(0, 8)
+      .map(
+        (i) =>
+          `<div class="item" role="listitem"><span class="sha">#${esc(String(i.number))}</span><span><a href="${esc(i.html_url)}" target="_blank" rel="noopener">${esc(i.title)}</a></span><span class="when">${rel(i.updated_at)}</span></div>`
+      )
+      .join("");
+  }
+
+  async function resolveLiveData() {
+    // 1) PAT → API privada
+    if (pat()) {
+      try {
+        const since30 = new Date(Date.now() - 30 * 864e5).toISOString();
+        const [rawCommits, branches, issues] = await Promise.all([
+          ghPrivate(
+            `/commits?per_page=100&sha=feat/hub-v2&since=${encodeURIComponent(since30)}`
+          ),
+          ghPrivate("/branches?per_page=50"),
+          ghPrivate("/issues?state=open&per_page=20").catch(() => []),
+        ]);
+        state.live = {
+          source: "api",
+          commits: normalizeApiCommits(rawCommits),
+          branches: (branches || []).map((b) => ({ name: b.name })),
+          issues: (issues || [])
+            .filter((i) => !i.pull_request)
+            .map((i) => ({
+              number: i.number,
+              title: i.title,
+              html_url: i.html_url,
+              updated_at: i.updated_at,
+              labels: (i.labels || []).map((l) => l.name),
+            })),
+        };
+        return state.live;
+      } catch (e) {
+        // cae a snapshot
+        console.warn("API privada falló, usando snapshot", e);
+      }
+    }
+    // 2) Snapshot local
+    if (state.snapshot?.commits) {
+      state.live = {
+        source: "snapshot",
+        commits: state.snapshot.commits,
+        branches: state.snapshot.branches || [],
+        issues: state.snapshot.issues || [],
+      };
+      return state.live;
+    }
+    state.live = null;
+    return null;
   }
 
   async function loadGithubPanels() {
     updateMode();
-    try {
-      const since30 = new Date(Date.now() - 30 * 864e5).toISOString();
-      const [commits30, branches, issues] = await Promise.all([
-        gh(`/commits?per_page=100&since=${encodeURIComponent(since30)}`),
-        gh("/branches?per_page=50"),
-        gh("/issues?state=open&per_page=20").catch(() => []),
-      ]);
-      $("#dot-node").className = "d on";
-      $("#node-label").textContent = repo().split("/")[1] || "nodo";
-      if ($("#k-commits")) $("#k-commits").textContent = commits30.length;
-      if ($("#k-branches")) $("#k-branches").textContent = branches.length;
-      if ($("#k-issues")) $("#k-issues").textContent = issues.length;
-
-      const feedHtml = commits30.length
-        ? commits30
-            .slice(0, 12)
-            .map((c) => {
-              const msg = esc(c.commit.message.split("\n")[0]);
-              const who = esc(c.commit.author?.name || c.author?.login || "?");
-              return `<div class="item" role="listitem">
-                <span class="sha"><a href="${esc(c.html_url)}" target="_blank" rel="noopener">${esc(c.sha.slice(0, 7))}</a></span>
-                <span>${msg}</span>
-                <span class="when">${who} · ${rel(c.commit.author.date)}</span>
-              </div>`;
-            })
-            .join("")
-        : `<div class="item note">Sin commits recientes.</div>`;
-      $$("#commit-feed").forEach((el) => {
-        el.innerHTML = feedHtml;
-      });
-      const issuesFeed = $("#issues-feed");
-      if (issuesFeed) {
-        issuesFeed.innerHTML = issues.length
-          ? issues
-              .slice(0, 8)
-              .map(
-                (i) =>
-                  `<div class="item" role="listitem"><span class="sha">#${i.number}</span><span><a href="${esc(i.html_url)}" target="_blank" rel="noopener">${esc(i.title)}</a></span><span class="when">${rel(i.updated_at)}</span></div>`
-              )
-              .join("")
-          : `<div class="item note">Sin issues.</div>`;
-      }
-      $("#dock-status").textContent = `vault · ${repo()} · ${commits30.length} c/30d · premium`;
-    } catch (e) {
+    const live = await resolveLiveData();
+    updateMode();
+    if (!live) {
       $("#dot-node").className = "d err";
-      const hint = pat()
-        ? "Revisa PAT."
-        : "Público 404 — Config → PAT del privado.";
-      const err = `<div class="item err-box" role="listitem"><strong>HTTP ${esc(e.message)} · ${esc(repo())}</strong>${esc(hint)}</div>`;
+      $("#node-label").textContent = "sin datos";
+      const msg = state.isFileProtocol
+        ? `<div class="item err-box" role="listitem"><strong>file://</strong>Usa start-hub.ps1 → http://localhost:4180/hub/</div>`
+        : `<div class="item err-box" role="listitem"><strong>Sin snapshot ni PAT</strong>Ejecuta .\\hub\\refresh-snapshot.ps1 o pega PAT en Config.</div>`;
       $$("#commit-feed").forEach((el) => {
-        el.innerHTML = err;
+        el.innerHTML = msg;
       });
       const issuesFeed = $("#issues-feed");
-      if (issuesFeed) issuesFeed.innerHTML = err;
-      $("#dock-status").textContent = `error ${e.message}`;
+      if (issuesFeed) issuesFeed.innerHTML = msg;
+      $("#dock-status").textContent = "vault · sin fuente git";
+      return;
     }
+
+    $("#dot-node").className = "d on";
+    $("#node-label").textContent =
+      live.source === "api" ? "privado·vivo" : "snapshot";
+    if ($("#k-commits")) $("#k-commits").textContent = live.commits.length;
+    if ($("#k-branches")) $("#k-branches").textContent = live.branches.length;
+    if ($("#k-issues")) $("#k-issues").textContent = live.issues.length;
+
+    $$("#commit-feed").forEach((el) => {
+      el.innerHTML = renderCommitFeed(live.commits);
+    });
+    const issuesFeed = $("#issues-feed");
+    if (issuesFeed) issuesFeed.innerHTML = renderIssuesFeed(live.issues);
+
+    $("#dock-status").textContent = `vault · ${repoLabel()} · ${live.source} · ${live.commits.length} commits`;
   }
 
   async function loadHeatmapBars() {
     const root = $("#heatmap-root");
     if (!root) return;
-    try {
-      const since = new Date(Date.now() - 90 * 864e5).toISOString();
-      const commits = await fetchCommitsSince(since);
-      const byDay = new Map();
-      for (const c of commits) {
-        const d = c.commit?.author?.date;
-        if (!d) continue;
-        const k = d.slice(0, 10);
-        byDay.set(k, (byDay.get(k) || 0) + 1);
-      }
-      // last 42 days as vertical bars
-      const days = [];
-      for (let i = 41; i >= 0; i--) {
-        const d = new Date();
-        d.setHours(0, 0, 0, 0);
-        d.setDate(d.getDate() - i);
-        const k = d.toISOString().slice(0, 10);
-        days.push({ k, n: byDay.get(k) || 0 });
-      }
-      const max = Math.max(1, ...days.map((d) => d.n));
-      const bars = days
-        .map((d) => {
-          const h = Math.max(4, Math.round((d.n / max) * 100));
-          return `<b style="--h:${h}%" title="${esc(d.k)}: ${d.n} commits" tabindex="0"></b>`;
-        })
-        .join("");
-      const authors = new Map();
-      for (const c of commits) {
-        const who = c.author?.login || c.commit?.author?.name || "?";
-        authors.set(who, (authors.get(who) || 0) + 1);
-      }
-      const pills = [...authors.entries()]
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 8)
-        .map(([n, c]) => `<span class="tag">${esc(n)} · ${c}</span>`)
-        .join("");
-      root.innerHTML = `
-        <div class="caption">Reactor bars · 42d window · ${commits.length} commits / 90d · ${esc(repo())}</div>
-        <div class="vbars" style="margin-top:12px" role="img" aria-label="Barras de actividad">${bars}</div>
-        <div class="tagrow" style="margin-top:12px">${pills}</div>`;
-    } catch (e) {
-      root.innerHTML = `<div class="err-box"><strong>Pulse offline (HTTP ${esc(e.message)})</strong>${pat() ? "Token." : "Añade PAT."}</div>`;
+    const live = state.live || (await resolveLiveData());
+    if (!live?.commits?.length) {
+      root.innerHTML = `<div class="err-box"><strong>Sin datos de pulse</strong>
+        Abre con start-hub.ps1. Si falta snapshot: <code>.\\hub\\refresh-snapshot.ps1</code>
+        (usa tu gh de consola). O Config → PAT.</div>`;
+      return;
     }
+    const byDay = new Map();
+    for (const c of live.commits) {
+      if (!c.date) continue;
+      const k = c.date.slice(0, 10);
+      byDay.set(k, (byDay.get(k) || 0) + 1);
+    }
+    const days = [];
+    for (let i = 41; i >= 0; i--) {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() - i);
+      const k = d.toISOString().slice(0, 10);
+      days.push({ k, n: byDay.get(k) || 0 });
+    }
+    const max = Math.max(1, ...days.map((d) => d.n));
+    const bars = days
+      .map((d) => {
+        const h = Math.max(4, Math.round((d.n / max) * 100));
+        return `<b style="--h:${h}%" title="${esc(d.k)}: ${d.n} commits" tabindex="0"></b>`;
+      })
+      .join("");
+    const authors = new Map();
+    for (const c of live.commits) {
+      const who = c.login || c.author || "?";
+      authors.set(who, (authors.get(who) || 0) + 1);
+    }
+    const pills = [...authors.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8)
+      .map(([n, c]) => `<span class="tag">${esc(n)} · ${c}</span>`)
+      .join("");
+    root.innerHTML = `
+      <div class="caption">Reactor bars · fuente <b>${esc(live.source)}</b> · ${live.commits.length} commits · ${esc(PRIV)}</div>
+      <div class="vbars" style="margin-top:12px" role="img" aria-label="Barras de actividad">${bars}</div>
+      <div class="tagrow" style="margin-top:12px">${pills}</div>`;
   }
 
   function renderCredits() {

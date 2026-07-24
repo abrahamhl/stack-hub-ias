@@ -52,3 +52,20 @@ Use live libraries and galleries for discovery, then audit:
 Treat galleries such as Skiper UI, 21st.dev, Cult UI, Watermelon UI, Ali Imam,
 StyleUI, Codrops, Behance, and Figma Community as inspiration or component
 sources, not as a design system by accumulation.
+
+### AI Forge mandatory premium registry
+
+For this monorepo and any AI Forge hub / agent factory work, the **canonical
+premium line** is locked in `premium-21st-registry.md` (Abraham 2026-07-25):
+
+- Shader feature cards, futuristic hero, spotlight cards
+- Sphere / swirl for live AI process & audit states
+- Fluid particles + interactive dots for handoff graphs (Obsidian-vault feel)
+- Celestial orrey / cosmos orbit for agent system map
+- Circular & portfolio galleries for UX references
+- Vertical bars for heatmap/metrics; background circles for production phases
+- Boxes / wavy backgrounds for depth atmosphere
+
+`npx shadcn@latest add "https://21st.dev/r/..."` is an **evaluation path** for
+React+shadcn apps only. Vanilla `hub/` must reimplement the same grammar with
+forge tokens. Do not ship flat admin UI and claim hyper-boost compliance.

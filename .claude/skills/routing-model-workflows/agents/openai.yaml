@@ -1,0 +1,4 @@
+interface:
+  display_name: "Model Workflow Router"
+  short_description: "Ruta tareas entre modelos y créditos"
+  default_prompt: "Use $routing-model-workflows to choose the cheapest reliable model sequence for this task."

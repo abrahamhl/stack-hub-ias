@@ -16,10 +16,15 @@ work/
 .DS_Store
 Thumbs.db
 
-# Local/private source libraries. Only the reviewed canonical frontend Skill is tracked.
+# Local/private source libraries. Only reviewed canonical entries are tracked.
 /.skills/*
 !/.skills/frontend-hyper-boost/
 !/.skills/frontend-hyper-boost/**
+!/.skills/00_CLAUDE_LIVE/
+!/.skills/00_CLAUDE_LIVE/**
+
+# Claude Code local permissions stay local; mirrored skills are tracked.
+.claude/settings.local.json
 /src/
 *.zip
 *.skill

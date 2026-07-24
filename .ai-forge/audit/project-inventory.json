@@ -1,0 +1,341 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-23T05:29:47.1225731+02:00",
+  "projects_root": "C:\\dev\\02_PROJECTS",
+  "count": 22,
+  "projects": [
+    {
+      "id": "artefactos-revision-wiki",
+      "name": "artefactos-revision-wiki",
+      "path": "C:\\dev\\02_PROJECTS\\artefactos-revision-wiki",
+      "last_modified": "2026-07-23T04:57:20.2134811+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "skills-frontend",
+      "name": "SKILLS-FRONTEND",
+      "path": "C:\\dev\\02_PROJECTS\\SKILLS-FRONTEND",
+      "last_modified": "2026-07-23T04:52:12.1712390+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "thisvid",
+      "name": "THISVID",
+      "path": "C:\\dev\\02_PROJECTS\\THISVID",
+      "last_modified": "2026-07-21T13:01:35.6770036+02:00",
+      "git": {
+        "enabled": true,
+        "branch": "master",
+        "remote": "origin\thttps://github.com/kinkydisorder/thisvid-search.git (fetch)",
+        "dirty_files": 48
+      },
+      "manifests": [
+        "package.json",
+        "netlify.toml"
+      ],
+      "privacy": "private_review",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "creative-tech-portfolio",
+      "name": "creative-tech-portfolio",
+      "path": "C:\\dev\\02_PROJECTS\\creative-tech-portfolio",
+      "last_modified": "2026-07-21T06:25:04.7406567+02:00",
+      "git": {
+        "enabled": true,
+        "branch": "main",
+        "remote": "origin\thttps://github.com/kinkydisorder/creative-tech-portfolio.git (fetch)",
+        "dirty_files": 3
+      },
+      "manifests": "vercel.json",
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "portfolio-job-search",
+      "name": "portfolio-job-search",
+      "path": "C:\\dev\\02_PROJECTS\\portfolio-job-search",
+      "last_modified": "2026-07-21T05:31:17.3036556+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": "package.json",
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "codex-portfolio-audit-2026-07-20",
+      "name": "_CODEX_PORTFOLIO_AUDIT_2026-07-20",
+      "path": "C:\\dev\\02_PROJECTS\\_CODEX_PORTFOLIO_AUDIT_2026-07-20",
+      "last_modified": "2026-07-21T03:04:43.4265400+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "audio-reactive-render-library",
+      "name": "audio-reactive-render-library",
+      "path": "C:\\dev\\02_PROJECTS\\audio-reactive-render-library",
+      "last_modified": "2026-07-20T06:32:31.2863251+02:00",
+      "git": {
+        "enabled": true,
+        "branch": "main",
+        "remote": "origin\thttps://github.com/kinkydisorder/nexus-visual-engine.git (fetch)",
+        "dirty_files": 0
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "borradores-privado",
+      "name": "_borradores-privado",
+      "path": "C:\\dev\\02_PROJECTS\\_borradores-privado",
+      "last_modified": "2026-07-20T06:28:44.3113697+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "private_review",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "own-gemini-api-project",
+      "name": "own-gemini-API-project",
+      "path": "C:\\dev\\02_PROJECTS\\own-gemini-API-project",
+      "last_modified": "2026-07-17T02:12:40.8945929+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "my-own-maps",
+      "name": "my-own-maps",
+      "path": "C:\\dev\\02_PROJECTS\\my-own-maps",
+      "last_modified": "2026-07-17T02:12:40.8945929+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": "package.json",
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "adobe-rastreador-exhaustivo",
+      "name": "adobe-rastreador-exhaustivo",
+      "path": "C:\\dev\\02_PROJECTS\\adobe-rastreador-exhaustivo",
+      "last_modified": "2026-07-17T02:01:22.6727930+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "calendario-de-multas",
+      "name": "calendario de multas",
+      "path": "C:\\dev\\02_PROJECTS\\calendario de multas",
+      "last_modified": "2026-07-15T23:40:20.9971177+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "simulador-grua",
+      "name": "simulador-grua",
+      "path": "C:\\dev\\02_PROJECTS\\simulador-grua",
+      "last_modified": "2026-07-12T23:38:08.4325239+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "0-audios",
+      "name": "0_AUDIOS",
+      "path": "C:\\dev\\02_PROJECTS\\0_AUDIOS",
+      "last_modified": "2026-07-09T07:13:05.4077271+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "1-videos",
+      "name": "1_VIDEOS",
+      "path": "C:\\dev\\02_PROJECTS\\1_VIDEOS",
+      "last_modified": "2026-07-08T22:53:15.4458379+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "claude-wiki-varios-intentos",
+      "name": "claude_wiki_varios_intentos",
+      "path": "C:\\dev\\02_PROJECTS\\claude_wiki_varios_intentos",
+      "last_modified": "2026-07-08T03:15:54.4860561+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "extension-descargador-imagenes-videos",
+      "name": "extension_descargador_imagenes_videos",
+      "path": "C:\\dev\\02_PROJECTS\\extension_descargador_imagenes_videos",
+      "last_modified": "2026-06-30T10:17:31.5466750+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "sjaman",
+      "name": "sjaman",
+      "path": "C:\\dev\\02_PROJECTS\\sjaman",
+      "last_modified": "2026-06-25T16:22:45.6324609+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "generador-numeros",
+      "name": "generador-numeros",
+      "path": "C:\\dev\\02_PROJECTS\\generador-numeros",
+      "last_modified": "2026-06-20T21:27:07.7731506+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": "requirements.txt",
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "job-alerts",
+      "name": "job_alerts",
+      "path": "C:\\dev\\02_PROJECTS\\job_alerts",
+      "last_modified": "2026-05-25T06:48:53.1183634+02:00",
+      "git": {
+        "enabled": true,
+        "branch": "main",
+        "remote": "origin\thttps://github.com/kinkydisorder/job-alerts-nl.git (fetch)",
+        "dirty_files": 0
+      },
+      "manifests": "requirements.txt",
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "autocamp-hackijng-learning",
+      "name": "AutoCamp-Hackijng-learning",
+      "path": "C:\\dev\\02_PROJECTS\\AutoCamp-Hackijng-learning",
+      "last_modified": "2026-05-20T14:58:29.6047839+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    },
+    {
+      "id": "htmlthumbprovider",
+      "name": "HtmlThumbProvider",
+      "path": "C:\\dev\\02_PROJECTS\\HtmlThumbProvider",
+      "last_modified": "2026-05-06T02:50:57.1204870+02:00",
+      "git": {
+        "enabled": false,
+        "branch": null,
+        "remote": null,
+        "dirty_files": null
+      },
+      "manifests": null,
+      "privacy": "unclassified",
+      "verification_status": "inspected"
+    }
+  ]
+}

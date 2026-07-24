@@ -37,5 +37,8 @@ Thumbs.db
 # Local MCP policy can expose exact private roots.
 mcp/abraham-os-bridge/config/policy.local.json
 
-# Local operational evidence may contain absolute paths and private project names.
-/.ai-forge/
+# Local operational evidence: runtime/tools stay local, but audit notes ARE the
+# registry of record and travel with the private node repo.
+/.ai-forge/*
+!/.ai-forge/audit/
+!/.ai-forge/audit/**

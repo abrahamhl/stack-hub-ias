@@ -50,12 +50,13 @@
         <a href="#protocol">Protocolo</a>
         <a href="#audit">Auditoría</a>
       </nav>
-      <main id="main">
+      <main id="main" tabindex="-1">
         <p class="micro">Construir la fábrica. No otra wiki rota.</p>
         <h1>Un nodo. Todas las IAs.<br /><em>Todo registrado.</em></h1>
         <p class="sub">Este hub es una vista del nodo git. No guarda nada en servidor: lee GitHub en vivo
         y archivos locales del propio <code>hub/</code>. Truth model visible en créditos y novedades —
-        <strong>estimated ≠ uso real</strong>.</p>
+        <strong>estimated ≠ uso real</strong>. Sin PAT, el catálogo público puede no existir aún:
+        usa Config para leer el nodo privado.</p>
 
         <section id="command" aria-labelledby="h-command">
           <h2 id="h-command">Command Center <span class="micro">estado en vivo</span></h2>
@@ -99,9 +100,9 @@
           <div class="panel">
             <p class="note" style="margin-bottom:10px">Canales desde <code>hub/sources.json</code>. El check es manual
             (se guarda en localStorage de este navegador). No hay scrape automático en v2.</p>
-            <ul class="feed" id="sources-feed">
-              <li class="note">Cargando canales…</li>
-            </ul>
+            <div class="feed" id="sources-feed" role="list" aria-live="polite">
+              <div class="item note" role="listitem">Cargando canales…</div>
+            </div>
           </div>
         </section>
 
@@ -124,7 +125,7 @@
         <section id="boards" aria-labelledby="h-boards">
           <h2 id="h-boards">Tableros <span class="micro">github issues = corcho</span></h2>
           <div class="panel">
-            <ul class="feed" id="issues-feed"><li class="note">Cargando…</li></ul>
+            <div class="feed" id="issues-feed" role="list" aria-live="polite"><div class="item note" role="listitem">Cargando…</div></div>
             <div class="row" style="margin-top:14px">
               <a href="https://github.com/kinkydisorder/stack-hub-ias/issues/new?labels=idea&title=Idea%3A%20" target="_blank" rel="noopener"><button type="button">+ Nueva idea</button></a>
               <a href="https://github.com/kinkydisorder/stack-hub-ias/issues/new?labels=delegacion&title=Delegar%3A%20" target="_blank" rel="noopener"><button type="button" class="ghost">+ Delegar trabajo</button></a>
@@ -146,7 +147,7 @@
 
         <section id="audit" aria-labelledby="h-audit">
           <h2 id="h-audit">Auditoría <span class="micro">commits = qué · notas = por qué</span></h2>
-          <div class="panel"><ul class="feed" id="commit-feed"><li class="note">Cargando…</li></ul></div>
+          <div class="panel"><div class="feed" id="commit-feed" role="list" aria-live="polite"><div class="item note" role="listitem">Cargando…</div></div></div>
         </section>
 
         <section id="cfg" hidden aria-labelledby="h-cfg">

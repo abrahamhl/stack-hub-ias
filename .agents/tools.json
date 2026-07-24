@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "updated": "2026-07-24",
+  "purpose": "Manifiesto de herramientas del nodo. Cada IA usa lo que hay AQUÍ por diseño, no lo que lleve cargado su plataforma.",
+  "mcp_abraham_os": {
+    "list_roots": "Roots permitidos y su modo (read-only | audit-write)",
+    "list_directory": "Listar un directorio dentro de un root permitido",
+    "read_project_file": "Leer archivo de texto acotado (extensiones allowlist, sin secretos)",
+    "search_project_text": "Búsqueda ripgrep excluyendo deps, git, envs y claves",
+    "git_status": "Rama, estado y remotos de un root (nunca commit/push)",
+    "write_audit_note": "Única escritura: nota Markdown en .ai-forge/audit/"
+  },
+  "scripts": {
+    ".agents/skills/auditing-project-readiness/scripts/inspect-project.ps1": "Baseline read-only de un proyecto",
+    ".agents/skills/auditing-project-readiness/scripts/write-audit-note.ps1": "Nota de auditoría vía bridge desde PowerShell",
+    ".skills/frontend-hyper-boost/scripts/audit-frontend.ps1": "Auditoría estática frontend",
+    ".skills/frontend-hyper-boost/scripts/package-skill.ps1": "Empaquetar skill como .skill",
+    "scripts/export-mcp-client-configs.ps1": "Generar configs MCP por cliente (Codex, Gemini, VS Code…)",
+    "scripts/mcp-doctor.ps1": "Validar bridge, política y tests"
+  },
+  "commands": {
+    "sync_skill_mirror": "cp -r .agents/skills/* .claude/skills/",
+    "bridge_tests": "cd mcp/abraham-os-bridge && npm test",
+    "dev_frontend": "npm run dev",
+    "refresh_public_branch": "ver forge.config.yaml sync.public_branch"
+  },
+  "pending_backends": {
+    "vertex_ai": "€1.066 en créditos sin usar — brazo SAH engine (ver docs/architecture/HUB_ROADMAP.md)",
+    "hostinger": "Hosting estático del hub (subir hub/ por hPanel)",
+    "google_drive": "5TB disponibles para artefactos pesados (no código)"
+  }
+}

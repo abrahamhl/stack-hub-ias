@@ -1,0 +1,46 @@
+# AI Forge — configuración central (fuente de verdad machine-readable)
+version: 1
+updated: 2026-07-24
+
+node:
+  repo_private: kinkydisorder/stack-hub-ias        # nodo: todo el árbol + historia
+  repo_public: kinkydisorder/stack-hub-ias-public  # catálogo/escaparate (rama public)
+  default_branch: hyper-boost
+  audit_dir: .ai-forge/audit
+  hub: hub/index.html                              # vista estática (Hostinger)
+
+protocol:
+  bootstrap: docs/workflows/UNIVERSAL_BOOTSTRAP_PROMPT.md
+  claude: CLAUDE.md
+  generic_agents: AGENTS.md
+  soul: SOUL.md
+  reset_keyword: "RESET FORGE"
+  ritual: [commit-atomico, audit-note, push]
+
+surfaces:                       # dónde escribe su config cada IA
+  claude-code:   { rules: CLAUDE.md,  skills: .claude/skills/,  writes: git+mcp }
+  codex:         { rules: AGENTS.md,  config: .ai-forge/client-configs/codex-config.toml, writes: git }
+  gemini-cli:    { rules: GEMINI.md,  config: .ai-forge/client-configs/gemini-settings.json, writes: git }
+  vscode-mcp:    { config: .ai-forge/client-configs/vscode-mcp.json, writes: git }
+  chat-web:      { rules: hub/bootstrap.txt, writes: bloque-listo-para-commit }
+  sah-engine:    { rules: .agentrules, writes: git, backend: vertex-ai }
+
+skills:
+  canonical: [.skills/, .agents/skills/]
+  mirrors: [.claude/skills/]          # generado, no editar a mano
+  registry: .skills/00_CLAUDE_LIVE/REGISTRY.md
+  catalog_json: hub/catalog.json      # regenerar al cambiar skills
+
+sync:
+  on_skill_change: [regenerar .claude/skills, regenerar hub/catalog.json, commit, push]
+  on_session_end: [audit-note, commit, push]
+  public_branch:
+    name: public
+    excludes: [docs/, scripts/inventory-projects.ps1, CLAUDE.md, AGENTS.md, .claude/, forge.config.yaml, SOUL.md]
+
+mcp:
+  abraham-os:
+    server: mcp/abraham-os-bridge/dist/index.js
+    policy_env: ABRAHAM_MCP_POLICY
+    roots: { ai-forge: audit-write, abraham-os: read-only }
+    forbidden: [git-push, delete, arbitrary-shell]

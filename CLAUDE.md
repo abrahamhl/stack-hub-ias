@@ -27,13 +27,21 @@ la fuente de verdad.
   bloque, próximos pasos concretos ("renueva en 2 días"), sin ruido decorativo.
   Español por defecto.
 
-## Al terminar una sesión (ritual obligatorio)
+## Registro continuo (sin que Abraham lo recuerde)
 
-1. Commit atómico con mensaje convencional (`feat|fix|docs(scope): …`).
-2. Nota de auditoría — qué se hizo y por qué — vía MCP `write_audit_note` o
-   `.agents/skills/auditing-project-readiness/scripts/write-audit-note.ps1`.
-3. `git push` al remoto cuando exista. Si no existe remoto, decláralo como
-   riesgo P0 en tu resumen (sin copia externa, el nodo muere con este disco).
+**Toda interacción con efecto — aunque sea pequeña — termina registrada**, en
+cualquier superficie (escritorio, web, móvil, CLI):
+
+1. Commit atómico con mensaje convencional (`feat|fix|docs(scope): …`) en cuanto
+   un cambio queda estable; nunca acumular trabajo sin commitear entre turnos.
+2. Nota de auditoría por sesión — qué se hizo y por qué — vía MCP
+   `write_audit_note` (actor: `claude-<superficie>`).
+3. `git push origin` al terminar cada tanda de commits (el remoto ya existe).
+4. No se guardan conversaciones completas: se registra la taxonomía del trabajo
+   (qué archivos, qué decisión, qué queda pendiente).
+
+Arranque en superficies sin este archivo: pegar el bloque de
+`docs/workflows/UNIVERSAL_BOOTSTRAP_PROMPT.md`.
 
 ## Límites duros
 

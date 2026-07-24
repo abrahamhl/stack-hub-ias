@@ -9,8 +9,12 @@ Mapeo de ficheros de reglas: Codex → este `AGENTS.md` · Gemini CLI → `GEMIN
 
 1. **El nodo es el repo.** Ninguna decisión, skill, workflow o resultado es real
    hasta que está committeado aquí. Los chats son efímeros; el git no.
-2. **Registro doble**: commit atómico + nota de auditoría en `.ai-forge/audit/`
-   (vía MCP `abraham-os` → `write_audit_note`, actor = tu nombre de agente).
+2. **Registro doble y continuo**: commit atómico + nota de auditoría en
+   `.ai-forge/audit/` (vía MCP `abraham-os` → `write_audit_note`, actor = tu
+   nombre de agente). Toda interacción con efecto se registra sin que Abraham lo
+   pida; si tu superficie no puede escribir en git, entrega el resultado como
+   bloque listo para commit y márcalo "pendiente de registro". Arranque en
+   cualquier superficie: `docs/workflows/UNIVERSAL_BOOTSTRAP_PROMPT.md`.
 3. **Truth model**: todo dato cambiante lleva fuente, estado de verificación y
    fecha. Estimación ≠ uso real. Prohibido inventar datos.
 4. **Skills canónicas**: `.skills/` (biblioteca) y `.agents/skills/` (control

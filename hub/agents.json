@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "metaphor": "fallout-shelter-factory",
+  "description": "Mapa de agentes del nodo. Cada sala = un operador. Entrar = ver su stack (skills, tools, rutas del repo), no arrastrar chat.",
+  "shared": {
+    "node": "kinkydisorder/stack-hub-ias",
+    "protocol_files": ["AGENTS.md", "SOUL.md", "docs/workflows/UNIVERSAL_BOOTSTRAP_PROMPT.md"],
+    "reset_keyword": "RESET FORGE",
+    "skills_canonical": [".skills/", ".agents/skills/"],
+    "tools_manifest": ".agents/tools.json"
+  },
+  "agents": [
+    {
+      "id": "claude",
+      "name": "Claude Code",
+      "short": "Claude",
+      "role": "Arquitectura, orquestación, revisión y frontend hyper-boost",
+      "surface": "Claude Code CLI",
+      "protocol": "CLAUDE.md",
+      "accent": "forge",
+      "glyph": "◆",
+      "status": "active",
+      "best_for": ["arquitectura", "skills", "frontend visual", "handoffs", "auditoría de decisiones"],
+      "avoid_for": ["fan-out masivo de subagentes sin justificación"],
+      "repo_paths": [
+        "CLAUDE.md",
+        ".claude/skills/",
+        ".skills/frontend-hyper-boost/",
+        ".agents/skills/building-nextgen-frontends/",
+        ".agents/skills/operating-google-stitch/",
+        ".agents/skills/orchestrating-ai-forge/"
+      ],
+      "skills": [
+        "frontend-hyper-boost",
+        "building-nextgen-frontends",
+        "operating-google-stitch",
+        "orchestrating-ai-forge",
+        "auditing-project-readiness",
+        "operating-abraham-mcp",
+        "routing-model-workflows"
+      ],
+      "tools": ["git", "mcp:abraham-os", "write_audit_note", "subagents (solo justificados)"],
+      "deep_link": null,
+      "notes": "Emisor del work order HUB-V2. Superficie principal de dirección."
+    },
+    {
+      "id": "codex",
+      "name": "Codex / ChatGPT",
+      "short": "Codex",
+      "role": "Scaffolding, control plane, co-orquestación, diffs",
+      "surface": "Codex CLI / ChatGPT",
+      "protocol": "AGENTS.md",
+      "accent": "green",
+      "glyph": "▣",
+      "status": "active",
+      "best_for": ["scaffolding", "control-plane", "migraciones", "scripts"],
+      "avoid_for": ["dirección visual hyper-boost sin skill"],
+      "repo_paths": [
+        "AGENTS.md",
+        ".ai-forge/client-configs/codex-config.toml",
+        ".agents/skills/",
+        "scripts/"
+      ],
+      "skills": [
+        "orchestrating-ai-forge",
+        "auditing-project-readiness",
+        "routing-model-workflows",
+        "operating-abraham-mcp",
+        "building-nextgen-frontends"
+      ],
+      "tools": ["git", "mcp:abraham-os", "scripts/*.ps1"],
+      "deep_link": null,
+      "notes": "Lee AGENTS.md de serie al abrir el repo."
+    },
+    {
+      "id": "grok",
+      "name": "Grok CLI",
+      "short": "Grok",
+      "role": "Búsqueda viva, contraste rápido, ejecución frontend cuando se delega",
+      "surface": "Grok Build / Grok web",
+      "protocol": "AGENTS.md",
+      "accent": "cyan",
+      "glyph": "◈",
+      "status": "active",
+      "best_for": ["contraste", "búsqueda", "implementación hub cuando se delega", "X/web pulse"],
+      "avoid_for": ["inventar datos de facturación", "omitir truth model"],
+      "repo_paths": [
+        "AGENTS.md",
+        "hub/",
+        ".skills/frontend-hyper-boost/",
+        "docs/workflows/handoffs/"
+      ],
+      "skills": [
+        "frontend-hyper-boost",
+        "building-nextgen-frontends",
+        "orchestrating-ai-forge",
+        "routing-model-workflows"
+      ],
+      "tools": ["git", "web_search", "GitHub API (hub)"],
+      "deep_link": null,
+      "notes": "Ejecutor HUB-V2. Debe resetear contexto desde el nodo, no desde el chat."
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini CLI",
+      "short": "Gemini",
+      "role": "Investigación ampliada, documentos largos, Vertex/GCP",
+      "surface": "Gemini CLI / AI Studio",
+      "protocol": "GEMINI.md → AGENTS.md",
+      "accent": "blue",
+      "glyph": "⬡",
+      "status": "active",
+      "best_for": ["docs largos", "research", "Vertex", "contexto amplio"],
+      "avoid_for": ["publicar secretos del nodo privado"],
+      "repo_paths": [
+        "AGENTS.md",
+        ".ai-forge/client-configs/gemini-settings.json",
+        "docs/",
+        "deep-research-report-for-stack-IAs.md"
+      ],
+      "skills": [
+        "orchestrating-ai-forge",
+        "routing-model-workflows",
+        "auditing-project-readiness"
+      ],
+      "tools": ["git", "Vertex (pending)", "Drive (artefactos)"],
+      "deep_link": null,
+      "notes": "Brazo de investigación. Créditos Vertex: ver panel créditos (estimated hasta verificar)."
+    },
+    {
+      "id": "sah",
+      "name": "SAH Engine",
+      "short": "SAH",
+      "role": "Mutaciones AST locales deterministas + linter/compilador",
+      "surface": "SAH / Vertex backend puntual",
+      "protocol": ".agentrules → AGENTS.md",
+      "accent": "red",
+      "glyph": "⬢",
+      "status": "planned",
+      "best_for": ["AST local", "refactors deterministas", "antes de gastar tokens"],
+      "avoid_for": ["UI hyper-boost", "orquestación multi-agente de producto"],
+      "repo_paths": [
+        "docs/architecture/HUB_ROADMAP.md",
+        ".agents/tools.json"
+      ],
+      "skills": ["routing-model-workflows"],
+      "tools": ["Tree-sitter (plan)", "Vertex € credit (plan)"],
+      "deep_link": null,
+      "notes": "Fase 4 del roadmap. No inventar que ya está cableado."
+    },
+    {
+      "id": "manus",
+      "name": "Manus",
+      "short": "Manus",
+      "role": "Agente ejecutivo autónomo (navegador, fases, archivos)",
+      "surface": "Manus app",
+      "protocol": "hub/bootstrap.txt (si sin repo)",
+      "accent": "purple",
+      "glyph": "✦",
+      "status": "optional",
+      "best_for": ["tareas multi-paso en navegador", "investigación por fases"],
+      "avoid_for": ["ser el nodo central", "guardar secretos del forge"],
+      "repo_paths": ["hub/bootstrap.txt", "docs/workflows/templates/HANDOFF_PACKET.md"],
+      "skills": ["orchestrating-ai-forge"],
+      "tools": ["browser agent (plataforma)"],
+      "deep_link": null,
+      "notes": "Objetivo declarado: superar a Manus con orquestación frugal, no copiarlo."
+    }
+  ],
+  "lanes": [
+    { "from": "claude", "to": "grok", "label": "handoff frontend", "via": "docs/workflows/handoffs/" },
+    { "from": "claude", "to": "codex", "label": "co-orquestación", "via": "AGENTS.md" },
+    { "from": "grok", "to": "claude", "label": "review / merge", "via": "feat/* → hyper-boost" },
+    { "from": "gemini", "to": "claude", "label": "research packet", "via": "docs/" },
+    { "from": "codex", "to": "sah", "label": "AST local (plan)", "via": "HUB_ROADMAP Fase 4" }
+  ],
+  "skill_owners": {
+    "frontend-hyper-boost": ["claude", "grok"],
+    "building-nextgen-frontends": ["claude", "codex", "grok"],
+    "operating-google-stitch": ["claude"],
+    "auditing-project-readiness": ["claude", "codex", "gemini"],
+    "orchestrating-ai-forge": ["claude", "codex", "grok", "gemini", "manus"],
+    "routing-model-workflows": ["claude", "codex", "grok", "gemini", "sah"],
+    "operating-abraham-mcp": ["claude", "codex"]
+  }
+}

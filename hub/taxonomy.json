@@ -36,9 +36,21 @@
     { "ref": 16, "zone": "wavy atmosphere", "impl": ".wave-layer" },
     { "ref": 17, "zone": "production phase rings", "impl": ".phase-rings + job phases" }
   ],
+  "product_orientation": {
+    "doc": "docs/architecture/PRODUCT_ORIENTATION.md",
+    "status": "VIGENTE",
+    "ui": "hub = puesto de mando",
+    "backend": "GitHub private = infra",
+    "chats": "brazos desechables; siempre leen el stack",
+    "skill_edit": "en el nodo para que todas las IAs lo vean"
+  },
   "conversation_taxonomy": {
     "description": "Temas de esta conversación ya registrados en el nodo",
     "items": [
+      {
+        "topic": "Orientación: UI hub + backend GitHub; skills editadas en stack no en configs de proveedor",
+        "where": "docs/architecture/PRODUCT_ORIENTATION.md"
+      },
       { "topic": "Hub v2 work order HUB-V2-001", "where": "docs/workflows/handoffs/" },
       { "topic": "Factory floor agent map (not flat admin)", "where": "hub/ + agents.json" },
       { "topic": "Premium 21st.dev orientation REQUIRED", "where": ".skills/frontend-hyper-boost/references/premium-21st-registry.md" },

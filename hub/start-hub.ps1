@@ -1,10 +1,9 @@
 # AI Forge Vault — arranque local correcto
-# Uso: clic derecho → Ejecutar con PowerShell, o:
-#   cd C:\dev\02_PROJECTS\SKILLS-FRONTEND\stack-hub-IAs\hub
-#   .\start-hub.ps1
+# Uso (desde la raíz del repo):  .\hub\start-hub.ps1
 #
-# NO abras index.html con doble clic (file://). El navegador bloquea fetch
-# de JSON y GitHub privado sin token → todo sale en error.
+# NO abras index.html con doble clic (file://).
+# Esto NO es un Pull Request ni publica el repo (el nodo es PRIVATE).
+# Ver hub/SECURITY.md
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
@@ -13,13 +12,11 @@ if (-not (Test-Path (Join-Path $root "hub\index.html"))) {
 }
 Set-Location $root
 Write-Host ""
-Write-Host " AI FORGE VAULT" -ForegroundColor Cyan
-Write-Host " Sirviendo desde: $root" -ForegroundColor DarkGray
-Write-Host " URL: http://localhost:4180/hub/" -ForegroundColor Green
-Write-Host ""
-Write-Host " GitHub privado: kinkydisorder/stack-hub-ias" -ForegroundColor DarkGray
-Write-Host " Sin PAT: usa hub/live-snapshot.json (local)." -ForegroundColor DarkGray
-Write-Host " Con PAT (Config en la web): datos en vivo del privado." -ForegroundColor DarkGray
+Write-Host " AI FORGE VAULT (local · no publica secretos)" -ForegroundColor Cyan
+Write-Host " Raiz: $root" -ForegroundColor DarkGray
+Write-Host " URL:  http://localhost:4180/hub/" -ForegroundColor Green
+Write-Host " Repo: PRIVATE en GitHub (no abrir visibility Public)" -ForegroundColor DarkGray
+Write-Host " Sin PAT: live-snapshot.json · Con PAT: API privada" -ForegroundColor DarkGray
 Write-Host " Ctrl+C para parar." -ForegroundColor DarkGray
 Write-Host ""
 

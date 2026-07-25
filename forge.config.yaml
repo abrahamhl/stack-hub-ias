@@ -36,7 +36,13 @@ sync:
   on_session_end: [audit-note, commit, push]
   public_branch:
     name: public
-    excludes: [docs/, scripts/inventory-projects.ps1, CLAUDE.md, AGENTS.md, .claude/, forge.config.yaml, SOUL.md]
+    # Secreto comercial: nunca empujar docs/protocolos/config al escaparate.
+    # El repo de escaparate debe crearse aparte y SOLO con el árbol curado.
+    excludes: [docs/, scripts/inventory-projects.ps1, CLAUDE.md, AGENTS.md, .claude/, forge.config.yaml, SOUL.md, .ai-forge/, hub/taxonomy.json, hub/live-snapshot.json, hub/ABRE-ASI.md, hub/SECURITY.md]
+  security:
+    node_visibility: private
+    never_commit: [tokens, PAT, passwords, real_billing, personal_identity]
+    hub_public_hosting: "risk — prefer private host or curate; full hub exposes methodology"
 
 mcp:
   abraham-os:

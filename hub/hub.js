@@ -92,10 +92,10 @@
     if (state.isFileProtocol) {
       return `<div class="err-box setup-banner" role="alert" style="margin-bottom:14px;border-color:rgba(255,138,76,.45);background:rgba(255,138,76,.08)">
         <strong style="color:var(--forge)">No abras index.html con doble clic</strong>
-        El protocolo file:// bloquea taxonomy, bootstrap, agents y GitHub.
-        En PowerShell: <code>cd C:\\dev\\02_PROJECTS\\SKILLS-FRONTEND\\stack-hub-IAs</code>
-        y luego <code>.\\hub\\start-hub.ps1</code> → abre
+        El protocolo file:// bloquea taxonomy, bootstrap y datos.
+        En la raíz del repo: <code>.\\hub\\start-hub.ps1</code> →
         <b>http://localhost:4180/hub/</b>
+        (local; no publica el secreto comercial — ver SECURITY.md)
       </div>`;
     }
     const src = state.live?.source;

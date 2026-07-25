@@ -1,61 +1,44 @@
-# Cómo abrir el Vault (sin errores)
+# Cómo abrir el Vault (sin errores) + seguridad
 
-## Por qué ves HTTP 404 y “todo error”
+Lee también `SECURITY.md` (secreto comercial).
 
-1. **El repo `stack-hub-ias-public` NO existe** (GitHub devuelve 404).  
-   El nodo real es el **privado** `kinkydisorder/stack-hub-ias`.
-2. **El navegador no puede leer el privado sin un PAT** pegado en Config.
-3. Si abres `index.html` con **doble clic** (`file://`), el navegador **bloquea**
-   cargar `taxonomy.json`, `bootstrap.txt`, `agents.json`… → errores en **todo**.
+## Por qué veías HTTP 404
 
-No es que “GitHub no esté activado”. Es **cómo se abre** + **público inexistente**.
+1. El repo público de catálogo **no existe**. El nodo es el **privado**.
+2. El navegador **no usa** tu `gh auth` de consola: sin PAT en Config no lee el privado en vivo.
+3. Abrir `index.html` a doble clic (`file://`) **rompe** taxonomy/bootstrap/JSON.
 
-## Forma correcta (local)
-
-Desde PowerShell:
+## Forma correcta (local) — NO es un Pull Request
 
 ```powershell
-cd C:\dev\02_PROJECTS\SKILLS-FRONTEND\stack-hub-IAs
+# Desde la raíz del repositorio clonado (ruta local tuya)
 .\hub\start-hub.ps1
 ```
 
-O:
+Navegador: **http://localhost:4180/hub/**
 
-```powershell
-cd C:\dev\02_PROJECTS\SKILLS-FRONTEND\stack-hub-IAs
-npx --yes serve . -l 4180
-```
+| Acción | ¿Es lo mismo? |
+|---|---|
+| `start-hub.ps1` / localhost | Ver la web en tu máquina |
+| GitHub → Compare & pull request | Propuesta de **fusionar ramas** en git |
+| | **No son lo mismo.** El PR no “abre” el hub. El hub no “publica” el PR. |
 
-Luego en el navegador: **http://localhost:4180/hub/**
+Un PR **dentro del repo privado** sigue siendo privado (solo colaboradores).
 
-### Datos de GitHub en vivo (opcional)
+### Datos GitHub en vivo (opcional)
 
-1. En GitHub → Settings → Developer settings → Personal access tokens  
-   (fine-grained, solo este repo, permiso **Contents: Read**).
-2. En el hub → **Config** → pega el token → Guardar.  
-3. El token **solo** vive en localStorage de tu navegador, no en el repo.
+1. Fine-grained PAT: solo este repo, **Contents: Read** (Issues Read opcional).
+2. Hub → Config → pegar → Guardar.
+3. El token **no se sube a git** (solo tu navegador).
 
-Sin PAT, el hub usa **`live-snapshot.json`** (generado con `gh` en tu PC):
-commits/issues locales, sin 404 rojo.
+Sin PAT: `live-snapshot.json` (generado con `.\hub\refresh-snapshot.ps1` + tu `gh`).
 
-## Hostinger / deploy
+## Hostinger
 
-Sube la carpeta **`hub/`** (y si quieres galería, también **`src/`** al lado).  
-Abre la URL del hosting que apunte a `index.html`.  
-Para GitHub en vivo en Hostinger: mismo PAT en Config (solo en tu PC/navegador).
+Si subes `hub/` a un sitio **público**, cualquiera ve la UI y el protocolo del vault.
+Para secreto comercial: hosting **privado**, basic auth, o no desplegar el hub completo.
+El nodo de verdad permanece en el GitHub **PRIVATE**.
 
-## Qué es “interiorizar” el chat
+## Interiorizar el chat
 
-Lo que hablas en Grok/Claude **solo cuenta** si acaba en:
-
-- commits en git, y/o  
-- `hub/taxonomy.json`, y/o  
-- `.ai-forge/audit/`
-
-El chat solo **no** es el nodo. Este vault es una **vista** del nodo.
-
-## 21st.dev / shadcn
-
-Son **gramática visual + piezas** para conectar a funciones vivas cuando el
-stack sea React. El hub actual es **estático** y reimplementa esa gramática;
-no instala los 17 paquetes en el navegador.
+Solo cuenta si acaba en commits / `taxonomy.json` / `.ai-forge/audit/` del **privado**.

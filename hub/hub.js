@@ -20,6 +20,10 @@
     bootstrap: "",
     snapshot: null,
     live: null, // { commits, branches, issues, source: 'api'|'snapshot' }
+    activations: null, // skill-activations.json
+    registry: null, // agent-registry.json
+    dirtyActivations: false,
+    dirtyRegistry: false,
     loadErrors: [],
     reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
     isFileProtocol: location.protocol === "file:",
@@ -346,13 +350,17 @@
     );
 
     const catalogSkills = state.catalog?.skills || [];
+    const activeNames = agentActiveSkills(a.id);
     const skillCards = (a.skills || [])
       .map((name) => {
         const meta = catalogSkills.find((s) => s.name === name);
-        return `<li><strong>${esc(name)}</strong>${meta ? esc(meta.description) : ""}
+        const on = isSkillOn(name, a.id);
+        return `<li><strong>${esc(name)}</strong> <span class="${on ? "badge-on" : "badge-off"}">${on ? "ON" : "OFF"}</span>
+          ${meta ? esc(meta.description) : ""}
           ${meta ? `<br/><span style="color:var(--cyan)">${esc(meta.path)}</span>` : ""}</li>`;
       })
       .join("");
+    const onlyOnNote = `<p class="note" style="margin-bottom:8px">En chat nuevo este agente solo debe usar <b>${activeNames.length}</b> skills ON (matriz skill-activations).</p>`;
     const paths = (a.repo_paths || []).map((p) => `<li>${esc(p)}</li>`).join("");
     const tools = (a.tools || []).map((t) => `<span class="tag">${esc(t)}</span>`).join("");
     const best = (a.best_for || []).map((t) => `<span class="tag">${esc(t)}</span>`).join("");
@@ -391,7 +399,8 @@
       </div>
       <div class="dossier-grid">
         <div class="panel">
-          <div class="caption">Stack de skills</div>
+          <div class="caption">Stack de skills (expediente)</div>
+          ${onlyOnNote}
           <ul class="stack-list" style="margin-top:10px">${skillCards}</ul>
           <div class="caption" style="margin-top:14px">Tools</div>
           <div class="tagrow">${tools}</div>
@@ -436,6 +445,255 @@ ${(a.repo_paths || []).map((p) => `   - ${p}`).join("\n")}
 10. Entrega: commit atómico + .ai-forge/audit/ (actor: ${a.id}-*)
 
 Confirma: nombre, qué lees/escribes, próxima acción única.`;
+  }
+
+  function isSkillOn(skillName, agentId) {
+    const m = state.activations?.matrix?.[skillName];
+    if (!m) return true; // default on if missing
+    return !!m[agentId];
+  }
+
+  function agentActiveSkills(agentId) {
+    const names = Object.keys(state.activations?.matrix || {});
+    return names.filter((n) => isSkillOn(n, agentId));
+  }
+
+  function pushLog(entry) {
+    if (!state.activations) return;
+    state.activations.log = state.activations.log || [];
+    state.activations.log.unshift({
+      at: new Date().toISOString(),
+      ...entry,
+    });
+    state.activations.log = state.activations.log.slice(0, 80);
+    state.activations.updated_at = new Date().toISOString();
+    state.dirtyActivations = true;
+  }
+
+  function pushSession(event, detail, agentId = "abraham") {
+    if (!state.registry) {
+      state.registry = { schema_version: 1, checkins: [], session_log: [] };
+    }
+    state.registry.session_log = state.registry.session_log || [];
+    state.registry.session_log.unshift({
+      at: new Date().toISOString(),
+      agent_id: agentId,
+      event,
+      detail,
+    });
+    state.registry.session_log = state.registry.session_log.slice(0, 120);
+    state.dirtyRegistry = true;
+  }
+
+  function viewExpediente() {
+    const agents = state.activations?.agents ||
+      (state.agentsData?.agents || []).map((a) => a.id);
+    const skills = state.catalog?.skills || [];
+    const matrix = state.activations?.matrix || {};
+    setInspector(
+      "Skill Expediente",
+      `<p class="note">Menú tipo plugins/skills. <b>ON</b> = el agente la carga en chat nuevo. <b>OFF</b> = prohibida (como desactivar en su config).</p>
+       <p class="note" style="margin-top:6px">Rutas canónicas en el repo. Commit al nodo = multi-dispositivo.</p>`,
+      state.dirtyActivations
+        ? "Hay cambios sin subir — Commit al nodo o Export."
+        : "Matriz alineada con el archivo del repo (o sin cambios locales).",
+      2,
+      state.dirtyActivations
+    );
+
+    const head = agents
+      .map((id) => `<th title="${esc(id)}">${esc((id || "").slice(0, 6))}</th>`)
+      .join("");
+
+    const rows = skills
+      .map((s) => {
+        const row = matrix[s.name] || {};
+        const cells = agents
+          .map((aid) => {
+            const on = row[aid] !== false && row[aid] !== undefined ? !!row[aid] : !!row[aid];
+            // if key missing, default false for agents not in seed unless we want true - use !!row[aid] when defined else true from seed
+            const checked = Object.prototype.hasOwnProperty.call(row, aid) ? !!row[aid] : true;
+            return `<td>
+              <button type="button" class="sw" role="switch" aria-checked="${checked}"
+                data-skill="${esc(s.name)}" data-agent="${esc(aid)}"
+                aria-label="${esc(s.name)} para ${esc(aid)}: ${checked ? "on" : "off"}">
+                <i></i>
+              </button>
+              <div class="${checked ? "badge-on" : "badge-off"}">${checked ? "ON" : "OFF"}</div>
+            </td>`;
+          })
+          .join("");
+        return `<tr>
+          <td>
+            <span class="skill-name">${esc(s.name)}</span>
+            <span class="skill-path">${esc(s.path)}</span>
+            <div class="skill-desc">${esc(s.description || "")}</div>
+          </td>
+          ${cells}
+        </tr>`;
+      })
+      .join("");
+
+    const log = (state.activations?.log || [])
+      .slice(0, 12)
+      .map(
+        (l) =>
+          `<div class="item" role="listitem">
+            <span class="sha">${esc((l.at || "").slice(0, 16))}</span>
+            <span>${esc(l.actor || "?")} · ${esc(l.action || "")} · ${esc(l.skill || "")} ${esc(l.agent || "")} ${l.to === undefined ? "" : "→ " + l.to}</span>
+            <span class="when">${esc(l.detail || "")}</span>
+          </div>`
+      )
+      .join("") || `<div class="item note">Sin cambios aún</div>`;
+
+    return `
+      ${setupBannerHtml()}
+      <div class="view-head">
+        <div><div class="caption">Skill Expediente · config de plugins</div>
+        <h1>ON / OFF por <em>agente</em>.</h1></div>
+        <p class="lead">Si desactivas una skill para Codex aquí, en el primer chat Codex solo debe usar las ON. Ruta canónica en el repo, no en la app del proveedor.</p>
+      </div>
+      <div class="row" style="margin-bottom:12px">
+        <button type="button" class="hot" id="commit-activations">Commit al nodo (GitHub)</button>
+        <button type="button" class="ghost" id="export-activations">Export JSON</button>
+        <button type="button" class="ghost" id="reload-activations">Recargar del disco</button>
+        <span class="note" id="act-dirty">${state.dirtyActivations ? "● cambios locales" : "○ sin cambios pendientes"}</span>
+      </div>
+      <div id="commit-msg" class="commit-status warn" hidden></div>
+      <div class="panel exp-wrap">
+        <table class="exp-table">
+          <thead><tr><th class="skill-col">Skill · path</th>${head}</tr></thead>
+          <tbody>${rows || '<tr><td colspan="7">catalog/activations no cargados</td></tr>'}</tbody>
+        </table>
+      </div>
+      <div class="panel" style="margin-top:14px">
+        <div class="caption">Log de activaciones</div>
+        <div class="feed" style="margin-top:8px">${log}</div>
+      </div>`;
+  }
+
+  function viewMonitor() {
+    const agents = state.agentsData?.agents || [];
+    const jobs = liveJobs();
+    setInspector(
+      "Monitor",
+      `<p class="note">Quién hace qué · skills ON · log de sesión · fuente git: ${esc(state.live?.source || "—")}</p>`,
+      "Consola de fábrica. Firmas en Registro.",
+      2,
+      jobs.length > 0
+    );
+    const cards = agents
+      .map((a) => {
+        const on = agentActiveSkills(a.id);
+        return `<article class="card">
+          <div class="row" style="justify-content:space-between">
+            <h3>${esc(a.short || a.name)}</h3>
+            <span class="status-pill ${esc(a.job_state || a.status)}">${esc(a.job_state || a.status)}</span>
+          </div>
+          <p class="job-label">${esc(a.job_label || "—")}</p>
+          <p class="note">Skills ON: <b>${on.length}</b></p>
+          <div class="tagrow">${on.map((s) => `<span class="tag">${esc(s)}</span>`).join("") || '<span class="note">ninguna</span>'}</div>
+          <div class="row" style="margin-top:10px">
+            <button type="button" class="ghost" data-agent="${esc(a.id)}">Abrir sala</button>
+          </div>
+        </article>`;
+      })
+      .join("");
+
+    const slog = (state.registry?.session_log || [])
+      .slice(0, 20)
+      .map(
+        (l) =>
+          `<div class="item" role="listitem">
+            <span class="sha">${esc((l.at || "").slice(5, 16))}</span>
+            <span><b>${esc(l.agent_id)}</b> · ${esc(l.event)}</span>
+            <span class="when">${esc(l.detail || "")}</span>
+          </div>`
+      )
+      .join("") || `<div class="item note">Sin eventos de sesión</div>`;
+
+    const checkins = (state.registry?.checkins || [])
+      .slice(0, 10)
+      .map(
+        (c) =>
+          `<div class="item" role="listitem">
+            <span class="sha">${esc((c.at || "").slice(0, 10))}</span>
+            <span>✍ ${esc(c.agent_id)} · ${esc(c.action)}</span>
+            <span class="when">${esc(c.signature || "")}</span>
+          </div>`
+      )
+      .join("") || `<div class="item note">Ninguna firma aún — ve a Registro</div>`;
+
+    return `
+      ${setupBannerHtml()}
+      <div class="view-head">
+        <div><div class="caption">Monitor · consola de fábrica</div>
+        <h1>Quién · qué · <em>ON</em>.</h1></div>
+        <p class="lead">Monitoreo: jobs, skills activas por agente, log y firmas. Ideas importantes en Taxonomy.</p>
+      </div>
+      <div class="grid c2">${cards}</div>
+      <div class="dossier-grid" style="margin-top:14px">
+        <div class="panel">
+          <div class="caption">Session log</div>
+          <div class="feed" style="margin-top:8px">${slog}</div>
+        </div>
+        <div class="panel">
+          <div class="caption">Últimas firmas (check-in)</div>
+          <div class="feed" style="margin-top:8px">${checkins}</div>
+        </div>
+      </div>`;
+  }
+
+  function viewRegistry() {
+    setInspector(
+      "Registro firmas",
+      `<p class="note">Cada IA (o Abraham) confirma: he leído skill-activations y mi sala. Comprobable en el nodo.</p>`,
+      "Firma y haz Commit al nodo para multi-dispositivo.",
+      1,
+      false
+    );
+    const agents = (state.agentsData?.agents || []).map((a) => a.id);
+    const opts = agents
+      .map((id) => `<option value="${esc(id)}">${esc(id)}</option>`)
+      .join("");
+    const list = (state.registry?.checkins || [])
+      .map(
+        (c) =>
+          `<div class="item" role="listitem">
+            <span class="sha">${esc((c.at || "").slice(0, 19))}</span>
+            <span><b>${esc(c.agent_id)}</b> · ${esc(c.actor_label || "")}<br/>
+            <span class="note">skills: ${(c.skills_confirmed || []).map(esc).join(", ") || "—"}</span></span>
+            <span class="when">${esc(c.signature || "")}</span>
+          </div>`
+      )
+      .join("") || `<div class="item note">Sin check-ins</div>`;
+
+    return `
+      ${setupBannerHtml()}
+      <div class="view-head">
+        <div><div class="caption">Registro comprobable</div>
+        <h1>Firma de <em>entrada</em>.</h1></div>
+        <p class="lead">“He visto las skills ON de mi carpeta y las valido.” Queda en agent-registry.json + git.</p>
+      </div>
+      <div class="panel">
+        <div class="caption">Nuevo check-in</div>
+        <label class="note" style="display:block;margin:10px 0 4px">Agente</label>
+        <select id="ck-agent" style="max-width:280px">${opts}</select>
+        <label class="note" style="display:block;margin:10px 0 4px">Quién firma (ej. grok-cli, claude-fable, abraham)</label>
+        <input type="text" id="ck-actor" placeholder="actor" style="max-width:280px" />
+        <label class="note" style="display:block;margin:10px 0 4px">Nota breve</label>
+        <input type="text" id="ck-note" placeholder="Skills vistas y validadas" style="max-width:420px" />
+        <div class="row" style="margin-top:12px">
+          <button type="button" class="hot" id="ck-submit">Firmar check-in</button>
+          <button type="button" class="ghost" id="commit-registry">Commit registro al nodo</button>
+          <button type="button" class="ghost" id="export-registry">Export registry JSON</button>
+        </div>
+        <div id="ck-status" class="commit-status warn" hidden></div>
+      </div>
+      <div class="panel" style="margin-top:14px">
+        <div class="caption">Historial de firmas</div>
+        <div class="feed" style="margin-top:8px">${list}</div>
+      </div>`;
   }
 
   function viewSkills() {
@@ -616,28 +874,30 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
     setInspector(
       "Config",
       `<p class="note">PAT solo en localStorage de ESTE navegador. Nunca en git.</p>`,
-      "Sin PAT el vault usa live-snapshot.json (correcto y sin errores).",
+      "Read = ver commits. Read+Write Contents = Commit al nodo (activaciones/firmas).",
       0,
       false
     );
     return `
       ${setupBannerHtml()}
       <div class="view-head">
-        <div><div class="caption">Config</div><h1>Conectar <em>privado</em> en vivo.</h1></div>
-        <p class="lead">El repo <b>${esc(PRIV)}</b> es privado. No hay catálogo público todavía (por eso fallaba el 404).</p>
+        <div><div class="caption">Config</div><h1>Conectar <em>privado</em>.</h1></div>
+        <p class="lead">Repo <b>${esc(PRIV)}</b> PRIVATE. Multi-dispositivo = commit de la matriz al nodo.</p>
       </div>
       <div class="panel">
         <ol class="note" style="margin:0 0 12px 18px;line-height:1.7">
           <li>GitHub → Settings → Developer settings → Fine-grained token</li>
-          <li>Solo repo <code>stack-hub-ias</code> · permiso <b>Contents: Read</b> (Issues Read si quieres tableros)</li>
-          <li>Pega aquí → Guardar · recarga Pulse / Floor</li>
+          <li>Solo repo <code>stack-hub-ias</code></li>
+          <li><b>Contents: Read</b> = Pulse en vivo · <b>Read and Write</b> = botón “Commit al nodo”</li>
+          <li>Issues: Read opcional</li>
+          <li>Pega → Guardar</li>
         </ol>
         <div class="row">
           <input type="password" id="pat" placeholder="github_pat_… (opcional)" style="max-width:420px" autocomplete="off" />
           <button type="button" class="hot" id="save-pat">Guardar</button>
           <button type="button" class="ghost" id="clear-pat">Borrar</button>
         </div>
-        <p class="note" style="margin-top:12px">Sin token: ejecuta <code>.\\hub\\refresh-snapshot.ps1</code> (usa tu <code>gh auth</code> de consola) y recarga. Eso es “GitHub activado en la consola” → snapshot para el navegador.</p>
+        <p class="note" style="margin-top:12px">Sin token: snapshot local + Export JSON. Con Write: Skill Expediente sincroniza a GitHub solo.</p>
       </div>`;
   }
 
@@ -648,6 +908,9 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
     } else {
       const map = {
         floor: viewFloor,
+        expediente: viewExpediente,
+        monitor: viewMonitor,
+        registry: viewRegistry,
         skills: viewSkills,
         ops: viewOps,
         credits: viewCredits,
@@ -702,6 +965,119 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
     if (state.view === "credits") renderCredits();
     if (state.view === "news") renderSources();
     if (state.view === "gallery") renderGallery();
+
+    // Expediente toggles
+    $$(".sw[data-skill]").forEach((btn) => {
+      btn.onclick = () => {
+        const skill = btn.dataset.skill;
+        const agent = btn.dataset.agent;
+        if (!state.activations?.matrix) return;
+        if (!state.activations.matrix[skill]) state.activations.matrix[skill] = {};
+        const next = !isSkillOn(skill, agent);
+        state.activations.matrix[skill][agent] = next;
+        state.activations.updated_by = "hub-ui";
+        pushLog({
+          actor: "abraham-ui",
+          action: "toggle",
+          skill,
+          agent,
+          to: next,
+          detail: next ? "activado" : "desactivado",
+        });
+        pushSession("toggled_skill", `${skill} → ${agent} = ${next}`);
+        saveDrafts();
+        render();
+      };
+    });
+    $("#export-activations")?.addEventListener("click", () => {
+      if (!state.activations) return;
+      downloadJson("skill-activations.json", state.activations);
+      pushSession("export_activations", "download skill-activations.json");
+    });
+    $("#reload-activations")?.addEventListener("click", async () => {
+      localStorage.removeItem("forge_activations_draft");
+      state.activations = await loadJson("skill-activations.json");
+      state.dirtyActivations = false;
+      render();
+    });
+    $("#commit-activations")?.addEventListener("click", async () => {
+      const el = $("#commit-msg");
+      if (!el || !state.activations) return;
+      el.hidden = false;
+      el.className = "commit-status warn";
+      el.textContent = "Subiendo skill-activations.json a feat/hub-v2…";
+      try {
+        await commitToNode(
+          "hub/skill-activations.json",
+          state.activations,
+          "chore(hub): update skill activations matrix from vault UI"
+        );
+        localStorage.removeItem("forge_activations_draft");
+        state.dirtyActivations = false;
+        el.className = "commit-status ok";
+        el.textContent = "OK — matriz en GitHub (feat/hub-v2). Otras máquinas: git pull.";
+        pushSession("commit_activations", "GitHub Contents API ok");
+      } catch (e) {
+        el.className = "commit-status err";
+        el.textContent = String(e.message || e);
+      }
+    });
+
+    // Registry check-in
+    $("#ck-submit")?.addEventListener("click", () => {
+      const agent = $("#ck-agent")?.value;
+      const actor = ($("#ck-actor")?.value || "").trim() || "anonymous";
+      const note = ($("#ck-note")?.value || "").trim() || "Skills vistas y validadas";
+      if (!agent) return;
+      const confirmed = agentActiveSkills(agent);
+      const signature = `${actor}|${agent}|${confirmed.join(",")}|${Date.now()}`;
+      if (!state.registry) state.registry = { schema_version: 1, checkins: [], session_log: [] };
+      state.registry.checkins = state.registry.checkins || [];
+      state.registry.checkins.unshift({
+        at: new Date().toISOString(),
+        agent_id: agent,
+        actor_label: actor,
+        action: "confirm_skills_seen",
+        skills_confirmed: confirmed,
+        signature: signature.slice(0, 64),
+        note,
+      });
+      state.dirtyRegistry = true;
+      pushSession("checkin", note, agent);
+      saveDrafts();
+      const st = $("#ck-status");
+      if (st) {
+        st.hidden = false;
+        st.className = "commit-status ok";
+        st.textContent = `Firma local OK (${confirmed.length} skills ON). Haz Commit registro al nodo.`;
+      }
+      setTimeout(() => render(), 400);
+    });
+    $("#export-registry")?.addEventListener("click", () => {
+      if (state.registry) downloadJson("agent-registry.json", state.registry);
+    });
+    $("#commit-registry")?.addEventListener("click", async () => {
+      const st = $("#ck-status");
+      if (!st || !state.registry) return;
+      st.hidden = false;
+      st.className = "commit-status warn";
+      st.textContent = "Subiendo agent-registry.json…";
+      try {
+        await commitToNode(
+          "hub/agent-registry.json",
+          state.registry,
+          "chore(hub): agent check-in registry from vault UI"
+        );
+        localStorage.removeItem("forge_registry_draft");
+        state.dirtyRegistry = false;
+        st.className = "commit-status ok";
+        st.textContent = "OK — registro en GitHub. Multi-dispositivo: git pull.";
+      } catch (e) {
+        st.className = "commit-status err";
+        st.textContent = String(e.message || e);
+      }
+    });
+
     if (state.view === "config") {
       if (pat()) $("#pat").value = pat();
       $("#save-pat").onclick = async () => {
@@ -764,7 +1140,7 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
     if (state.isFileProtocol) {
       state.loadErrors.push("file:// bloquea fetch local — usa start-hub.ps1");
     }
-    const [agents, catalog, credits, sources, gallery, boot, taxonomy, snapshot] =
+    const [agents, catalog, credits, sources, gallery, boot, taxonomy, snapshot, activations, registry] =
       await Promise.all([
         loadJson("agents.json"),
         loadJson("catalog.json"),
@@ -774,6 +1150,8 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
         loadText("bootstrap.txt"),
         loadJson("taxonomy.json"),
         loadJson("live-snapshot.json"),
+        loadJson("skill-activations.json"),
+        loadJson("agent-registry.json"),
       ]);
     state.agentsData = agents;
     state.catalog = catalog;
@@ -791,6 +1169,23 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
       "[Bootstrap no cargado — abre http://localhost:4180/hub/ con start-hub.ps1]";
     state.taxonomy = taxonomy;
     state.snapshot = snapshot;
+    state.activations = activations;
+    state.registry = registry;
+    state.dirtyActivations = false;
+    state.dirtyRegistry = false;
+    // local drafts (same browser) — optional
+    try {
+      const draftA = localStorage.getItem("forge_activations_draft");
+      if (draftA) {
+        state.activations = JSON.parse(draftA);
+        state.dirtyActivations = true;
+      }
+      const draftR = localStorage.getItem("forge_registry_draft");
+      if (draftR) {
+        state.registry = JSON.parse(draftR);
+        state.dirtyRegistry = true;
+      }
+    } catch { /* ignore */ }
     if (snapshot?.commits) {
       state.live = {
         source: "snapshot",
@@ -802,6 +1197,72 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
     $("#nav-skills").textContent = String(catalog?.skills?.length || "—");
     renderRail();
     renderMobile();
+  }
+
+  function saveDrafts() {
+    if (state.activations && state.dirtyActivations) {
+      localStorage.setItem("forge_activations_draft", JSON.stringify(state.activations));
+    }
+    if (state.registry && state.dirtyRegistry) {
+      localStorage.setItem("forge_registry_draft", JSON.stringify(state.registry));
+    }
+  }
+
+  function downloadJson(filename, obj) {
+    const blob = new Blob([JSON.stringify(obj, null, 2) + "\n"], {
+      type: "application/json",
+    });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  /** Commit file to private repo via Contents API (needs PAT with Contents: Write). */
+  async function commitToNode(path, contentObj, message) {
+    const token = pat();
+    if (!token) {
+      throw new Error("Falta PAT en Config (Contents: Read and Write)");
+    }
+    const bodyStr = JSON.stringify(contentObj, null, 2) + "\n";
+    const content = btoa(unescape(encodeURIComponent(bodyStr)));
+    // get sha if exists
+    let sha;
+    const meta = await fetch(
+      `https://api.github.com/repos/${PRIV}/contents/${path}?ref=feat/hub-v2`,
+      {
+        headers: {
+          Accept: "application/vnd.github+json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (meta.ok) {
+      const j = await meta.json();
+      sha = j.sha;
+    } else if (meta.status !== 404) {
+      throw new Error(`No se pudo leer ${path} (HTTP ${meta.status})`);
+    }
+    const put = await fetch(`https://api.github.com/repos/${PRIV}/contents/${path}`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message,
+        content,
+        branch: "feat/hub-v2",
+        sha,
+      }),
+    });
+    if (!put.ok) {
+      const t = await put.text();
+      throw new Error(`Commit falló HTTP ${put.status}: ${t.slice(0, 180)}`);
+    }
+    return put.json();
   }
 
   function renderRail() {
@@ -824,9 +1285,10 @@ Confirma: nombre, qué lees/escribes, próxima acción única.`;
     const tabs = $("#mobile-tabs");
     const items = [
       ["floor", "Floor"],
-      ["skills", "Skills"],
+      ["expediente", "Skills"],
+      ["monitor", "Mon"],
+      ["registry", "Firma"],
       ["ops", "Pulse"],
-      ["credits", "€"],
       ["taxonomy", "Tax"],
       ["protocol", "Boot"],
     ];

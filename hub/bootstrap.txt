@@ -17,7 +17,11 @@ Contexto operativo, no negociable:
 3. SKILLS SIN INSTALACIÓN: el trabajo se hace leyendo la skill que toque desde
    el repo: .agents/skills/<skill>/SKILL.md (y sus references/). Elige por la
    descripción del frontmatter, lee el archivo completo, aplica. Inventario:
-   .skills/00_CLAUDE_LIVE/REGISTRY.md.
+   .skills/00_CLAUDE_LIVE/REGISTRY.md y hub/catalog.json.
+   OBLIGATORIO: lee hub/skill-activations.json — solo usa skills en true para
+   TU agent_id (claude|codex|grok|gemini|sah|manus). false = prohibido aunque
+   el proveedor las tenga. Tras cargar, deja check-in en hub/agent-registry.json
+   o nota .ai-forge/audit/ + commit.
 
 4. TRUTH MODEL: ningún dato cambiante sin fuente, estado de verificación y
    fecha. Estimación ≠ dato real. Prohibido inventar.

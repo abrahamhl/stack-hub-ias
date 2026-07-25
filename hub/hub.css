@@ -683,6 +683,73 @@ textarea { font-family: Inter, system-ui, sans-serif; min-height: 60px; }
 .lb-toolbar { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; }
 .lb-title { font-family: var(--display); font-size: 14px; color: var(--muted); }
 
+/* Skill expediente matrix */
+.exp-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.exp-table {
+  width: 100%; border-collapse: separate; border-spacing: 0 6px; min-width: 720px;
+}
+.exp-table th {
+  font: 800 10px var(--mono); color: var(--muted); text-align: center;
+  padding: 6px 8px; text-transform: uppercase; letter-spacing: 0.06em;
+}
+.exp-table th.skill-col { text-align: left; min-width: 180px; }
+.exp-table td {
+  background: rgba(255, 255, 255, 0.04);
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  padding: 10px 8px; vertical-align: middle; text-align: center;
+}
+.exp-table td:first-child {
+  border-left: 1px solid var(--line); border-radius: 12px 0 0 12px; text-align: left;
+}
+.exp-table td:last-child {
+  border-right: 1px solid var(--line); border-radius: 0 12px 12px 0;
+}
+.exp-table .skill-name {
+  font-family: var(--display); font-weight: 700; font-size: 13px; color: var(--text);
+}
+.exp-table .skill-path {
+  font: 600 10px var(--mono); color: var(--cyan); display: block; margin-top: 2px; word-break: break-all;
+}
+.exp-table .skill-desc {
+  font-size: 11px; color: var(--muted); margin-top: 4px; max-width: 280px;
+}
+
+/* Toggle switch */
+.sw {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 42px; height: 24px; border-radius: 99px; border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.08); cursor: pointer; padding: 2px;
+  transition: background 0.15s, border-color 0.15s;
+}
+.sw[aria-checked="true"] {
+  background: rgba(116, 224, 137, 0.2); border-color: rgba(116, 224, 137, 0.45);
+}
+.sw[aria-checked="false"] {
+  background: rgba(255, 91, 91, 0.12); border-color: rgba(255, 91, 91, 0.3);
+}
+.sw i {
+  width: 18px; height: 18px; border-radius: 50%; background: var(--dim);
+  display: block; transition: transform 0.15s, background 0.15s;
+}
+.sw[aria-checked="true"] i {
+  background: var(--green); transform: translateX(9px);
+  box-shadow: 0 0 10px rgba(116, 224, 137, 0.5);
+}
+.sw[aria-checked="false"] i {
+  background: var(--red); transform: translateX(-9px);
+}
+.sw:focus-visible { outline: 2px solid var(--forge); outline-offset: 2px; }
+
+.badge-on { color: var(--green); font: 800 10px var(--mono); }
+.badge-off { color: var(--red); font: 800 10px var(--mono); }
+.commit-status {
+  font: 700 12px var(--mono); padding: 8px 12px; border-radius: 10px;
+  border: 1px solid var(--line); margin-top: 10px;
+}
+.commit-status.ok { border-color: rgba(116, 224, 137, 0.4); color: var(--green); }
+.commit-status.err { border-color: rgba(255, 91, 91, 0.4); color: var(--red); }
+.commit-status.warn { border-color: rgba(255, 209, 102, 0.4); color: var(--yellow); }
+
 /* Taxonomy table */
 .tax-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
 .tax-table th {

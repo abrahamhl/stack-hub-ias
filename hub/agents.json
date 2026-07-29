@@ -18,6 +18,53 @@
   },
   "agents": [
     {
+      "id": "antigravity",
+      "name": "Antigravity AGY",
+      "short": "Antigravity",
+      "role": "Motor omnisciente de aceleración, orquestación multitarea, generación visual y auto-sync Git",
+      "surface": "Antigravity CLI / AGY 2.0",
+      "protocol": ".antigravity_code/RULES.md",
+      "accent": "purple",
+      "glyph": "⚡",
+      "status": "active",
+      "best_for": [
+        "aceleración 200%",
+        "subagentes concurrentes",
+        "generación UI/UX e imágenes",
+        "auto-sync git & hub",
+        "auditoría continua"
+      ],
+      "avoid_for": [
+        "omitir verificación empírica antes de commit"
+      ],
+      "repo_paths": [
+        ".antigravity_code/RULES.md",
+        ".antigravity_code/config.yaml",
+        ".antigravity_code/SYNC_PROTOCOL.md",
+        ".antigravity_code/skills/",
+        ".antigravity_code/hooks/"
+      ],
+      "skills": [
+        "antigravity-chassis-200",
+        "frontend-hyper-boost",
+        "orchestrating-ai-forge",
+        "operating-abraham-mcp"
+      ],
+      "tools": [
+        "git",
+        "mcp:abraham-os",
+        "invoke_subagent",
+        "generate_image",
+        "git-sync hook"
+      ],
+      "deep_link": null,
+      "notes": "Motor principal Antigravity 2.0. Conexión nativa con GitHub y Vault Factory.",
+      "job_state": "processing",
+      "job_label": "vault 200% hyper-boost & real-time sync",
+      "phase": 1,
+      "intensity": 0.98
+    },
+    {
       "id": "claude",
       "name": "Claude Code",
       "short": "Claude",

@@ -1,0 +1,18 @@
+{
+  "engine": "Antigravity AGY 2.0",
+  "vendor": "Google DeepMind",
+  "version": "2.0.0-hyper-boost",
+  "chassis_status": "VERIFIED_CHASSIS_200",
+  "active_surface": "antigravity-code",
+  "rules": ".antigravity_code/RULES.md",
+  "config": ".antigravity_code/config.yaml",
+  "sync_protocol": ".antigravity_code/SYNC_PROTOCOL.md",
+  "instructions": ".antigravity_code/INSTRUCTIONS.md",
+  "commands": ".antigravity_code/COMMANDS.md",
+  "tools": ".antigravity_code/TOOLS.md",
+  "skills_dir": ".antigravity_code/skills/",
+  "docs_dir": ".antigravity_code/docs/",
+  "hooks_dir": ".antigravity_code/hooks/",
+  "github_repo": "git@github.com:kinkydisorder/stack-hub-ias.git",
+  "active_branch": "feat/hub-v2"
+}

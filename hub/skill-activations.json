@@ -4,9 +4,46 @@
   "updated_by": "system-init",
   "branch_hint": "feat/hub-v2",
   "description": "Matriz skill × agente. true = DEBE cargar en chat nuevo. false = PROHIBIDO usar (como desactivar en config del proveedor). Fuente de verdad del nodo — no la memoria del chat.",
-  "agents": ["claude", "codex", "grok", "gemini", "sah", "manus"],
+  "agents": ["antigravity", "claude", "codex", "grok", "gemini", "sah", "manus"],
   "matrix": {
+    "antigravity-chassis-200": {
+      "antigravity": true,
+      "claude": false,
+      "codex": false,
+      "grok": false,
+      "gemini": false,
+      "sah": false,
+      "manus": false
+    },
+    "reseller-clothing-triage": {
+      "antigravity": true,
+      "claude": true,
+      "codex": false,
+      "grok": false,
+      "gemini": true,
+      "sah": false,
+      "manus": false
+    },
+    "multi-marketplace-scorer": {
+      "antigravity": true,
+      "claude": true,
+      "codex": false,
+      "grok": true,
+      "gemini": false,
+      "sah": false,
+      "manus": false
+    },
+    "git-auto-sync": {
+      "antigravity": true,
+      "claude": true,
+      "codex": true,
+      "grok": false,
+      "gemini": false,
+      "sah": false,
+      "manus": false
+    },
     "frontend-hyper-boost": {
+      "antigravity": true,
       "claude": true,
       "codex": true,
       "grok": true,

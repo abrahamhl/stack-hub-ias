@@ -1,13 +1,27 @@
 {
   "schema_version": 1,
   "description": "Registro comprobable: quién entró, qué confirmó, firmas de 'he visto las skills activas'. Cada IA en chat nuevo debe dejar check-in.",
-  "checkins": [],
+  "checkins": [
+    {
+      "at": "2026-07-29T20:29:00.000Z",
+      "agent_id": "antigravity",
+      "agent_name": "Antigravity AGY 2.0",
+      "signature": "VERIFIED_CHASSIS_200",
+      "active_skills": ["antigravity-chassis-200", "frontend-hyper-boost", "orchestrating-ai-forge"]
+    }
+  ],
   "session_log": [
     {
       "at": "2026-07-25T00:00:00.000Z",
       "agent_id": "system",
       "event": "registry_created",
       "detail": "Registro vacío listo para firmas de agentes"
+    },
+    {
+      "at": "2026-07-29T20:29:00.000Z",
+      "agent_id": "antigravity",
+      "event": "checkin_complete",
+      "detail": "Motor Antigravity 200% inicializado, validado y sincronizado con GitHub"
     }
   ]
 }

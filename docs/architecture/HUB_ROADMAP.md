@@ -4,6 +4,18 @@ Registro completo de la visión de Abraham (2026-07-24) para que ninguna idea se
 pierda, faseado por coste/valor. Objetivo final declarado: **superar a Manus —
 romper la barrera de necesitar computación masiva para ser competente con IAs.**
 
+## NORTE (2026-07-25) — leer primero
+
+**Orientación canónica:** `PRODUCT_ORIENTATION.md`
+
+- UI del hub = puesto de mando (donde Abraham opera).
+- GitHub privado = backend / infra (skills, issues, commits).
+- Chats de proveedores = brazos; cada chat nuevo **va al stack**, no a la memoria
+  del proveedor.
+- Editar skills en la UI = editar el repo (todas las IAs lo ven).
+- Réplica de menús tipo config/plugins/skills de IDE/GitHub donde encaje.
+- **No** es “usar PowerShell como producto”; la consola solo arranca la vista local.
+
 ## Fase 0 — HECHA (hub v1, estático)
 
 Cockpit dark-premium (tokens frontend-hyper-boost): estado del nodo en vivo
@@ -21,15 +33,19 @@ localStorage. Cero backend, desplegable en Hostinger.
 - Selector/captura: galería de capturas de interfaces (src/ ya tiene referencias)
   enlazables a issues.
 
-## Fase 2 — Editor y tiempo real (requiere backend mínimo)
+## Fase 2 — Editor y tiempo real (requiere backend mínimo) — **PRIORIDAD PRODUCTO**
 
-- Modo editor tipo WordPress: editar secciones HTML/CSS del hub in-place y
-  guardar como commit (GitHub API `contents` con PAT — sigue sin servidor propio).
-- Sincronización inmediata: webhook GitHub → rebuild del hub (GitHub Actions
-  gratis) o polling ligero.
-- Documentos enlazados: registro de artefactos en Drive (5TB) con índice en repo.
-- Delegación visual de tareas: issues con labels por agente + tablero Kanban
-  (GitHub Projects embebido o API).
+Alineado a `PRODUCT_ORIENTATION.md`:
+
+- **Skill/Plugin Config UI** (réplica de menú de skills/plugins): listar, abrir,
+  editar SKILL.md canónico, owners por agente; **Guardar = commit en el repo**
+  (GitHub Contents API + PAT write acotado, o patch descargable).
+- Modo editor tipo WordPress del hub in-place → commit (sin servidor propio).
+- Tablero “quién hace qué / ideas nuevas / skills a coger” (Issues + audit + job_state).
+- Sincronización: webhook GitHub → rebuild o polling ligero.
+- Documentos enlazados: índice en repo + Drive para artefactos pesados.
+- Terminal de sala: contexto de carga del nodo + deep-link al brazo (no sustituir
+  aún al chat del proveedor; sí forzar que el brazo arranque desde el stack).
 
 ## Fase 3 — Fallout Shelter (la fábrica como videojuego)
 

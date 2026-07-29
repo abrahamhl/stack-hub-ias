@@ -18,6 +18,7 @@ protocol:
   ritual: [commit-atomico, audit-note, push]
 
 surfaces:                       # dónde escribe su config cada IA
+  antigravity-code: { rules: .antigravity_code/RULES.md, skills: .antigravity_code/skills/, config: .antigravity_code/config.yaml, writes: git+mcp+hub }
   claude-code:   { rules: CLAUDE.md,  skills: .claude/skills/,  writes: git+mcp }
   codex:         { rules: AGENTS.md,  config: .ai-forge/client-configs/codex-config.toml, writes: git }
   gemini-cli:    { rules: GEMINI.md,  config: .ai-forge/client-configs/gemini-settings.json, writes: git }
@@ -36,7 +37,13 @@ sync:
   on_session_end: [audit-note, commit, push]
   public_branch:
     name: public
-    excludes: [docs/, scripts/inventory-projects.ps1, CLAUDE.md, AGENTS.md, .claude/, forge.config.yaml, SOUL.md]
+    # Secreto comercial: nunca empujar docs/protocolos/config al escaparate.
+    # El repo de escaparate debe crearse aparte y SOLO con el árbol curado.
+    excludes: [docs/, scripts/inventory-projects.ps1, CLAUDE.md, AGENTS.md, .claude/, forge.config.yaml, SOUL.md, .ai-forge/, hub/taxonomy.json, hub/live-snapshot.json, hub/ABRE-ASI.md, hub/SECURITY.md]
+  security:
+    node_visibility: private
+    never_commit: [tokens, PAT, passwords, real_billing, personal_identity]
+    hub_public_hosting: "risk — prefer private host or curate; full hub exposes methodology"
 
 mcp:
   abraham-os:

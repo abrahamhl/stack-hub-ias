@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-07-25T00:00:00.000Z",
+  "updated_by": "system-init",
+  "branch_hint": "feat/hub-v2",
+  "description": "Matriz skill × agente. true = DEBE cargar en chat nuevo. false = PROHIBIDO usar (como desactivar en config del proveedor). Fuente de verdad del nodo — no la memoria del chat.",
+  "agents": ["claude", "codex", "grok", "gemini", "sah", "manus"],
+  "matrix": {
+    "frontend-hyper-boost": {
+      "claude": true,
+      "codex": true,
+      "grok": true,
+      "gemini": false,
+      "sah": false,
+      "manus": false
+    },
+    "building-nextgen-frontends": {
+      "claude": true,
+      "codex": true,
+      "grok": true,
+      "gemini": false,
+      "sah": false,
+      "manus": false
+    },
+    "operating-google-stitch": {
+      "claude": true,
+      "codex": false,
+      "grok": false,
+      "gemini": false,
+      "sah": false,
+      "manus": false
+    },
+    "auditing-project-readiness": {
+      "claude": true,
+      "codex": true,
+      "grok": true,
+      "gemini": true,
+      "sah": false,
+      "manus": false
+    },
+    "orchestrating-ai-forge": {
+      "claude": true,
+      "codex": true,
+      "grok": true,
+      "gemini": true,
+      "sah": false,
+      "manus": true
+    },
+    "routing-model-workflows": {
+      "claude": true,
+      "codex": true,
+      "grok": true,
+      "gemini": true,
+      "sah": true,
+      "manus": false
+    },
+    "operating-abraham-mcp": {
+      "claude": true,
+      "codex": true,
+      "grok": false,
+      "gemini": false,
+      "sah": false,
+      "manus": false
+    },
+    "claude-live-registry": {
+      "claude": true,
+      "codex": false,
+      "grok": false,
+      "gemini": false,
+      "sah": false,
+      "manus": false
+    }
+  },
+  "log": [
+    {
+      "at": "2026-07-25T00:00:00.000Z",
+      "actor": "system-init",
+      "action": "seed_matrix",
+      "detail": "Matriz inicial desde agents.json skill_owners + roles"
+    }
+  ]
+}

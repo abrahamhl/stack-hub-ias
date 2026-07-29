@@ -9,6 +9,8 @@ Mapeo de ficheros de reglas: Codex → este `AGENTS.md` · Gemini CLI → `GEMIN
 
 1. **El nodo es el repo.** Ninguna decisión, skill, workflow o resultado es real
    hasta que está committeado aquí. Los chats son efímeros; el git no.
+   Orientación de producto (UI hub = mando, GitHub = backend, skills en el
+   stack): `docs/architecture/PRODUCT_ORIENTATION.md`.
 2. **Registro doble y continuo**: commit atómico + nota de auditoría en
    `.ai-forge/audit/` (vía MCP `abraham-os` → `write_audit_note`, actor = tu
    nombre de agente). Toda interacción con efecto se registra sin que Abraham lo

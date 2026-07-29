@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "description": "Registro comprobable: quién entró, qué confirmó, firmas de 'he visto las skills activas'. Cada IA en chat nuevo debe dejar check-in.",
+  "checkins": [],
+  "session_log": [
+    {
+      "at": "2026-07-25T00:00:00.000Z",
+      "agent_id": "system",
+      "event": "registry_created",
+      "detail": "Registro vacío listo para firmas de agentes"
+    }
+  ]
+}

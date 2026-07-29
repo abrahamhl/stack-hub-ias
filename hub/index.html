@@ -4,266 +4,121 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
-<title>AI FORGE — Hub</title>
+<meta name="description" content="AI Forge — Fallout Shelter Factory. Nodo git visual de agentes, skills y jobs vivos." />
+<title>AI FORGE — Vault Factory</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
-<style>
-  :root{
-    --bg:#07080b; --panel:#11141b; --text:#eef2ff; --muted:#99a2b7; --dim:#687187;
-    --line:rgba(255,255,255,.10); --soft:rgba(255,255,255,.055);
-    --forge:#ff8a4c; --cyan:#37e8ff; --purple:#9b7cff; --blue:#6aa8ff;
-    --green:#74e089; --yellow:#ffd166; --red:#ff5b5b;
-    --radius:28px; --shadow:0 30px 100px rgba(0,0,0,.55);
-    --display:'Space Grotesk',Inter,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
-  }
-  *{box-sizing:border-box;margin:0}
-  html,body{height:100%}
-  body{background:var(--bg);color:var(--text);font:15px/1.55 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-  a{color:var(--cyan);text-decoration:none} a:hover{text-decoration:underline}
-  .shell{display:grid;grid-template-rows:56px 1fr;min-height:100dvh}
-  /* command bar */
-  .bar{display:flex;align-items:center;gap:16px;padding:0 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(7,8,11,.85);backdrop-filter:blur(10px);z-index:10}
-  .brand{font-family:var(--display);font-weight:700;letter-spacing:.02em}
-  .brand b{color:var(--forge)}
-  .micro{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
-  .bar .status{margin-left:auto;display:flex;gap:14px;align-items:center}
-  .dot{width:7px;height:7px;border-radius:50%;background:var(--dim);display:inline-block;margin-right:6px}
-  .dot.on{background:var(--green);box-shadow:0 0 8px var(--green)}
-  .dot.live{background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
-  /* layout */
-  .cols{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:0}
-  @media(max-width:900px){.cols{grid-template-columns:1fr}.rail{display:none}}
-  .rail{border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;gap:4px}
-  .rail a{display:block;padding:9px 12px;border-radius:12px;color:var(--muted);font-weight:500}
-  .rail a:hover{background:var(--soft);color:var(--text);text-decoration:none}
-  .rail .sep{margin:14px 8px 6px}
-  main{padding:28px clamp(16px,4vw,44px);max-width:1180px;width:100%}
-  h1{font-family:var(--display);font-size:clamp(28px,4.5vw,44px);line-height:1.08;font-weight:700;margin:10px 0 6px}
-  h1 em{font-style:normal;color:var(--forge)}
-  .sub{color:var(--muted);max-width:62ch}
-  section{margin-top:44px}
-  h2{font-family:var(--display);font-size:20px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:14px}
-  h2 .micro{color:var(--dim)}
-  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
-  .grid{display:grid;gap:14px}
-  .grid.c3{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
-  .card h3{font-family:var(--display);font-size:15px;margin-bottom:4px}
-  .card p{color:var(--muted);font-size:13.5px}
-  .tag{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:99px;border:1px solid var(--line);color:var(--dim)}
-  .tag.frontend{color:var(--forge);border-color:rgba(255,138,76,.35)}
-  .tag.control-plane{color:var(--purple);border-color:rgba(155,124,255,.35)}
-  .tag.audit{color:var(--green);border-color:rgba(116,224,137,.35)}
-  .tag.integration{color:var(--cyan);border-color:rgba(55,232,255,.35)}
-  ul.feed{list-style:none;display:flex;flex-direction:column}
-  ul.feed li{display:flex;gap:14px;padding:11px 2px;border-top:1px solid var(--line);font-size:13.5px;align-items:baseline}
-  ul.feed li:first-child{border-top:0}
-  ul.feed .sha{font-family:var(--mono);color:var(--forge);font-size:12px;flex:0 0 62px}
-  ul.feed .when{margin-left:auto;color:var(--dim);font-family:var(--mono);font-size:11px;white-space:nowrap}
-  pre.proto{font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--muted);background:#0b0d13;border:1px solid var(--line);border-radius:14px;padding:18px;max-height:320px;overflow:auto;white-space:pre-wrap}
-  button{font:600 13px Inter;color:var(--bg);background:var(--forge);border:0;border-radius:10px;padding:9px 16px;cursor:pointer}
-  button.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
-  button:hover{filter:brightness(1.08)}
-  input[type=password],input[type=text]{background:#0b0d13;border:1px solid var(--line);border-radius:10px;color:var(--text);padding:9px 12px;font-family:var(--mono);font-size:12px;width:100%}
-  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .note{font-size:12.5px;color:var(--dim)}
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
-  .kpi{border:1px solid var(--line);border-radius:16px;padding:14px 16px}
-  .kpi .v{font-family:var(--display);font-size:26px;font-weight:700}
-  .kpi .k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
-  footer{margin:60px 0 30px;color:var(--dim);font-size:12.5px;border-top:1px solid var(--line);padding-top:18px}
-  @media (prefers-reduced-motion:no-preference){
-    .card,.panel{transition:border-color .18s}
-    .card:hover{border-color:rgba(255,138,76,.35)}
-  }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="hub.css" />
 </head>
 <body>
+<a class="skip" href="#canvas">Saltar al vault</a>
+
+<!-- Atmosphere layers (refs #7 boxes, #16 wavy) -->
+<div class="atmos" aria-hidden="true">
+  <div class="bg-boxes"></div>
+  <div class="wave-layer"></div>
+  <canvas id="particle-field" class="particle-field"></canvas>
+</div>
+
 <div class="shell">
-  <header class="bar">
-    <span class="brand">AI <b>FORGE</b></span>
-    <span class="micro">abraham_os / hub</span>
-    <span class="status">
-      <span class="micro"><span class="dot" id="dot-node"></span>nodo</span>
-      <span class="micro"><span class="dot" id="dot-mode"></span><span id="mode-label">público</span></span>
-      <button class="ghost" id="cfg-btn">Config</button>
-    </span>
+  <header class="bar" role="banner">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+      <div>
+        <strong>AI <b>FORGE</b></strong>
+        <small>VAULT · SHELTER FACTORY · NODO GIT</small>
+      </div>
+    </div>
+    <input class="search" id="search" type="search" placeholder="Buscar sala, skill, job, ruta…" aria-label="Buscar en el vault" />
+    <div class="bar-status">
+      <span class="chip"><span class="d" id="dot-node"></span><span id="node-label">nodo</span></span>
+      <span class="chip"><span class="d live" id="dot-jobs"></span><span id="jobs-label">jobs —</span></span>
+      <span class="chip"><span class="d" id="dot-mode"></span><span id="mode-label">público</span></span>
+      <button type="button" class="ghost" id="cfg-btn">Config</button>
+      <button type="button" class="hot" id="reset-btn" title="Copiar ritual RESET FORGE">RESET</button>
+    </div>
   </header>
-  <div class="cols">
-    <nav class="rail">
-      <span class="micro sep">Ventanas</span>
-      <a href="#command">01 · Command Center</a>
-      <a href="#skills">02 · Skill Registry</a>
-      <a href="#boards">03 · Tableros</a>
-      <a href="#protocol">04 · Protocolo</a>
-      <a href="#audit">05 · Auditoría</a>
-      <span class="micro sep">Nodo</span>
-      <a href="https://github.com/kinkydisorder/stack-hub-ias" target="_blank" rel="noopener">GitHub privado ↗</a>
-      <a href="https://github.com/kinkydisorder/stack-hub-ias-public" target="_blank" rel="noopener">Catálogo público ↗</a>
+
+  <div class="body">
+    <nav class="rail" aria-label="Mapa del vault">
+      <div class="rail-title">Shelter</div>
+      <button type="button" class="navitem on" data-view="floor"><span>☢ Factory Floor</span><span class="count">LIVE</span></button>
+      <button type="button" class="navitem" data-view="expediente"><span>⚡ Skill Expediente</span><span class="count" id="nav-skills">—</span></button>
+      <button type="button" class="navitem" data-view="monitor"><span>🖥 Monitor</span><span class="count">log</span></button>
+      <button type="button" class="navitem" data-view="registry"><span>✍ Registro firmas</span><span class="count">OK</span></button>
+      <button type="button" class="navitem" data-view="skills"><span>📚 Catálogo paths</span><span class="count">ref</span></button>
+      <button type="button" class="navitem" data-view="ops"><span>📊 Pulse / Bars</span><span class="count">90d</span></button>
+      <button type="button" class="navitem" data-view="credits"><span>💳 Power cells</span><span class="count">€</span></button>
+      <button type="button" class="navitem" data-view="news"><span>📡 Comms</span><span class="count">src</span></button>
+      <button type="button" class="navitem" data-view="gallery"><span>🖼 Archives</span><span class="count">UX</span></button>
+      <button type="button" class="navitem" data-view="protocol"><span>📜 Bootstrap</span><span class="count">boot</span></button>
+      <button type="button" class="navitem" data-view="audit"><span>🔴 Audit trail</span><span class="count">git</span></button>
+      <button type="button" class="navitem" data-view="taxonomy"><span>🗂 Taxonomy</span><span class="count">ideas</span></button>
+      <div class="rail-title">Rooms</div>
+      <div id="rail-agents"></div>
+      <div class="rail-title">Nodo</div>
+      <a class="navitem" href="https://github.com/kinkydisorder/stack-hub-ias" target="_blank" rel="noopener"><span>GitHub privado ↗</span></a>
     </nav>
-    <main>
-      <p class="micro">Construir la fábrica. No otra wiki rota.</p>
-      <h1>Un nodo. Todas las IAs.<br /><em>Todo registrado.</em></h1>
-      <p class="sub">Este hub es una vista del nodo git. No guarda nada: lee GitHub en vivo.
-      Cambiar una skill = editarla en GitHub (botón en cada tarjeta). Toda interacción de
-      cualquier IA acaba aquí como commit + nota de auditoría.</p>
 
-      <section id="command">
-        <h2>Command Center <span class="micro">estado en vivo</span></h2>
-        <div class="panel">
-          <div class="kpis">
-            <div class="kpi"><div class="v" id="k-commits">—</div><div class="k">commits (30d)</div></div>
-            <div class="kpi"><div class="v" id="k-branches">—</div><div class="k">ramas</div></div>
-            <div class="kpi"><div class="v" id="k-issues">—</div><div class="k">issues abiertas</div></div>
-            <div class="kpi"><div class="v" id="k-updated">—</div><div class="k">último push</div></div>
-          </div>
+    <div class="main-col">
+      <div class="mobile-tabs" id="mobile-tabs" aria-label="Vistas"></div>
+      <main class="canvas" id="canvas" tabindex="-1">
+        <p class="note">Inicializando vault…</p>
+      </main>
+    </div>
+
+    <aside class="inspector" aria-label="Inspector de sala">
+      <div class="rail-title" style="margin-top:0">Inspector</div>
+      <div class="block" id="insp-context">
+        <h3>Vault status</h3>
+        <p class="note">Fallout Shelter Factory · premium 21st.dev grammar. Selecciona una sala o un job vivo.</p>
+      </div>
+      <div class="block">
+        <h3>Fases de producción</h3>
+        <div class="phase-rings" id="insp-phases" aria-hidden="true">
+          <i class="on"></i><i></i><i></i><i></i>
         </div>
-      </section>
-
-      <section id="skills">
-        <h2>Skill Registry Matrix <span class="micro">catálogo desde el repo</span></h2>
-        <div class="grid c3" id="skill-grid"><p class="note">Cargando catálogo…</p></div>
-      </section>
-
-      <section id="boards">
-        <h2>Tableros <span class="micro">github issues = corcho</span></h2>
-        <div class="panel">
-          <ul class="feed" id="issues-feed"><li class="note">Cargando…</li></ul>
-          <div class="row" style="margin-top:14px">
-            <a href="https://github.com/kinkydisorder/stack-hub-ias/issues/new?labels=idea&title=Idea%3A%20" target="_blank" rel="noopener"><button>+ Nueva idea</button></a>
-            <a href="https://github.com/kinkydisorder/stack-hub-ias/issues/new?labels=delegacion&title=Delegar%3A%20" target="_blank" rel="noopener"><button class="ghost">+ Delegar trabajo</button></a>
-            <span class="note">Cada IA se asigna una issue antes de tocar un proyecto (HANDOFF_PACKET).</span>
-          </div>
+        <p class="note" id="insp-phase-label" style="margin-top:8px">Fase 0 · idle</p>
+      </div>
+      <div class="block">
+        <h3>Truth model</h3>
+        <div class="truth-grid">
+          <div class="truth"><b class="ok">Verified</b>API/docs</div>
+          <div class="truth"><b class="info">Manual</b>check</div>
+          <div class="truth"><b class="warn">Estimated</b>≠ real</div>
+          <div class="truth"><b class="err">Job live</b>visible</div>
         </div>
-      </section>
+      </div>
+      <div class="block">
+        <h3>Una acción</h3>
+        <p class="note" id="insp-action">Entra en una sala activa → copia bootstrap → RESET FORGE en esa superficie.</p>
+      </div>
+    </aside>
+  </div>
 
-      <section id="protocol">
-        <h2>Protocolo <span class="micro">pega esto una vez en cualquier IA</span></h2>
-        <div class="panel">
-          <pre class="proto" id="proto-block">Cargando protocolo…</pre>
-          <div class="row" style="margin-top:12px">
-            <button id="copy-proto">Copiar bloque</button>
-            <span class="note">Fuente: docs/workflows/UNIVERSAL_BOOTSTRAP_PROMPT.md (repo privado). El bloque sustituye a la memoria de plataforma.</span>
-          </div>
-        </div>
-      </section>
+  <footer class="dock" role="contentinfo">
+    <button type="button" class="hot-pill" data-view="floor">FLOOR</button>
+    <button type="button" data-view="skills">/skills</button>
+    <button type="button" data-view="ops">/pulse</button>
+    <button type="button" data-view="protocol">/boot</button>
+    <button type="button" id="dock-copy-boot">copiar bootstrap</button>
+    <span id="dock-status">vault · premium grammar · fallout shelter</span>
+  </footer>
+</div>
 
-      <section id="audit">
-        <h2>Auditoría <span class="micro">commits = qué · notas = por qué</span></h2>
-        <div class="panel"><ul class="feed" id="commit-feed"><li class="note">Cargando…</li></ul></div>
-      </section>
-
-      <section id="cfg" hidden>
-        <h2>Config <span class="micro">solo en este navegador</span></h2>
-        <div class="panel">
-          <p class="note" style="margin-bottom:10px">Token GitHub de grano fino (solo lectura de repos) para ver el nodo privado.
-          Se guarda en <b>localStorage de este navegador</b>, jamás en el código ni en el repo.</p>
-          <div class="row">
-            <input type="password" id="pat" placeholder="github_pat_… (opcional)" style="max-width:420px" />
-            <button id="save-pat">Guardar</button>
-            <button class="ghost" id="clear-pat">Borrar</button>
-          </div>
-        </div>
-      </section>
-
-      <footer>
-        AI Forge · vista estática del nodo git · diseño: frontend-hyper-boost tokens ·
-        sin analítica, sin cookies, sin backend propio.
-      </footer>
-    </main>
+<div class="lb" id="lightbox" hidden role="dialog" aria-modal="true" aria-labelledby="lb-title">
+  <div class="lb-inner">
+    <img id="lb-img" src="" alt="" />
+    <div class="lb-toolbar">
+      <button type="button" class="ghost" id="lb-prev">←</button>
+      <span class="lb-title" id="lb-title"></span>
+      <button type="button" class="ghost" id="lb-next">→</button>
+      <button type="button" class="hot" id="lb-close">Esc</button>
+    </div>
   </div>
 </div>
-<script>
-const PUB = 'kinkydisorder/stack-hub-ias-public';
-const PRIV = 'kinkydisorder/stack-hub-ias';
-const $ = (s) => document.querySelector(s);
-const pat = () => localStorage.getItem('forge_pat') || '';
-const repo = () => (pat() ? PRIV : PUB);
-const gh = async (path) => {
-  const r = await fetch(`https://api.github.com/repos/${repo()}${path}`, {
-    headers: pat() ? { Authorization: `Bearer ${pat()}` } : {},
-  });
-  if (!r.ok) throw new Error(`${r.status}`);
-  return r.json();
-};
-const rel = (iso) => {
-  const m = Math.round((Date.now() - new Date(iso)) / 60000);
-  if (m < 60) return `${m}m`;
-  if (m < 1440) return `${Math.round(m / 60)}h`;
-  return `${Math.round(m / 1440)}d`;
-};
 
-async function loadState() {
-  $('#mode-label').textContent = pat() ? 'privado' : 'público';
-  $('#dot-mode').className = 'dot ' + (pat() ? 'on' : 'live');
-  try {
-    const since = new Date(Date.now() - 30 * 864e5).toISOString();
-    const [commits, branches, issues] = await Promise.all([
-      gh(`/commits?per_page=100&since=${since}`),
-      gh('/branches?per_page=50'),
-      gh('/issues?state=open&per_page=30').catch(() => []),
-    ]);
-    $('#dot-node').className = 'dot on';
-    $('#k-commits').textContent = commits.length;
-    $('#k-branches').textContent = branches.length;
-    $('#k-issues').textContent = issues.length;
-    $('#k-updated').textContent = commits[0] ? rel(commits[0].commit.author.date) : '—';
-    $('#commit-feed').innerHTML = commits.slice(0, 12).map((c) => `
-      <li><span class="sha"><a href="${c.html_url}" target="_blank" rel="noopener">${c.sha.slice(0, 7)}</a></span>
-      <span>${c.commit.message.split('\n')[0].replace(/</g, '&lt;')}</span>
-      <span class="when">${c.commit.author.name} · ${rel(c.commit.author.date)}</span></li>`).join('');
-    $('#issues-feed').innerHTML = issues.length
-      ? issues.slice(0, 8).map((i) => `
-        <li><span class="sha">#${i.number}</span>
-        <span><a href="${i.html_url}" target="_blank" rel="noopener">${i.title.replace(/</g, '&lt;')}</a></span>
-        <span class="when">${(i.labels || []).map((l) => l.name).join(' ') || 'sin etiqueta'} · ${rel(i.updated_at)}</span></li>`).join('')
-      : '<li class="note">Sin issues abiertas. El corcho está limpio.</li>';
-  } catch (e) {
-    $('#dot-node').className = 'dot';
-    $('#commit-feed').innerHTML = `<li class="note">No se pudo leer ${repo()} (HTTP ${e.message}).
-      ${pat() ? 'Revisa el token en Config.' : 'El repo público aún no existe o está vacío — añade un token en Config para leer el privado.'}</li>`;
-  }
-}
-
-async function loadCatalog() {
-  try {
-    const r = await fetch('catalog.json');
-    const data = await r.json();
-    $('#skill-grid').innerHTML = data.skills.map((s) => `
-      <article class="card">
-        <div class="row" style="justify-content:space-between;margin-bottom:6px">
-          <span class="tag ${s.category}">${s.category}</span>
-          <a class="note" href="https://github.com/${PRIV}/edit/hyper-boost/${s.path}" target="_blank" rel="noopener">editar ↗</a>
-        </div>
-        <h3>${s.name}</h3>
-        <p>${s.description}</p>
-      </article>`).join('');
-  } catch {
-    $('#skill-grid').innerHTML = '<p class="note">catalog.json no disponible junto al hub.</p>';
-  }
-}
-
-async function loadProto() {
-  try {
-    const r = await fetch('bootstrap.txt');
-    if (!r.ok) throw 0;
-    $('#proto-block').textContent = await r.text();
-  } catch {
-    $('#proto-block').textContent = 'Sube hub/bootstrap.txt junto a esta página (se genera desde docs/workflows/UNIVERSAL_BOOTSTRAP_PROMPT.md).';
-  }
-}
-
-$('#cfg-btn').onclick = () => { const s = $('#cfg'); s.hidden = !s.hidden; if (!s.hidden) s.scrollIntoView({ behavior: 'smooth' }); };
-$('#save-pat').onclick = () => { localStorage.setItem('forge_pat', $('#pat').value.trim()); loadState(); };
-$('#clear-pat').onclick = () => { localStorage.removeItem('forge_pat'); $('#pat').value = ''; loadState(); };
-$('#copy-proto').onclick = async () => {
-  await navigator.clipboard.writeText($('#proto-block').textContent);
-  $('#copy-proto').textContent = 'Copiado ✓';
-  setTimeout(() => ($('#copy-proto').textContent = 'Copiar bloque'), 1800);
-};
-
-loadState(); loadCatalog(); loadProto();
-</script>
+<script src="hub.js" defer></script>
 </body>
 </html>

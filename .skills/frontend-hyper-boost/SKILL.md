@@ -8,25 +8,58 @@ description: Architect, build, refactor, or audit distinctive production fronten
 Treat visual ambition and product quality as one system. Create original work;
 use references to learn interaction grammar, never to clone code or branding.
 
+## REQUIRED — Premium orientation (AI Forge / hyper-boost surfaces)
+
+**Nivel de entrega: PREMIUM.** No es opcional en hub, Operator Arena, factory
+floor, agent dossiers, heatmaps de actividad, flujos entre IAs, estados
+“IA trabajando/auditando”, heroes ni galerías de referencia.
+
+1. **Leer y aplicar** `references/premium-21st-registry.md` **antes de codificar**.
+   Ahí están los 17 anclajes 21st.dev mandados por Abraham (shader cards, hero
+   futuristic, sphere/swirl de proceso, partículas de handoff, orrey, galerías,
+   barras, círculos de fase, etc.).
+2. **Mapear** cada zona de UI a ≥1 ref del registro y documentarlo en el handoff
+   (`ref # → zona`). Sin mapeo = trabajo incompleto.
+3. **Rechazar** salidas tipo admin panel / lista gris / cards planas cuando el
+   brief pida fábrica de agentes, simulador o hyper-boost. El listón es
+   Behance mockup del repo + gramática 21st.dev, no un CRUD bonito.
+4. **No instalar a ciegas** los `npx shadcn@latest add "https://21st.dev/..."`.
+   Usar las URLs como gramática; en vanilla reimplementar con tokens forge; en
+   React/shadcn solo tras audit de licencia, a11y, bundle y re-tokenizado.
+5. **Estados vivos obligatorios:** si una IA audita, procesa o corre un job
+   (aunque el usuario no tenga la app del proveedor abierta), el hub debe
+   mostrarlo con orbe/sphere/swirl/circles/bars — nunca solo “loading…”.
+6. **Flujos entre IAs** se representan como grafo/partículas/carriles (estilo
+   vault Obsidian), no como bullet list de strings.
+
+Si el perfil es `calm` (settings/legal), se puede bajar motion; el **craft
+visual** sigue siendo premium (tipografía, profundidad, foco).
+
 ## Operating contract
 
 1. Inspect the real repository, existing design system, routes, framework,
    dependencies, deploy target, and local instructions before proposing changes.
-2. State the user journey and the single intended emotional effect.
-3. Select one experience profile: `calm`, `boost`, or `ultra`.
-4. Select at most three hero interactions. Keep ordinary controls ordinary.
-5. Define keyboard, touch, reduced-motion, low-power, and TV equivalents before
+2. Read `references/premium-21st-registry.md` when the surface is AI Forge,
+   hub, agents, or any boost/ultra creative product UI.
+3. State the user journey and the single intended emotional effect.
+4. Select one experience profile: `calm`, `boost`, or `ultra`.
+5. Select at most three hero interactions. Keep ordinary controls ordinary.
+6. Define keyboard, touch, reduced-motion, low-power, and TV equivalents before
    implementing pointer motion.
-6. Build the semantic content and critical conversion path first.
-7. Add motion, 3D, audio, and shaders as progressively enhanced layers.
-8. Test responsive states, accessibility, performance, pricing/consent clarity,
+7. Build the semantic content and critical conversion path first.
+8. Add motion, 3D, audio, and shaders as progressively enhanced layers at the
+   premium grammar level (not decorative fluff on a flat layout).
+9. Test responsive states, accessibility, performance, pricing/consent clarity,
    and failure fallbacks.
-9. Record evidence, remaining risks, and the exact next physical action.
+10. Record evidence, ref mapping, remaining risks, and the exact next physical
+    action.
 
 ## Route the work
 
 Read only the references needed for the current request:
 
+- **Premium 21st.dev line (REQUIRED for AI Forge / boost+):**  
+  `references/premium-21st-registry.md`
 - Color, type, spacing, or theming decisions: `references/design-tokens.md`
 - React 19 / Next 15 / Tailwind v4 implementation code: `references/react-patterns.md`
 - Interaction or visual behavior: `references/interaction-patterns.md`

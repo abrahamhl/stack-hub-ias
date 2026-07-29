@@ -57,7 +57,9 @@
       { "topic": "Fallout shelter metaphor", "where": "HUB_ROADMAP + design-directions + hub UI" },
       { "topic": "RESET FORGE / no chat memory drag", "where": "bootstrap + agent room terminals" },
       { "topic": "Truth model credits", "where": "hub/credits.json" },
-      { "topic": "Live AI job visibility independent of provider app", "where": "agents.job_state + phase rings" }
+      { "topic": "Live AI job visibility independent of provider app", "where": "agents.job_state + phase rings" },
+      { "topic": "Sincronización omnicanal en tiempo real (móvil, desktop, CLI, chat web) para auto-registro de taxonomía e ideas sin fricción", "where": "hub/taxonomy.json + .antigravity_code/SYNC_PROTOCOL.md" },
+      { "topic": "Superficie Antigravity AGY 200% integrada como operador principal en el Fallout Shelter Vault Factory", "where": ".antigravity_code/ + hub/agents.json" }
     ]
   },
   "skills": {

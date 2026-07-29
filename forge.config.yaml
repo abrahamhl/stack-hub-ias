@@ -18,6 +18,7 @@ protocol:
   ritual: [commit-atomico, audit-note, push]
 
 surfaces:                       # dónde escribe su config cada IA
+  antigravity-code: { rules: .antigravity_code/RULES.md, skills: .antigravity_code/skills/, config: .antigravity_code/config.yaml, writes: git+mcp+hub }
   claude-code:   { rules: CLAUDE.md,  skills: .claude/skills/,  writes: git+mcp }
   codex:         { rules: AGENTS.md,  config: .ai-forge/client-configs/codex-config.toml, writes: git }
   gemini-cli:    { rules: GEMINI.md,  config: .ai-forge/client-configs/gemini-settings.json, writes: git }

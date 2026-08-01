@@ -1,203 +1,309 @@
-{
-  "schema_version": 1,
-  "source": "gh-cli snapshot",
-  "repo": "kinkydisorder/stack-hub-ias",
-  "private": true,
-  "generated_at": "2026-07-24T23:51:29.5897419Z",
-  "verification_status": "verified",
-  "note": "Snapshot local para el hub sin PAT en el navegador.",
-  "commits": [
-    {
-      "sha": "a4e9ae2c6a241d6e0551ba112d4c01562c929db0",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/a4e9ae2c6a241d6e0551ba112d4c01562c929db0",
-      "message": "docs(audit): hub premium vault factory applied",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-24T23:47:34Z",
-      "login": null
-    },
-    {
-      "sha": "56b05f635889640cbf67cebfe2263048dafdab7d",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/56b05f635889640cbf67cebfe2263048dafdab7d",
-      "message": "feat(hub): premium Fallout vault factory with live jobs and taxonomy\n\nApply 21st.dev premium grammar in vanilla hub: orrey agent map, shader\nspotlight rooms, process orbs, particle field, vertical-bar pulse, circular\ngallery, phase rings, and hub/taxonomy.json so stack conversations are counted.",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-24T23:47:21Z",
-      "login": null
-    },
-    {
-      "sha": "c72e869407e7ce62051eee80202e982d3d2c6820",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/c72e869407e7ce62051eee80202e982d3d2c6820",
-      "message": "docs(skills): lock REQUIRED premium 21st.dev orientation for AI Forge\n\nAdd premium-21st-registry with Abraham's 17 shadcn/21st.dev anchors (shader\ncards, live agent orbs, handoff particles, orrey, galleries, phase circles).\nWire hyper-boost, building-nextgen, stitch skills and catalog to reject flat\nadmin UI and require ref#ÔåÆzone mapping at PREMIUM craft level.",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-24T23:40:46Z",
-      "login": null
-    },
-    {
-      "sha": "932b7c947201123f9fe5287850cae0b5e51f065c",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/932b7c947201123f9fe5287850cae0b5e51f065c",
-      "message": "feat(hub): factory floor operator arena with agent dossiers\n\nReplace flat admin panels with Fallout Shelter factory map: agent rooms,\nper-agent skill/tool/path stacks, room bootstrap + RESET, cockpit shell\n(bar/rail/canvas/inspector/dock). Keeps ops, credits, gallery as modes.",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-24T23:26:24Z",
-      "login": null
-    },
-    {
-      "sha": "af56affd4670273809b3bbec21fae22aa274bbfd",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/af56affd4670273809b3bbec21fae22aa274bbfd",
-      "message": "docs(handoff): hub-v2 DoD verification evidence and audit note\n\nRecord Lighthouse a11y 100, local serve checks, and public/private API results.",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-24T22:33:47Z",
-      "login": null
-    },
-    {
-      "sha": "b72323fd35008b64df3dc089578c44c314fedefd",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/b72323fd35008b64df3dc089578c44c314fedefd",
-      "message": "fix(hub): a11y hardening for Lighthouse 100 and clearer errors\n\nRaise micro-label contrast with muted, convert dynamic feeds to listitem-safe\ndivs, trap lightbox focus, and label estimated credits as not real usage.",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-24T22:33:47Z",
-      "login": null
-    },
-    {
-      "sha": "8a3569135ad66005a1ad4a93337c854dd3077771",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/8a3569135ad66005a1ad4a93337c854dd3077771",
-      "message": "docs(handoff): hub-v2 RESULT packet and audit note\n\nRecord HUB-V2-001 delivery, verification gaps, and next human action.",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-24T22:27:33Z",
-      "login": null
-    },
-    {
-      "sha": "ced7fb6fb285812814afad179db923dec12de94c",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/ced7fb6fb285812814afad179db923dec12de94c",
-      "message": "feat(hub): v2 static cockpit with heatmap, credits, news, gallery\n\nEvolve hub to Phase 1: 90-day commit heatmap via GitHub API, editable credits\npanel with export, manual news checks, accessible lightbox gallery, and\nvisible offline/error states. Vanilla HTML/CSS/JS only; forge tokens.",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-24T22:27:33Z",
-      "login": null
-    },
-    {
-      "sha": "d36730513a4d2839eabfdaf8a7ad97aeb8e102fb",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/d36730513a4d2839eabfdaf8a7ad97aeb8e102fb",
-      "message": "feat(hub): add credits, sources and gallery data manifests\n\nPlaceholder credits with truth-model fields, official channel list without\nscraping, and gallery index pointing at ../src design references.",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-24T22:27:33Z",
-      "login": null
-    },
-    {
-      "sha": "3ddcd4a93829fd488b13b905b025a80c9f4ee8d1",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/3ddcd4a93829fd488b13b905b025a80c9f4ee8d1",
-      "message": "docs(audit): full session report ÔÇö steps, triggers, self-assessment, external audit paths\n\nComplete traceable report of the three Claude sessions: chronological\nstep-by-step with file links, table of built-in triggers (what fires\nwhat, with zero installation), honest instruction-compliance scorecard\nincluding the 207k-token workflow failure, and exact external audit\npaths (GitHub commits, audit notes, hub, handoffs).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-24T22:17:00Z",
-      "login": null
-    },
-    {
-      "sha": "b633500b2f2a2ee82641a5cbe90a77e439b7af23",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/b633500b2f2a2ee82641a5cbe90a77e439b7af23",
-      "message": "feat(handoff): hub-v2 work order for executor AI; audit notes join the node\n\n- docs/workflows/handoffs/2026-07-25-hub-v2-frontend-work-order.md:\n  max-level delegation packet (contract, scope, hard constraints,\n  definition of done, delivery ritual) for Grok CLI / Antigravity /\n  Composer.\n- .ai-forge/audit/ now tracked: audit notes are the registry of record\n  and must be verifiable from the private GitHub node, not only local.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-24T22:10:43Z",
-      "login": null
-    },
-    {
-      "sha": "a84634bf554324d91d96a1a36dbb5582e71cbdd9",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/a84634bf554324d91d96a1a36dbb5582e71cbdd9",
-      "message": "feat(hub): static cockpit view, universal bootstrap, soul/config/tools manifests\n\n- hub/: self-contained dark-premium cockpit reading GitHub as backend\n  (live state, skill catalog, boards via Issues, copyable bootstrap,\n  optional PAT for private mode). Deployable to Hostinger as-is.\n- Universal bootstrap prompt (docs + hub/bootstrap.txt) with RESET FORGE\n  memory-reset contract for every AI surface.\n- SOUL.md, forge.config.yaml, .agents/tools.json: shared identity,\n  machine-readable central config, tools manifest.\n- HUB_ROADMAP.md: full phased vision (heatmaps, editor mode, Fallout\n  Shelter factory view, SAH/Vertex arm). Changelog with token-cost\n  transparency for this session.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-24T21:55:16Z",
-      "login": null
-    },
-    {
-      "sha": "1dab1aa41e468f84ab2016213e962d8bec511596",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/1dab1aa41e468f84ab2016213e962d8bec511596",
-      "message": "feat(control-plane): decide GitHub as central node and wire multi-agent protocol\n\n- ADR docs/architecture/CENTRAL_NODE_DECISION.md: private GitHub repo is\n  the single source of truth; ChatGPT site, local dashboard, public\n  showcase and SAH engine are views/arms.\n- CLAUDE.md + AGENTS.md: session protocol (atomic commit + MCP audit\n  note + push, truth model, privacy limits, ADHD-first comms) loaded\n  into every CLI's context automatically.\n- Mirror .agents/skills into .claude/skills so Claude Code auto-loads\n  the repo's 7 skills; add sanitized Claude live-skill registry at\n  .skills/00_CLAUDE_LIVE/REGISTRY.md.\n- Track the new paths in .gitignore; keep local settings untracked.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-24T15:54:06Z",
-      "login": null
-    },
-    {
-      "sha": "0e7cefef234ec9742eec60efd69c65289db746c0",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/0e7cefef234ec9742eec60efd69c65289db746c0",
-      "message": "docs: add TSX-to-HTML conversion guide with templates and snippets\n\nCovers no-build CDN previews, Vite/esbuild pipelines, and static\nprerendering with react-dom/server for turning .tsx components into\nshareable HTML artifacts.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-24T15:31:13Z",
-      "login": null
-    },
-    {
-      "sha": "3cbe0dc9fffdabd0a6cb2220d6b9cd0ddd7e4b87",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/3cbe0dc9fffdabd0a6cb2220d6b9cd0ddd7e4b87",
-      "message": "feat(auditing): record audits through the abraham-os MCP bridge\n\nAdd write-audit-note.ps1 (JSON-RPC stdio call to write_audit_note) and\ndocument the recording step in the skill. Verified end-to-end.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-23T15:16:41Z",
-      "login": null
-    },
-    {
-      "sha": "6c87c8154df2c58990a9de221a793cc379b3a1f6",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/6c87c8154df2c58990a9de221a793cc379b3a1f6",
-      "message": "feat(skills): implement building-nextgen-frontends and operating-google-stitch\n\nBoth were empty scaffolds; add real SKILL.md content wired to the\ncanonical frontend-hyper-boost references and the Stitch runbook.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-23T15:16:41Z",
-      "login": null
-    },
-    {
-      "sha": "fa63c4d79028011cce102e30c9da0822ac9604b7",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/fa63c4d79028011cce102e30c9da0822ac9604b7",
-      "message": "feat(frontend-hyper-boost): add codified design tokens and React 19 patterns\n\nExtract the Behance/Chromia dark-premium system into design-tokens.md\n(palette, type, Tailwind v4 @theme mapping, usage rules) and add\nreact-patterns.md with executable app-shell, server-first, motion and\nperformance patterns. Route both from the canonical SKILL.md.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-23T15:16:40Z",
-      "login": null
-    },
-    {
-      "sha": "5bd2180d209df88ac9e61b1d7f14d4f5a99e115a",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/5bd2180d209df88ac9e61b1d7f14d4f5a99e115a",
-      "message": "docs: add multi-ai workflow and mcp onboarding",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-23T10:59:46Z",
-      "login": null
-    },
-    {
-      "sha": "df37bbf9805ba8c04f17ee4a42ec633b396ed260",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/df37bbf9805ba8c04f17ee4a42ec633b396ed260",
-      "message": "feat: unify frontend hyper boost system",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-23T07:38:53Z",
-      "login": null
-    },
-    {
-      "sha": "52cea97ee7a98ef3aa8ef7aee2bc9ce92d9eba2a",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/52cea97ee7a98ef3aa8ef7aee2bc9ce92d9eba2a",
-      "message": "docs: prepare audited Google Stitch workflow",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-23T03:41:22Z",
-      "login": null
-    },
-    {
-      "sha": "c1cda37b90f063a2239a053cd43b32db8b77613f",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/c1cda37b90f063a2239a053cd43b32db8b77613f",
-      "message": "feat: build audited AI Forge control plane",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-07-23T03:35:53Z",
-      "login": null
-    },
-    {
-      "sha": "023f6eed377888677db46646fb0d83bda43edcfb",
-      "html_url": "https://github.com/kinkydisorder/stack-hub-ias/commit/023f6eed377888677db46646fb0d83bda43edcfb",
-      "message": "docs: define AI Forge product architecture",
-      "author": "AI Forge Local Engineer",
-      "date": "2026-06-30T18:30:31Z",
-      "login": null
-    }
-  ],
-  "branches": [
-    {
-      "name": "feat/hub-v2"
-    },
-    {
-      "name": "hyper-boost"
-    },
-    {
-      "name": "master"
-    },
-    {
-      "name": "public"
-    }
-  ],
-  "issues": []
+﻿{
+    "schema_version":  1,
+    "source":  "gh-cli snapshot",
+    "repo":  "kinkydisorder/stack-hub-ias",
+    "private":  true,
+    "generated_at":  "2026-08-01T17:50:47.8256909Z",
+    "verification_status":  "verified",
+    "note":  "Snapshot local para el hub sin PAT en el navegador.",
+    "commits":  [
+                    {
+                        "sha":  "cd4bb78d35f7d7b3b6914bd1c3bfcf03a3c28048",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/cd4bb78d35f7d7b3b6914bd1c3bfcf03a3c28048",
+                        "message":  "security(forge): add .antigravity_code/ to commercial secret exclusions",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-29T19:45:54Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "526d2371684b890398bfa780ad62597bca654d32",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/526d2371684b890398bfa780ad62597bca654d32",
+                        "message":  "docs(antigravity): add SYSTEM.md, SOUL.md, DECISIONS.md and align architecture with .0_FABRICA-DE-IAS mockups",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-29T19:40:37Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "e1a4cd00348ad7d3270d192b6a742be6383753db",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/e1a4cd00348ad7d3270d192b6a742be6383753db",
+                        "message":  "feat(hub): activate Antigravity skills in skill-activations matrix \u0026 add commands/tools radiography",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-29T19:33:48Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "c07f258eebbf44d9e05282201fe78b7efafa0a20",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/c07f258eebbf44d9e05282201fe78b7efafa0a20",
+                        "message":  "feat(hub): expand skill catalog with 120+ skills taxonomy and Antigravity skills",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-29T19:24:43Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "453f0b262362b2f5f68860c38849b86957bfdbca",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/453f0b262362b2f5f68860c38849b86957bfdbca",
+                        "message":  "docs(antigravity): structure .antigravity_code taxonomy, master plan docs, and specialized skills",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-29T19:22:38Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "378c4d1636bcf3de33c5ed4ec534d1e81d99e2a2",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/378c4d1636bcf3de33c5ed4ec534d1e81d99e2a2",
+                        "message":  "feat(gemini): validate user API key, save .env and update endpoint tests",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-29T18:54:48Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "e8537e5f23c7061aefba34eca966d7c90493c064",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/e8537e5f23c7061aefba34eca966d7c90493c064",
+                        "message":  "feat(gcp): add GCP credits diagnostic script, env template and 48h credit usage guide",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-29T18:37:12Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "cc5868860903885da6511d6798944de6f1053fa6",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/cc5868860903885da6511d6798944de6f1053fa6",
+                        "message":  "feat(hub): integrate Antigravity AGY room into Fallout Shelter Vault Factory \u0026 sync taxonomy",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-29T18:30:02Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "5ce403fe0f458777d9d917eb0d465e6c2ec4a857",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/5ce403fe0f458777d9d917eb0d465e6c2ec4a857",
+                        "message":  "feat(antigravity): audit repository, initialize .antigravity_code chassis 200% \u0026 auto-sync protocol",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-29T17:37:44Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "5fa37778443cd22b8122ee819fcc0e79c2622c87",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/5fa37778443cd22b8122ee819fcc0e79c2622c87",
+                        "message":  "feat(hub): skill expediente matrix, agent registry, GitHub commit\n\nAdd per-agent skill ON/OFF expediente (skill-activations.json), check-in\nsignatures (agent-registry.json), monitor console, optional Contents API\ncommit for multi-device sync, and today operational runbook with MCP steps.",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-25T00:24:50Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "92d317b0b276e6d080d2b41d30c2c8068ccdbd47",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/92d317b0b276e6d080d2b41d30c2c8068ccdbd47",
+                        "message":  "docs(architecture): lock product orientation ÔÇö hub UI + GitHub backend\n\nAbraham mandate: operate from stack UI, GitHub private as infra, skill edits\nin the node so every new chat loads the stack not provider memory. Phase 2\nprioritized as Skill Config editor + live factory board.",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-25T00:17:15Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "e420eea07852505ec9c6824dcc4a40dbef49dbbc",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/e420eea07852505ec9c6824dcc4a40dbef49dbbc",
+                        "message":  "docs(security): commercial-secret guardrails and PR vs local serve\n\nDocument private-node assurance, clarify Compare/PR is not public and not\nstart-hub, scrub absolute machine paths from hub UX copy, extend public\nbranch excludes, add hub/SECURITY.md for Hostinger risk.",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-25T00:11:08Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "45a4b0bc7853a15e9f478612caa5bc2a79400fc3",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/45a4b0bc7853a15e9f478612caa5bc2a79400fc3",
+                        "message":  "fix(hub): end 404 wall ÔÇö local snapshot + private PAT path\n\nStop calling missing public repo. Serve live-snapshot from gh for browser\nwithout PAT; optional PAT hits private API. Document start-hub.ps1 and\nfile:// failure mode. Pulse/audit/bootstrap no longer false-error cascade.",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T23:53:22Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "a4e9ae2c6a241d6e0551ba112d4c01562c929db0",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/a4e9ae2c6a241d6e0551ba112d4c01562c929db0",
+                        "message":  "docs(audit): hub premium vault factory applied",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T23:47:34Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "56b05f635889640cbf67cebfe2263048dafdab7d",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/56b05f635889640cbf67cebfe2263048dafdab7d",
+                        "message":  "feat(hub): premium Fallout vault factory with live jobs and taxonomy\n\nApply 21st.dev premium grammar in vanilla hub: orrey agent map, shader\nspotlight rooms, process orbs, particle field, vertical-bar pulse, circular\ngallery, phase rings, and hub/taxonomy.json so stack conversations are counted.",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T23:47:21Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "c72e869407e7ce62051eee80202e982d3d2c6820",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/c72e869407e7ce62051eee80202e982d3d2c6820",
+                        "message":  "docs(skills): lock REQUIRED premium 21st.dev orientation for AI Forge\n\nAdd premium-21st-registry with Abraham\u0027s 17 shadcn/21st.dev anchors (shader\ncards, live agent orbs, handoff particles, orrey, galleries, phase circles).\nWire hyper-boost, building-nextgen, stitch skills and catalog to reject flat\nadmin UI and require ref#ÔåÆzone mapping at PREMIUM craft level.",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T23:40:46Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "932b7c947201123f9fe5287850cae0b5e51f065c",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/932b7c947201123f9fe5287850cae0b5e51f065c",
+                        "message":  "feat(hub): factory floor operator arena with agent dossiers\n\nReplace flat admin panels with Fallout Shelter factory map: agent rooms,\nper-agent skill/tool/path stacks, room bootstrap + RESET, cockpit shell\n(bar/rail/canvas/inspector/dock). Keeps ops, credits, gallery as modes.",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T23:26:24Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "af56affd4670273809b3bbec21fae22aa274bbfd",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/af56affd4670273809b3bbec21fae22aa274bbfd",
+                        "message":  "docs(handoff): hub-v2 DoD verification evidence and audit note\n\nRecord Lighthouse a11y 100, local serve checks, and public/private API results.",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T22:33:47Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "b72323fd35008b64df3dc089578c44c314fedefd",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/b72323fd35008b64df3dc089578c44c314fedefd",
+                        "message":  "fix(hub): a11y hardening for Lighthouse 100 and clearer errors\n\nRaise micro-label contrast with muted, convert dynamic feeds to listitem-safe\ndivs, trap lightbox focus, and label estimated credits as not real usage.",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T22:33:47Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "8a3569135ad66005a1ad4a93337c854dd3077771",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/8a3569135ad66005a1ad4a93337c854dd3077771",
+                        "message":  "docs(handoff): hub-v2 RESULT packet and audit note\n\nRecord HUB-V2-001 delivery, verification gaps, and next human action.",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T22:27:33Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "ced7fb6fb285812814afad179db923dec12de94c",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/ced7fb6fb285812814afad179db923dec12de94c",
+                        "message":  "feat(hub): v2 static cockpit with heatmap, credits, news, gallery\n\nEvolve hub to Phase 1: 90-day commit heatmap via GitHub API, editable credits\npanel with export, manual news checks, accessible lightbox gallery, and\nvisible offline/error states. Vanilla HTML/CSS/JS only; forge tokens.",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T22:27:33Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "d36730513a4d2839eabfdaf8a7ad97aeb8e102fb",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/d36730513a4d2839eabfdaf8a7ad97aeb8e102fb",
+                        "message":  "feat(hub): add credits, sources and gallery data manifests\n\nPlaceholder credits with truth-model fields, official channel list without\nscraping, and gallery index pointing at ../src design references.",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T22:27:33Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "3ddcd4a93829fd488b13b905b025a80c9f4ee8d1",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/3ddcd4a93829fd488b13b905b025a80c9f4ee8d1",
+                        "message":  "docs(audit): full session report ÔÇö steps, triggers, self-assessment, external audit paths\n\nComplete traceable report of the three Claude sessions: chronological\nstep-by-step with file links, table of built-in triggers (what fires\nwhat, with zero installation), honest instruction-compliance scorecard\nincluding the 207k-token workflow failure, and exact external audit\npaths (GitHub commits, audit notes, hub, handoffs).\n\nCo-Authored-By: Claude Fable 5 \u003cnoreply@anthropic.com\u003e",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T22:17:00Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "b633500b2f2a2ee82641a5cbe90a77e439b7af23",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/b633500b2f2a2ee82641a5cbe90a77e439b7af23",
+                        "message":  "feat(handoff): hub-v2 work order for executor AI; audit notes join the node\n\n- docs/workflows/handoffs/2026-07-25-hub-v2-frontend-work-order.md:\n  max-level delegation packet (contract, scope, hard constraints,\n  definition of done, delivery ritual) for Grok CLI / Antigravity /\n  Composer.\n- .ai-forge/audit/ now tracked: audit notes are the registry of record\n  and must be verifiable from the private GitHub node, not only local.\n\nCo-Authored-By: Claude Fable 5 \u003cnoreply@anthropic.com\u003e",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T22:10:43Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "a84634bf554324d91d96a1a36dbb5582e71cbdd9",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/a84634bf554324d91d96a1a36dbb5582e71cbdd9",
+                        "message":  "feat(hub): static cockpit view, universal bootstrap, soul/config/tools manifests\n\n- hub/: self-contained dark-premium cockpit reading GitHub as backend\n  (live state, skill catalog, boards via Issues, copyable bootstrap,\n  optional PAT for private mode). Deployable to Hostinger as-is.\n- Universal bootstrap prompt (docs + hub/bootstrap.txt) with RESET FORGE\n  memory-reset contract for every AI surface.\n- SOUL.md, forge.config.yaml, .agents/tools.json: shared identity,\n  machine-readable central config, tools manifest.\n- HUB_ROADMAP.md: full phased vision (heatmaps, editor mode, Fallout\n  Shelter factory view, SAH/Vertex arm). Changelog with token-cost\n  transparency for this session.\n\nCo-Authored-By: Claude Fable 5 \u003cnoreply@anthropic.com\u003e",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T21:55:16Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "1dab1aa41e468f84ab2016213e962d8bec511596",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/1dab1aa41e468f84ab2016213e962d8bec511596",
+                        "message":  "feat(control-plane): decide GitHub as central node and wire multi-agent protocol\n\n- ADR docs/architecture/CENTRAL_NODE_DECISION.md: private GitHub repo is\n  the single source of truth; ChatGPT site, local dashboard, public\n  showcase and SAH engine are views/arms.\n- CLAUDE.md + AGENTS.md: session protocol (atomic commit + MCP audit\n  note + push, truth model, privacy limits, ADHD-first comms) loaded\n  into every CLI\u0027s context automatically.\n- Mirror .agents/skills into .claude/skills so Claude Code auto-loads\n  the repo\u0027s 7 skills; add sanitized Claude live-skill registry at\n  .skills/00_CLAUDE_LIVE/REGISTRY.md.\n- Track the new paths in .gitignore; keep local settings untracked.\n\nCo-Authored-By: Claude Fable 5 \u003cnoreply@anthropic.com\u003e",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T15:54:06Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "0e7cefef234ec9742eec60efd69c65289db746c0",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/0e7cefef234ec9742eec60efd69c65289db746c0",
+                        "message":  "docs: add TSX-to-HTML conversion guide with templates and snippets\n\nCovers no-build CDN previews, Vite/esbuild pipelines, and static\nprerendering with react-dom/server for turning .tsx components into\nshareable HTML artifacts.\n\nCo-Authored-By: Claude Fable 5 \u003cnoreply@anthropic.com\u003e",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-24T15:31:13Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "3cbe0dc9fffdabd0a6cb2220d6b9cd0ddd7e4b87",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/3cbe0dc9fffdabd0a6cb2220d6b9cd0ddd7e4b87",
+                        "message":  "feat(auditing): record audits through the abraham-os MCP bridge\n\nAdd write-audit-note.ps1 (JSON-RPC stdio call to write_audit_note) and\ndocument the recording step in the skill. Verified end-to-end.\n\nCo-Authored-By: Claude Fable 5 \u003cnoreply@anthropic.com\u003e",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-23T15:16:41Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "6c87c8154df2c58990a9de221a793cc379b3a1f6",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/6c87c8154df2c58990a9de221a793cc379b3a1f6",
+                        "message":  "feat(skills): implement building-nextgen-frontends and operating-google-stitch\n\nBoth were empty scaffolds; add real SKILL.md content wired to the\ncanonical frontend-hyper-boost references and the Stitch runbook.\n\nCo-Authored-By: Claude Fable 5 \u003cnoreply@anthropic.com\u003e",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-23T15:16:41Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "fa63c4d79028011cce102e30c9da0822ac9604b7",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/fa63c4d79028011cce102e30c9da0822ac9604b7",
+                        "message":  "feat(frontend-hyper-boost): add codified design tokens and React 19 patterns\n\nExtract the Behance/Chromia dark-premium system into design-tokens.md\n(palette, type, Tailwind v4 @theme mapping, usage rules) and add\nreact-patterns.md with executable app-shell, server-first, motion and\nperformance patterns. Route both from the canonical SKILL.md.\n\nCo-Authored-By: Claude Fable 5 \u003cnoreply@anthropic.com\u003e",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-23T15:16:40Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "5bd2180d209df88ac9e61b1d7f14d4f5a99e115a",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/5bd2180d209df88ac9e61b1d7f14d4f5a99e115a",
+                        "message":  "docs: add multi-ai workflow and mcp onboarding",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-23T10:59:46Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "df37bbf9805ba8c04f17ee4a42ec633b396ed260",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/df37bbf9805ba8c04f17ee4a42ec633b396ed260",
+                        "message":  "feat: unify frontend hyper boost system",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-23T07:38:53Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "52cea97ee7a98ef3aa8ef7aee2bc9ce92d9eba2a",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/52cea97ee7a98ef3aa8ef7aee2bc9ce92d9eba2a",
+                        "message":  "docs: prepare audited Google Stitch workflow",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-23T03:41:22Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "c1cda37b90f063a2239a053cd43b32db8b77613f",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/c1cda37b90f063a2239a053cd43b32db8b77613f",
+                        "message":  "feat: build audited AI Forge control plane",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-07-23T03:35:53Z",
+                        "login":  null
+                    },
+                    {
+                        "sha":  "023f6eed377888677db46646fb0d83bda43edcfb",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/023f6eed377888677db46646fb0d83bda43edcfb",
+                        "message":  "docs: define AI Forge product architecture",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-06-30T18:30:31Z",
+                        "login":  null
+                    }
+                ],
+    "branches":  [
+                     {
+                         "name":  "feat/hub-v2"
+                     },
+                     {
+                         "name":  "hyper-boost"
+                     },
+                     {
+                         "name":  "master"
+                     },
+                     {
+                         "name":  "public"
+                     }
+                 ],
+    "issues":  [
+
+               ]
 }
 

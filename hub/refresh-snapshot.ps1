@@ -5,12 +5,11 @@ $root = Split-Path -Parent $hub
 Set-Location $root
 
 if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
-  Write-Host "gh no instalado — snapshot no actualizado" -ForegroundColor Yellow
+  Write-Host "gh no instalado - snapshot no actualizado" -ForegroundColor Yellow
   exit 0
 }
 
 $since = (Get-Date).AddDays(-90).ToString("yyyy-MM-ddT00:00:00Z")
-# Prefer work branch if present (hub development), else default
 $branch = "feat/hub-v2"
 try {
   gh api "repos/kinkydisorder/stack-hub-ias/branches/$branch" | Out-Null
@@ -57,4 +56,5 @@ $snap = [ordered]@{
 
 $out = Join-Path $hub "live-snapshot.json"
 ($snap | ConvertTo-Json -Depth 8) + "`n" | Set-Content -Path $out -Encoding utf8
-Write-Host "OK snapshot → $out ($($snap.commits.Count) commits)" -ForegroundColor Green
+$count = $snap.commits.Count
+Write-Host "OK snapshot -> $out ($count commits)" -ForegroundColor Green

@@ -3,10 +3,18 @@
     "source":  "gh-cli snapshot",
     "repo":  "kinkydisorder/stack-hub-ias",
     "private":  true,
-    "generated_at":  "2026-08-01T21:48:41.1751448Z",
+    "generated_at":  "2026-08-01T21:51:24.3359463Z",
     "verification_status":  "verified",
     "note":  "Snapshot local para el hub sin PAT en el navegador.",
     "commits":  [
+                    {
+                        "sha":  "a30c06def984771ca917d2d52c8907697b81bafc",
+                        "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/a30c06def984771ca917d2d52c8907697b81bafc",
+                        "message":  "feat(antigravity): auto-sync hub state \u0026 skills",
+                        "author":  "AI Forge Local Engineer",
+                        "date":  "2026-08-01T21:48:48Z",
+                        "login":  null
+                    },
                     {
                         "sha":  "b23b49b1bf6b9e59648800213733fe6446e0a5ac",
                         "html_url":  "https://github.com/kinkydisorder/stack-hub-ias/commit/b23b49b1bf6b9e59648800213733fe6446e0a5ac",

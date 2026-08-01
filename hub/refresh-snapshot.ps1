@@ -55,6 +55,11 @@ $snap = [ordered]@{
 }
 
 $out = Join-Path $hub "live-snapshot.json"
-($snap | ConvertTo-Json -Depth 8) + "`n" | Set-Content -Path $out -Encoding utf8
+try {
+  ($snap | ConvertTo-Json -Depth 8) + "`n" | Set-Content -Path $out -Encoding utf8 -Force
+} catch {
+  Start-Sleep -Milliseconds 200
+  ($snap | ConvertTo-Json -Depth 8) + "`n" | Set-Content -Path $out -Encoding utf8 -Force
+}
 $count = $snap.commits.Count
 Write-Host "OK snapshot -> $out ($count commits)" -ForegroundColor Green

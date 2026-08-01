@@ -29,6 +29,7 @@
     { "name": "operating-abraham-mcp", "category": "integration", "path": ".agents/skills/operating-abraham-mcp/SKILL.md", "description": "Operar el puente MCP abraham-os: roots permitidos, lecturas seguras, búsqueda, git status y notas de auditoría." },
     { "name": "small-business-suite", "category": "plugin_skills", "path": ".skills/04_PLUGIN_SKILLS/", "description": "Pack integral para pequeñas empresas: CRM, facturación, Canva, impuestos, margen comercial y gestión de clientes." },
     { "name": "cockroachdb-suite", "category": "plugin_skills", "path": ".skills/04_PLUGIN_SKILLS/", "description": "Pack de optimización, auditoría, migración y perfilado de bases de datos distribuidas." },
+    { "name": "github-automation", "category": "control-plane", "path": ".skills/github-automation/SKILL.md", "description": "Gestión avanzada de GitHub CLI, API REST/GraphQL, Pull Requests, Issues, Actions CI/CD y políticas de repositorio seguro para agentes IA." },
     { "name": "manus-execution-engine", "category": "manus_oficial", "path": ".skills/05_MANUS_OFICIAL/", "description": "Patrones de ejecución autónoma en navegador y automatización de tareas por fases." }
   ]
 }

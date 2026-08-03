@@ -207,3 +207,86 @@ Del `CLAUDE.md` del proyecto:
 - Puntuación plana y publicada, **no** una evaluación validada.
 - Investigación de licencias y vacantes sin reanudar → el mapeo de competencias
   sigue vacío a propósito.
+
+---
+
+# Addendum — misma fecha, tarde: de "terminado" a "publicable"
+
+## El encargo
+
+Pregunta del usuario: ¿esto para qué sirve — currículum, venta, patrocinio? ¿Y
+cómo se despliega: web, móvil, escritorio?
+
+## La respuesta que se dio (y por qué)
+
+**Portfolio: 8/10, rédito casi seguro. Producto vendible hoy: 2-3/10.**
+
+Tres verdades incómodas que había que decir en lugar de vender humo:
+
+1. **"Homologarlo por internet" no existe.** La certificación la dan organismos
+   acreditados; ningún software se homologa online. Lo vendible es *preparación*
+   y *ahorro de horas de máquina*, nunca certificación.
+2. **Patrocinios de GitHub ≈ 0 €.** No es una vía.
+3. **La venta a academias es un servicio, no una descarga** — pilotos, contenido
+   a medida, tablas del cliente. Meses, no semanas. Y el primer resultado
+   probable de enseñárselo a una academia es **una oferta de empleo, no un
+   contrato**.
+
+**Móvil: descartado.** Controles de grúa en pantalla táctil no enseñan nada y el
+público objetivo (recruiters, academias) no está ahí.
+
+**Web: sí, pero como demo con fricción cero, no como producto.** El diagnóstico
+clave fue que el activo estaba bloqueado detrás de fricción máxima: repo privado
++ .bat de Windows. Un enlace jugable cambia el rendimiento de todo lo demás.
+
+## Patrón reutilizable: el piloto de demostración
+
+Para grabar vídeo hacía falta que la máquina se moviera sola. Dos opciones:
+animación guionizada o controlador real. Se eligió **controlador proporcional
+sobre el mismo diccionario de comandos que produce un jugador**, y no llama a
+`rig.step` por su cuenta — la sesión sigue siendo el único sitio donde avanza la
+simulación, así que el orden de tick documentado se mantiene intacto.
+
+Consecuencia que justifica la decisión: **el piloto está sujeto al mismo
+marcador que un jugador**, y eso reveló información real. Primera versión: 9,4°
+de balanceo, por encima del límite. Se le añadió antibalanceo (reduce los ejes
+horizontales según crece el balanceo) → 7,3°, dentro de límite. Sigue
+anotándose un contacto con el suelo al depositar, y **eso se documentó en el
+README público como limitación** en vez de maquillarlo.
+
+Una animación guionizada habría dado un vídeo más bonito y cero información.
+
+## La barrera anti-fugas volvió a pagar su coste
+
+El hook de logging del proyecto escribe `COMMAND_LOG.md` con rutas locales
+completas en cualquier carpeta desde la que se ejecute un comando. En esta
+sesión dejó **cuatro** copias en sitios no previstos, una de ellas dentro de
+`docs/public/media/` — es decir, dentro del árbol que se publica.
+
+La detectó la lista blanca del script de export y **falló el build**. Con una
+lista negra se habría publicado. Segunda vez que este patrón evita una fuga
+real en la misma jornada.
+
+## Verificación: lo que no se pudo hacer
+
+El pane de navegador del entorno no compone frames (`visibilityState: hidden`,
+canvas 0×0), así que **la verificación visual de la build web quedó pendiente de
+confirmación humana**. Lo que sí se verificó: la consola confirma Godot
+inicializado sobre WebGL2 Compatibility, sin un solo error.
+
+Se declaró como pendiente en lugar de darlo por bueno. Es exactamente el mismo
+principio que llevó a añadir capturas por la mañana: no confundir "no hay
+errores en el log" con "se ve bien".
+
+## Estado al cierre
+
+- Repo `crane-simulator-academy-NL` en v1.1.0, **todavía privado** a propósito:
+  se publica cuando el README lleve el enlace jugable, para que la primera
+  impresión de un recruiter sea la buena.
+- ZIP de la web listo, texto y ajustes exactos de la página itch.io escritos.
+- Materiales de salida (CV en ES/EN por cuatro ángulos, borradores de LinkedIn,
+  one-pager comercial, perfiles de sector) en `COMMERCIAL/outreach/` — fuera
+  del repo público.
+- Regla mantenida: **ni una sola empresa nombrada** sin verificar la vacante con
+  URL y fecha de acceso. Los perfiles de sector son perfiles, no una lista de
+  objetivos, y llevan adjunto el encargo para `vacancy-evidence-researcher`.

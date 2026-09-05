@@ -42,3 +42,7 @@ mcp/abraham-os-bridge/config/policy.local.json
 /.ai-forge/*
 !/.ai-forge/audit/
 !/.ai-forge/audit/**
+
+build/
+__pycache__/
+*.pyc

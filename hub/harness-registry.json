@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "updated": "2026-09-10",
+  "control_plane": {
+    "repository": "abrahamhl/stack-hub-ias",
+    "branch": "hyper-boost",
+    "principle": "Centralize registry, policy, evidence and routing; keep project repositories physically separate.",
+    "runtime_policy": "lazy-profile",
+    "package_policy": "pnpm-only-for-node"
+  },
+  "profiles": {
+    "core": ["abraham-os", "context-mode", "codebase-memory-mcp"],
+    "research": ["abraham-os", "context-mode", "codebase-memory-mcp", "scrapling-mcp"],
+    "deep-code": ["abraham-os", "context-mode", "codebase-memory-mcp", "graphify"],
+    "browser": ["abraham-os", "context-mode", "codebase-memory-mcp", "browser-use"],
+    "cyber": ["abraham-os", "context-mode", "codebase-memory-mcp", "graphify", "promptfoo", "trivy", "gitleaks"],
+    "observability": ["session-evidence-fabric", "opentelemetry-collector", "langfuse"],
+    "gateway": ["contextforge"]
+  },
+  "components": [
+    {
+      "id": "abraham-os",
+      "kind": "mcp",
+      "role": "Local policy bridge and audit writer",
+      "source": "repo:mcp/abraham-os-bridge",
+      "activation": "core",
+      "trust": "first-party",
+      "status": "existing"
+    },
+    {
+      "id": "context-mode",
+      "kind": "mcp+hooks",
+      "role": "Context compression, FTS5 session memory and tool-output sandboxing",
+      "source": "https://github.com/mksglu/context-mode",
+      "package": "context-mode@1.0.169",
+      "version": "1.0.169",
+      "license": "Elastic-2.0",
+      "osi_open_source": false,
+      "command": "context-mode",
+      "install": "pnpm add --global context-mode@1.0.169",
+      "activation": "core",
+      "trust": "third-party-pinned"
+    },
+    {
+      "id": "codebase-memory-mcp",
+      "kind": "mcp",
+      "role": "Fast persistent structural code graph and impact/call-path queries",
+      "source": "https://github.com/DeusData/codebase-memory-mcp",
+      "version": "0.10.8",
+      "license": "MIT",
+      "osi_open_source": true,
+      "command": "codebase-memory-mcp",
+      "activation": "core",
+      "trust": "third-party-pinned-checksum"
+    },
+    {
+      "id": "graphify",
+      "kind": "mcp+knowledge-graph",
+      "role": "Deep graph across code, docs, schemas, config and documents",
+      "source": "https://github.com/Graphify-Labs/graphify",
+      "package": "graphifyy[mcp]==0.9.47",
+      "version": "0.9.47",
+      "license": "Apache-2.0",
+      "osi_open_source": true,
+      "command": "graphify",
+      "args": ["serve"],
+      "install": "uv tool install --force 'graphifyy[mcp]==0.9.47'",
+      "activation": "deep-code",
+      "trust": "third-party-pinned"
+    },
+    {
+      "id": "scrapling-mcp",
+      "kind": "mcp+scraper",
+      "role": "Primary open-source web acquisition: HTTP, dynamic browser, stealth, sessions, bulk, selectors and RAG-ready Markdown",
+      "source": "https://github.com/D4Vinci/Scrapling",
+      "package": "scrapling[ai]==0.4.15",
+      "version": "0.4.15",
+      "license": "BSD-3-Clause",
+      "osi_open_source": true,
+      "command": "scrapling-mcp",
+      "install": "uv tool install --force 'scrapling[ai]==0.4.15'",
+      "post_install_optional": "scrapling install",
+      "activation": "research",
+      "transport": "stdio-default",
+      "network_http_policy": "If HTTP is enabled, bind localhost and require SCRAPLING_MCP_AUTH_TOKEN; never expose --no-auth on 0.0.0.0.",
+      "trust": "third-party-pinned"
+    },
+    {
+      "id": "crawl4ai",
+      "kind": "crawler-service",
+      "role": "Secondary bulk LLM/RAG crawl engine; fallback, not co-resident by default",
+      "source": "https://github.com/unclecode/crawl4ai",
+      "version": "0.9.3",
+      "license": "Apache-2.0",
+      "osi_open_source": true,
+      "image": "unclecode/crawl4ai:0.9.3",
+      "activation": "fallback-only",
+      "trust": "third-party-pinned-isolated"
+    },
+    {
+      "id": "browser-use",
+      "kind": "interactive-browser-agent",
+      "role": "Interactive/authenticated browser flows when scraping is the wrong primitive",
+      "source": "https://github.com/browser-use/browser-use",
+      "version": "0.13.10",
+      "license": "MIT",
+      "osi_open_source": true,
+      "command": "browser-use",
+      "args": ["--mcp"],
+      "activation": "browser",
+      "trust": "third-party-pinned"
+    },
+    {
+      "id": "contextforge",
+      "kind": "mcp-gateway",
+      "role": "Optional runtime gateway/registry/proxy for many MCP/A2A/API endpoints",
+      "source": "https://github.com/IBM/mcp-context-forge",
+      "version": "1.0.9",
+      "license": "Apache-2.0",
+      "osi_open_source": true,
+      "activation": "gateway-on-demand",
+      "security": "Admin UI localhost-only; trusted upstreams; auth required; follow latest-main security fixes.",
+      "trust": "third-party-pinned-isolated"
+    },
+    {
+      "id": "session-evidence-fabric",
+      "kind": "telemetry",
+      "role": "Canonical provider-neutral session evidence already stored by this node",
+      "source": "repo:existing",
+      "activation": "observability",
+      "trust": "first-party",
+      "status": "existing"
+    },
+    {
+      "id": "opentelemetry-collector",
+      "kind": "telemetry-bus",
+      "role": "Vendor-neutral traces/metrics/logs fan-out",
+      "source": "https://github.com/open-telemetry/opentelemetry-collector-releases",
+      "version": "0.160.0",
+      "license": "Apache-2.0",
+      "osi_open_source": true,
+      "activation": "observability-on-demand",
+      "trust": "third-party-pinned"
+    },
+    {
+      "id": "langfuse",
+      "kind": "ai-observability",
+      "role": "Optional traces, evals, metrics and prompt/agent observability UI",
+      "source": "https://github.com/langfuse/langfuse",
+      "version": "4.33.0",
+      "license": "MIT core / commercial ee",
+      "osi_open_source": true,
+      "image": "ghcr.io/langfuse/langfuse:4.33.0",
+      "activation": "observability-on-demand",
+      "trust": "third-party-pinned-container"
+    },
+    {
+      "id": "promptfoo",
+      "kind": "security-eval",
+      "role": "LLM/agent/RAG red-team and evaluation gate",
+      "source": "https://github.com/promptfoo/promptfoo",
+      "package": "promptfoo@0.122.2",
+      "version": "0.122.2",
+      "license": "MIT",
+      "osi_open_source": true,
+      "run": "pnpm dlx promptfoo@0.122.2",
+      "activation": "cyber",
+      "trust": "third-party-pinned"
+    },
+    {
+      "id": "trivy",
+      "kind": "supply-chain-security",
+      "role": "Dependencies, containers, IaC, SBOM and vulnerability scanning",
+      "source": "https://github.com/aquasecurity/trivy",
+      "version": "0.74.0",
+      "license": "Apache-2.0",
+      "osi_open_source": true,
+      "activation": "cyber",
+      "trust": "third-party-pinned-attested"
+    },
+    {
+      "id": "gitleaks",
+      "kind": "secrets-security",
+      "role": "Secret detection before activation/commit",
+      "source": "https://github.com/gitleaks/gitleaks",
+      "version": "8.30.1",
+      "license": "MIT",
+      "osi_open_source": true,
+      "activation": "cyber",
+      "trust": "third-party-pinned-checksum"
+    },
+    {
+      "id": "ralph-loop",
+      "kind": "agent-loop-pattern",
+      "role": "Fresh-session iterative execution with progress/evidence/stop guardrails",
+      "source": "https://github.com/SantanderAI/ralph",
+      "activation": "pattern-vendored-after-review",
+      "trust": "reference-only"
+    },
+    {
+      "id": "opencode",
+      "kind": "coding-agent",
+      "role": "High-popularity open-source coding agent provider",
+      "source": "https://github.com/anomalyco/opencode",
+      "license": "MIT",
+      "osi_open_source": true,
+      "activation": "agent-on-demand",
+      "trust": "third-party"
+    },
+    {
+      "id": "openhands",
+      "kind": "coding-agent",
+      "role": "Open-source autonomous software agent / agent server",
+      "source": "https://github.com/All-Hands-AI/OpenHands",
+      "license": "MIT",
+      "osi_open_source": true,
+      "activation": "agent-on-demand-isolated",
+      "trust": "third-party"
+    }
+  ],
+  "discovery_sources": [
+    {"id": "official-mcp-registry", "url": "https://github.com/modelcontextprotocol/registry", "policy": "metadata-discovery-only"},
+    {"id": "awesome-mcp-servers", "url": "https://github.com/punkpeye/awesome-mcp-servers", "policy": "metadata-discovery-only"},
+    {"id": "glama", "url": "https://glama.ai/mcp/servers", "policy": "metadata-discovery-only"},
+    {"id": "skills-sh", "url": "https://skills.sh", "policy": "metadata-discovery-only"},
+    {"id": "vercel-agent-skills", "url": "https://github.com/vercel-labs/agent-skills", "policy": "metadata-discovery-only"},
+    {"id": "cyberagents-exchange", "url": "https://github.com/tenable/cyberagents-exchange", "policy": "cyber-metadata-discovery-only; inspect upstream source before quarantine"},
+    {"id": "smithery", "url": "https://smithery.ai", "policy": "secondary-metadata-discovery-only"}
+  ],
+  "security_gate": [
+    "discover-metadata",
+    "pin-version-or-commit",
+    "verify-license-and-upstream",
+    "quarantine",
+    "scan-secrets-and-supply-chain",
+    "review-tool-schemas-and-prompt-injection-surface",
+    "apply-least-privilege-allowlist",
+    "healthcheck",
+    "activate-profile",
+    "write-audit-evidence"
+  ],
+  "forbidden": [
+    "auto-install-from-marketplace-without-review",
+    "unpinned-latest-in-canonical-runtime",
+    "http-mcp-on-0.0.0.0-without-auth",
+    "secrets-in-repo-or-command-line",
+    "all-tools-always-on",
+    "npm-or-npx"
+  ]
+}

@@ -1,7 +1,12 @@
 {
-  "version": 1,
-  "updated": "2026-07-24",
-  "purpose": "Manifiesto de herramientas del nodo. Cada IA usa lo que hay AQUÍ por diseño, no lo que lleve cargado su plataforma.",
+  "version": 2,
+  "updated": "2026-09-10",
+  "purpose": "Manifiesto de herramientas del nodo. Cada IA usa lo registrado aquí y en hub/harness-registry.json; las herramientas externas se activan por perfil, no globalmente.",
+  "policy": {
+    "node_package_manager": "pnpm",
+    "forbidden": ["npm", "npx", "yarn", "unpinned-latest", "auto-install-unreviewed-marketplace-content"],
+    "external_admission": "quarantine -> scan -> allowlist -> healthcheck -> audit"
+  },
   "mcp_abraham_os": {
     "list_roots": "Roots permitidos y su modo (read-only | audit-write)",
     "list_directory": "Listar un directorio dentro de un root permitido",
@@ -10,23 +15,48 @@
     "git_status": "Rama, estado y remotos de un root (nunca commit/push)",
     "write_audit_note": "Única escritura: nota Markdown en .ai-forge/audit/"
   },
+  "harness_profiles": {
+    "core": ["abraham-os", "context-mode", "codebase-memory-mcp"],
+    "research": ["core", "scrapling-mcp"],
+    "deep-code": ["core", "graphify"],
+    "browser": ["core", "browser-use"],
+    "cyber": ["core", "graphify", "promptfoo", "trivy", "gitleaks"],
+    "observability": ["session-evidence-fabric", "opentelemetry-collector", "langfuse"],
+    "gateway": ["contextforge"]
+  },
   "scripts": {
     ".agents/skills/auditing-project-readiness/scripts/inspect-project.ps1": "Baseline read-only de un proyecto",
     ".agents/skills/auditing-project-readiness/scripts/write-audit-note.ps1": "Nota de auditoría vía bridge desde PowerShell",
     ".skills/frontend-hyper-boost/scripts/audit-frontend.ps1": "Auditoría estática frontend",
     ".skills/frontend-hyper-boost/scripts/package-skill.ps1": "Empaquetar skill como .skill",
-    "scripts/export-mcp-client-configs.ps1": "Generar configs MCP por cliente (Codex, Gemini, VS Code…)",
-    "scripts/mcp-doctor.ps1": "Validar bridge, política y tests"
+    "scripts/export-mcp-client-configs.ps1": "Exportador legacy de abraham-os, pnpm-corrected",
+    "scripts/export-harness-client-configs.ps1": "Generar configs MCP por cliente y perfil del harness",
+    "scripts/harness-hyper-boost.ps1": "Doctor/bootstrap Windows para componentes aprobados y fijados",
+    "scripts/mcp-doctor.ps1": "Validar bridge, política y tests con pnpm"
   },
   "commands": {
-    "sync_skill_mirror": "cp -r .agents/skills/* .claude/skills/",
-    "bridge_tests": "cd mcp/abraham-os-bridge && npm test",
-    "dev_frontend": "npm run dev",
+    "sync_skill_mirror": "Copy-Item -Recurse -Force .agents/skills/* .claude/skills/",
+    "bridge_tests": "cd mcp/abraham-os-bridge && pnpm test",
+    "dev_frontend": "pnpm run dev",
+    "build_frontend": "pnpm run build",
+    "test_node": "pnpm test",
+    "harness_doctor": "powershell -ExecutionPolicy Bypass -File scripts/harness-hyper-boost.ps1 -Profile core",
+    "harness_research_install": "powershell -ExecutionPolicy Bypass -File scripts/harness-hyper-boost.ps1 -Profile research -InstallApproved -GenerateConfigs",
+    "harness_research_browser_install": "powershell -ExecutionPolicy Bypass -File scripts/harness-hyper-boost.ps1 -Profile research -InstallApproved -InstallBrowserDeps -GenerateConfigs",
+    "harness_deep_code_install": "powershell -ExecutionPolicy Bypass -File scripts/harness-hyper-boost.ps1 -Profile deep-code -InstallApproved -GenerateConfigs",
+    "harness_cyber_prepare": "powershell -ExecutionPolicy Bypass -File scripts/harness-hyper-boost.ps1 -Profile cyber -InstallApproved -GenerateConfigs",
     "refresh_public_branch": "ver forge.config.yaml sync.public_branch"
   },
+  "registries": {
+    "canonical": "hub/harness-registry.json",
+    "architecture": "docs/architecture/HARNESS_HYPER_BOOST_2026-09-10.md",
+    "external_policy": "metadata only until reviewed and admitted"
+  },
   "pending_backends": {
-    "vertex_ai": "€1.066 en créditos sin usar — brazo SAH engine (ver docs/architecture/HUB_ROADMAP.md)",
-    "hostinger": "Hosting estático del hub (subir hub/ por hPanel)",
-    "google_drive": "5TB disponibles para artefactos pesados (no código)"
+    "vertex_ai": "Brazo SAH engine; ver docs/architecture/HUB_ROADMAP.md",
+    "hostinger": "Hosting estático del hub; no exponer metodología privada",
+    "google_drive": "Artefactos pesados, no código canónico",
+    "contextforge": "Gateway opcional; aislar y autenticar antes de activar",
+    "otel_langfuse": "Observabilidad opcional; decidir retención/destino antes de desplegar"
   }
 }

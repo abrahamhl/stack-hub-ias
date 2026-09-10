@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
-  "description": "Canales oficiales de novedades por IA. Sin scraping automático en hub v2: last_checked_at y last_note son manuales.",
+  "schema_version": 2,
+  "description": "Canales oficiales y registries de descubrimiento. Los registries son metadata-only: nunca implican auto-instalación ni confianza.",
   "channels": [
     {
       "id": "claude",
@@ -55,6 +55,69 @@
       "last_checked_at": null,
       "last_note": "Sin check manual aún",
       "verification_status": "manual"
+    },
+    {
+      "id": "official-mcp-registry",
+      "name": "Official Model Context Protocol Registry",
+      "url": "https://github.com/modelcontextprotocol/registry",
+      "kind": "marketplace-registry",
+      "last_checked_at": "2026-09-10",
+      "last_note": "Discovery only; admit through harness security gate.",
+      "verification_status": "verified-upstream"
+    },
+    {
+      "id": "awesome-mcp-servers",
+      "name": "Awesome MCP Servers",
+      "url": "https://github.com/punkpeye/awesome-mcp-servers",
+      "kind": "community-directory",
+      "last_checked_at": "2026-09-10",
+      "last_note": "High-volume discovery source; popularity is not trust.",
+      "verification_status": "verified-upstream"
+    },
+    {
+      "id": "glama",
+      "name": "Glama MCP Directory",
+      "url": "https://glama.ai/mcp/servers",
+      "kind": "marketplace-directory",
+      "last_checked_at": "2026-09-10",
+      "last_note": "Discovery/scoring source only.",
+      "verification_status": "verified-public"
+    },
+    {
+      "id": "skills-sh",
+      "name": "skills.sh",
+      "url": "https://skills.sh",
+      "kind": "agent-skills-marketplace",
+      "last_checked_at": "2026-09-10",
+      "last_note": "Discover portable skills; quarantine before activation.",
+      "verification_status": "verified-public"
+    },
+    {
+      "id": "vercel-agent-skills",
+      "name": "Vercel Agent Skills",
+      "url": "https://github.com/vercel-labs/agent-skills",
+      "kind": "agent-skills-repository",
+      "last_checked_at": "2026-09-10",
+      "last_note": "Curated upstream skill source.",
+      "verification_status": "verified-upstream"
+    },
+    {
+      "id": "cyberagents-exchange",
+      "name": "Tenable CyberAgents Exchange",
+      "url": "https://github.com/tenable/cyberagents-exchange",
+      "kind": "cybersecurity-agent-marketplace",
+      "last_checked_at": "2026-09-10",
+      "last_note": "Cyber-native directory of agents, skills, MCPs and playbooks. Metadata only; inspect source repo and authorization scope.",
+      "verification_status": "verified-upstream"
+    },
+    {
+      "id": "smithery",
+      "name": "Smithery",
+      "url": "https://smithery.ai",
+      "kind": "mcp-marketplace",
+      "last_checked_at": "2026-09-10",
+      "last_note": "Secondary discovery source; never auto-install canonical runtime content.",
+      "verification_status": "verified-public"
     }
   ]
 }

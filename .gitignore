@@ -43,6 +43,14 @@ mcp/abraham-os-bridge/config/policy.local.json
 !/.ai-forge/audit/
 !/.ai-forge/audit/**
 
+# Harness runtime/index state is disposable and machine-specific.
+/.harness/
+/.context-mode/
+/.codebase-memory/
+/graphify-out/
+/.scrapling/
+/.browser-use/
+
 build/
 __pycache__/
 *.pyc

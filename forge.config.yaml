@@ -1,13 +1,21 @@
 # AI Forge — configuración central (fuente de verdad machine-readable)
-version: 1
-updated: 2026-07-24
+version: 2
+updated: 2026-09-10
 
 node:
-  repo_private: kinkydisorder/stack-hub-ias        # nodo: todo el árbol + historia
-  repo_public: kinkydisorder/stack-hub-ias-public  # catálogo/escaparate (rama public)
+  repo_private: abrahamhl/stack-hub-ias
+  repo_public: kinkydisorder/stack-hub-ias-public  # legacy/reference; verify before publishing
   default_branch: hyper-boost
   audit_dir: .ai-forge/audit
-  hub: hub/index.html                              # vista estática (Hostinger)
+  hub: hub/index.html
+
+runtime:
+  node_package_manager: pnpm
+  node_package_manager_pin: 10.23.0
+  forbidden_package_managers: [npm, npx, yarn]
+  python_tool_manager: uv
+  activation_strategy: lazy-profile
+  unpinned_latest_allowed: false
 
 protocol:
   bootstrap: docs/workflows/UNIVERSAL_BOOTSTRAP_PROMPT.md
@@ -17,9 +25,9 @@ protocol:
   reset_keyword: "RESET FORGE"
   ritual: [commit-atomico, audit-note, push]
 
-surfaces:                       # dónde escribe su config cada IA
+surfaces:
   antigravity-code: { rules: .antigravity_code/RULES.md, skills: .antigravity_code/skills/, config: .antigravity_code/config.yaml, writes: git+mcp+hub }
-  claude-code:   { rules: CLAUDE.md,  skills: .claude/skills/,  writes: git+mcp }
+  claude-code:   { rules: CLAUDE.md,  skills: .claude/skills/, writes: git+mcp }
   codex:         { rules: AGENTS.md,  config: .ai-forge/client-configs/codex-config.toml, writes: git }
   gemini-cli:    { rules: GEMINI.md,  config: .ai-forge/client-configs/gemini-settings.json, writes: git }
   vscode-mcp:    { config: .ai-forge/client-configs/vscode-mcp.json, writes: git }
@@ -28,22 +36,50 @@ surfaces:                       # dónde escribe su config cada IA
 
 skills:
   canonical: [.skills/, .agents/skills/]
-  mirrors: [.claude/skills/]          # generado, no editar a mano
+  mirrors: [.claude/skills/]
   registry: .skills/00_CLAUDE_LIVE/REGISTRY.md
-  catalog_json: hub/catalog.json      # regenerar al cambiar skills
+  catalog_json: hub/catalog.json
+  external_sources: [official-mcp-registry, awesome-mcp-servers, glama, skills-sh, vercel-agent-skills, cyberagents-exchange, smithery]
+  admission: quarantine-first
 
 sync:
   on_skill_change: [regenerar .claude/skills, regenerar hub/catalog.json, commit, push]
   on_session_end: [audit-note, commit, push]
   public_branch:
     name: public
-    # Secreto comercial: nunca empujar docs/protocolos/config al escaparate.
-    # El repo de escaparate debe crearse aparte y SOLO con el árbol curado.
-    excludes: [docs/, scripts/inventory-projects.ps1, CLAUDE.md, AGENTS.md, .claude/, forge.config.yaml, SOUL.md, .ai-forge/, hub/taxonomy.json, hub/live-snapshot.json, hub/ABRE-ASI.md, hub/SECURITY.md]
+    excludes: [docs/, scripts/inventory-projects.ps1, CLAUDE.md, AGENTS.md, .claude/, forge.config.yaml, SOUL.md, .ai-forge/, hub/taxonomy.json, hub/live-snapshot.json, hub/ABRE-ASI.md, hub/SECURITY.md, hub/harness-registry.json]
   security:
     node_visibility: private
     never_commit: [tokens, PAT, passwords, real_billing, personal_identity]
     hub_public_hosting: "risk — prefer private host or curate; full hub exposes methodology"
+
+harness:
+  registry: hub/harness-registry.json
+  architecture: docs/architecture/HARNESS_HYPER_BOOST_2026-09-10.md
+  bootstrap_windows: scripts/harness-hyper-boost.ps1
+  export_clients: scripts/export-harness-client-configs.ps1
+  profiles:
+    core: [abraham-os, context-mode, codebase-memory-mcp]
+    research: [abraham-os, context-mode, codebase-memory-mcp, scrapling-mcp]
+    deep-code: [abraham-os, context-mode, codebase-memory-mcp, graphify]
+    browser: [abraham-os, context-mode, codebase-memory-mcp, browser-use]
+    cyber: [abraham-os, context-mode, codebase-memory-mcp, graphify, promptfoo, trivy, gitleaks]
+    observability: [session-evidence-fabric, opentelemetry-collector, langfuse]
+    gateway: [contextforge]
+  web_acquisition:
+    primary: scrapling-mcp
+    fallback_bulk_rag: crawl4ai
+    fallback_interactive: browser-use
+  memory:
+    session_context: context-mode
+    structural_code: codebase-memory-mcp
+    deep_graph: graphify
+  observability:
+    canonical_evidence: session-evidence-fabric
+    telemetry_bus_optional: opentelemetry-collector
+    ai_observability_optional: langfuse
+  security_gate: [pin, verify-upstream, quarantine, secrets-scan, supply-chain-scan, schema-review, least-privilege, healthcheck, audit-evidence]
+  never: [auto-install-marketplace, all-tools-always-on, unpinned-latest, unauthenticated-public-mcp]
 
 mcp:
   abraham-os:
@@ -51,3 +87,6 @@ mcp:
     policy_env: ABRAHAM_MCP_POLICY
     roots: { ai-forge: audit-write, abraham-os: read-only }
     forbidden: [git-push, delete, arbitrary-shell]
+  external:
+    registry: hub/harness-registry.json
+    policy: "profile-routed, pinned, quarantine-before-enable"

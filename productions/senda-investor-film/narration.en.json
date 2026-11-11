@@ -1,0 +1,361 @@
+{
+ "voice": "bf_emma",
+ "voice_status": "Same voice config as civic-relay media/senda-film/m96-promo.json (Kokoro v1.0, bf_emma, en-gb, 0.95)",
+ "lang": "en-gb",
+ "speed": 0.95,
+ "note": "Investor cut (working id M97). Draft narration to be ported into the civic-relay media/senda-film scene schema (id, claim, source[], visual.kind, title, en[]). Tokens in {braces} MUST be filled from investor-next/public/senda/estado.json and the core at build time, never by hand. Synthetic voice declared on the closing card.",
+ "scenes": [
+  {
+   "id": "a1",
+   "title": "Cold open: the silence",
+   "chunks": [
+    {
+     "cue": "black",
+     "text": "Every emergency system we rely on shares one assumption."
+    },
+    {
+     "cue": "towers",
+     "text": "That the network will still be there."
+    },
+    {
+     "cue": "dark",
+     "text": "When the power fails, the towers go quiet. The alert never arrives. The call never connects. And the people who most need to be found disappear from the map."
+    }
+   ],
+   "claim": "OBSERVED",
+   "visual": "blackout"
+  },
+  {
+   "id": "a2",
+   "title": "Recreation: two trains",
+   "chunks": [
+    {
+     "cue": "rail",
+     "text": "January twenty twenty-six. Adamuz, southern Spain. A train derails at night."
+    },
+    {
+     "cue": "call",
+     "text": "According to the published timeline, the first emergency call came within about a minute."
+    },
+    {
+     "cue": "second",
+     "text": "But it took around forty-five minutes for responders to learn that a second train was down. The first report carried only one set of coordinates."
+    },
+    {
+     "cue": "phones",
+     "text": "Hundreds of phones were on board. Each one knew something. Nothing connected them."
+    }
+   ],
+   "claim": "OBSERVED",
+   "visual": "crash3d* + spainmap"
+  },
+  {
+   "id": "a3",
+   "title": "The structural gap",
+   "chunks": [
+    {
+     "cue": "g1",
+     "text": "This is not one failure. It is a structural gap."
+    },
+    {
+     "cue": "g2",
+     "text": "Public alerts depend on the cellular network. Professional radio connects responders, not citizens."
+    },
+    {
+     "cue": "g3",
+     "text": "Navigation apps react after the road is already blocked. And no one forecasts where people will be left in the dark."
+    }
+   ],
+   "claim": "OBSERVED",
+   "visual": "kpis"
+  },
+  {
+   "id": "a4",
+   "title": "Title",
+   "chunks": [
+    {
+     "cue": "logo",
+     "text": "This is SENDA."
+    },
+    {
+     "cue": "tag",
+     "text": "If a path to your people exists, SENDA finds it."
+    }
+   ],
+   "claim": "OBSERVED",
+   "visual": "hub"
+  },
+  {
+   "id": "b1",
+   "title": "The router: every channel at once",
+   "chunks": [
+    {
+     "cue": "graph",
+     "text": "SENDA treats an emergency as a routing problem across time."
+    },
+    {
+     "cue": "channels",
+     "text": "Bluetooth. Wi-Fi between phones. LoRa. S M S. A neighbour's satellite internet. A satellite passing overhead. Even sound."
+    },
+    {
+     "cue": "cgr",
+     "text": "Using contact graph routing, the technique designed for delay-tolerant space networks, it computes the earliest arrival through any chain of contacts, and launches several routes in parallel."
+    },
+    {
+     "cue": "s01",
+     "text": "In our reference scenario, a town loses its antenna for eight hours. The conventional messenger delivers after four hundred and eighty minutes. SENDA, in simulation, delivers in about four."
+    },
+    {
+     "cue": "honest",
+     "text": "And when no path exists, it does not invent one."
+    }
+   ],
+   "claim": "SIMULATED",
+   "visual": "fragments + globe"
+  },
+  {
+   "id": "b1b",
+   "title": "Delivery assurance: a number you can check",
+   "claim": "SIMULATED",
+   "visual": "assurance* (H3 map + bars)",
+   "chunks": [
+    {
+     "cue": "corr",
+     "text": "Channels do not fail one by one. In a storm or a blackout, they fail together."
+    },
+    {
+     "cue": "plan",
+     "text": "A planner that assumes independence promises ninety-nine point five percent, and in our simulation delivers ninety-six."
+    },
+    {
+     "cue": "ours",
+     "text": "SENDA's delivery assurance engine models those common causes, splits each message into fragments across channels that do not fall together, and reaches close to ninety-nine percent at no extra cost."
+    },
+    {
+     "cue": "learn",
+     "text": "And every signed delivery receipt will teach it. That learning, zone by zone, is the data advantage we are building."
+    }
+   ]
+  },
+  {
+   "id": "b2",
+   "title": "Consent, zones and blind relays",
+   "chunks": [
+    {
+     "cue": "zone",
+     "text": "When an authority issues an alert, or public seismic catalogues confirm an event, an emergency zone is declared."
+    },
+    {
+     "cue": "relay",
+     "text": "Phones whose owners agreed in advance become relays, within battery and data limits they control."
+    },
+    {
+     "cue": "e2e",
+     "text": "Every message travels in a signed, end-to-end encrypted envelope. Relays carry it. They cannot read it."
+    }
+   ],
+   "claim": "CALCULATED",
+   "visual": "trust"
+  },
+  {
+   "id": "b3",
+   "title": "Rail incident fusion",
+   "chunks": [
+    {
+     "cue": "detect",
+     "text": "Go back to that night. Each phone detects the impact, and asks its owner one question. Are you all right?"
+    },
+    {
+     "cue": "noresp",
+     "text": "No answer is also an answer. It is the signal rescuers need most."
+    },
+    {
+     "cue": "fuse",
+     "text": "SENDA fuses hundreds of reports into one picture: how many trains, which coaches, who is trapped."
+    },
+    {
+     "cue": "t2",
+     "text": "In our simulations, the second train is identified in thirty to forty-one seconds. Even when only five percent of passengers have the app."
+    }
+   ],
+   "claim": "SIMULATED",
+   "visual": "railtime"
+  },
+  {
+   "id": "b4",
+   "title": "Under the rubble: the building twin",
+   "chunks": [
+    {
+     "cue": "bldg",
+     "text": "After an earthquake, every building becomes a question."
+    },
+    {
+     "cue": "twin",
+     "text": "SENDA builds a digital twin from open map data. Floor by floor. Home by home."
+    },
+    {
+     "cue": "bridge",
+     "text": "A phone on the surface becomes a bridge for a phone below. Signal strength, measured as a rescuer walks, narrows the search and projects it onto the camera view."
+    },
+    {
+     "cue": "csi",
+     "text": "And with a low-cost Wi-Fi sensor, our models detect breathing behind a wall. Today, on synthetic signals. Field calibration is the next step."
+    }
+   ],
+   "claim": "SIMULATED",
+   "visual": "floors + fusion + rubble3d*"
+  },
+  {
+   "id": "b5",
+   "title": "Fire, smoke and the evacuation corridor",
+   "chunks": [
+    {
+     "cue": "fire",
+     "text": "Wildfires now outrun the systems built to manage them."
+    },
+    {
+     "cue": "physics",
+     "text": "SENDA couples established physics: Rothermel fire spread, smoke dispersion, and traffic flow as a fluid."
+    },
+    {
+     "cue": "shock",
+     "text": "So it can model how smoke cuts visibility, how a shock wave of stopped vehicles forms, and when a corridor will close."
+    },
+    {
+     "cue": "cover",
+     "text": "And it forecasts which antennas the fire will reach, so the mesh is ready before the blackout."
+    }
+   ],
+   "claim": "SIMULATED",
+   "visual": "fire + corridor3d*"
+  },
+  {
+   "id": "b6",
+   "title": "The command view: real data, clearly labelled",
+   "chunks": [
+    {
+     "cue": "globe",
+     "text": "For coordinators, one view. A four-dimensional globe, built on real open data."
+    },
+    {
+     "cue": "feeds",
+     "text": "Earthquakes from U S G S. Fires from NASA and Copernicus. Weather forecasts from MET Norway. Real terrain. Real road incidents."
+    },
+    {
+     "cue": "rf",
+     "text": "Radio links are modelled over that terrain with international propagation standards, and drone survey routes are planned across it."
+    },
+    {
+     "cue": "label",
+     "text": "Every layer is labelled for what it is. Observation. Forecast. Or simulation. Never confused."
+    }
+   ],
+   "claim": "OBSERVED",
+   "visual": "page (Globe4DStudio capture)"
+  },
+  {
+   "id": "c1",
+   "title": "Why this is science",
+   "chunks": [
+    {
+     "cue": "repro",
+     "text": "What makes this science is not a slogan. It is reproducibility."
+    },
+    {
+     "cue": "tests",
+     "text": "{core} automated tests in the core, all passing. {e2e} end-to-end checks in a real browser, with the network switched off. Every figure on this screen is regenerated by running the code."
+    },
+    {
+     "cue": "prior",
+     "text": "We publish our prior art. We do not claim to be first. We claim that our combination of routing, physics and evidence is implemented, measured, and open to inspection."
+    },
+    {
+     "cue": "open",
+     "text": "It is built on open standards and open data. And it runs on the phones people already carry."
+    }
+   ],
+   "claim": "OBSERVED",
+   "visual": "verify"
+  },
+  {
+   "id": "c2",
+   "title": "Where we really are",
+   "chunks": [
+    {
+     "cue": "trl",
+     "text": "Here is exactly where we stand. SENDA is a research-stage platform."
+    },
+    {
+     "cue": "limits",
+     "text": "Its algorithms are proven in software and simulation. Phone-to-phone delivery, satellite links and through-wall sensing are not yet validated in the field. It is not connected to emergency services. And it must not be used in a real emergency today."
+    },
+    {
+     "cue": "why",
+     "text": "We tell you this first, because trust is the product."
+    }
+   ],
+   "claim": "OBSERVED",
+   "visual": "kpis"
+  },
+  {
+   "id": "c3",
+   "title": "One engine, many fields",
+   "chunks": [
+    {
+     "cue": "f1",
+     "text": "One engine. Many fields."
+    },
+    {
+     "cue": "f2",
+     "text": "Rail and transport operators. Civil protection and emergency centres. Wildfire and evacuation planning."
+    },
+    {
+     "cue": "f3",
+     "text": "Road authorities and smart corridors. Urban search and rescue. Critical infrastructure that must keep talking when everything else stops."
+    }
+   ],
+   "claim": "INFERRED",
+   "visual": "arch3d"
+  },
+  {
+   "id": "c4",
+   "title": "What comes next",
+   "chunks": [
+    {
+     "cue": "r1",
+     "text": "What comes next is validation."
+    },
+    {
+     "cue": "r2",
+     "text": "A field pilot with civil protection: a stopped train, fifty to one hundred volunteers, and one number to measure. The time until every coach is known."
+    },
+    {
+     "cue": "r3",
+     "text": "A structured gateway to emergency centres. Native background apps. An independent security audit."
+    },
+    {
+     "cue": "r4",
+     "text": "That is what your investment builds."
+    }
+   ],
+   "claim": "INFERRED",
+   "visual": "stack"
+  },
+  {
+   "id": "c5",
+   "title": "Close",
+   "chunks": [
+    {
+     "cue": "end1",
+     "text": "The network will fail again. The question is what happens in the silence."
+    },
+    {
+     "cue": "end2",
+     "text": "SENDA. If a path exists, we find it."
+    }
+   ],
+   "claim": "OBSERVED",
+   "visual": "cta"
+  }
+ ]
+}

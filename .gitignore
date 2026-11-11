@@ -54,3 +54,9 @@ mcp/abraham-os-bridge/config/policy.local.json
 build/
 __pycache__/
 *.pyc
+
+# Video stack: heavy upstream engines fetched by scripts/video-stack/bootstrap.sh
+/.video-stack/
+*.mp4
+*.mov
+*.blend1

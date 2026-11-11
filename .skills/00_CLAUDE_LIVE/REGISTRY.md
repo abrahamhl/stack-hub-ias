@@ -4,7 +4,7 @@ Aportación de Claude (Fable 5) al nido `.skills/`: inventario de las skills
 **activas ahora mismo en mi entorno Claude** (claude.ai / Cowork / Claude Code),
 para que cualquier agente del stack sepa qué puedo ejecutar sin preguntármelo.
 
-- Actualizado: 2026-07-24 · Actor: claude-fable · Fuente: sesión Claude Code en este repo.
+- Actualizado: 2026-11-11 (vídeo/cine) · 2026-07-24 · Actor: claude-fable · Fuente: sesión Claude Code en este repo.
 - Descripciones sanitizadas: sin datos personales, rutas privadas ni contexto de identidad.
 - Las skills de ESTE repo están integradas en mi superficie activa vía `.claude/skills/`
   (espejo de `.agents/skills/`, se cargan automáticamente en cada sesión aquí).
@@ -20,6 +20,12 @@ para que cualquier agente del stack sepa qué puedo ejecutar sin preguntármelo.
 | operating-abraham-mcp | Uso del puente abraham-os (roots, límites) |
 | orchestrating-ai-forge | Orquestación del control plane AI Forge |
 | routing-model-workflows | Enrutado de trabajo entre modelos/IAs |
+| video-cinema-director | Router de vídeo/animación/3D/cine (elige motor) |
+| hyperframes · hyperframes-cli · hyperframes-registry · media-use · remotion-to-hyperframes · reverse-any-video · style-sampling | HyperFrames (HeyGen): HTML → MP4 |
+| remotion-best-practices · remotion-create · remotion-render · remotion-captions · remotion-multimedia · remotion-studio · remotion-docs · remotion-interactivity · remotion-license | Remotion (gate de licencia) |
+| lemo-opuscar | 66 estilos de película hechos con código |
+| claude-animation-base · paper-shaders · blender-cinematic | Dibujo animado, fondos shader, render 3D vía Blender MCP |
+| threejs-* (13) | Three.js: escenas, luz, materiales, postproceso, R3F |
 
 ## Skills personales del usuario (03_USER_SKILLS, activas en mi entorno)
 

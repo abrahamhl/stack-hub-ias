@@ -1,5 +1,18 @@
 # AI Forge changelog
 
+## 2026-11-11 — Stack de vídeo, animación, 3D y cine
+
+### Added
+
+- 30 skills vendorizadas con SHA pinneado: HyperFrames (7), Remotion (9), Lemo-Opuscar (1), Three.js (13) + 4 propias
+  (`video-cinema-director`, `claude-animation-base`, `paper-shaders`, `blender-cinematic`).
+- `.mcp.json` con Blender MCP 2.2.7 (telemetría OFF, safe-mode ON).
+- `scripts/video-stack/{doctor,bootstrap}.sh`, `docs/video-stack/UPSTREAM.md`, workflow 05.
+
+### Pendiente
+
+- Prueba de humo de render real (bloqueada en cloud); decisión de licencia Remotion si hay uso comercial.
+
 ## 2026-07-24 — Nodo GitHub activo, hub v1, protocolo universal
 
 ### Added

@@ -1,0 +1,29 @@
+name: Evidence Fabric CI
+
+on:
+  push:
+    branches: [ "hyper-boost", "jules/*" ]
+  pull_request:
+    branches: [ "hyper-boost" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Run Python unittests (stdlib)
+      run: |
+        export PYTHONPATH=$(pwd)
+        python -m unittest discover tests/
+
+    - name: Run Dogfood script
+      run: |
+        chmod +x scripts/dogfood.sh
+        ./scripts/dogfood.sh

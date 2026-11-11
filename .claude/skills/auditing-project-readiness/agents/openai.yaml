@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Readiness Auditor"
+  short_description: "Audita proyectos antes de publicar"
+  default_prompt: "Use $auditing-project-readiness to score this project and identify the smallest ship-ready path."

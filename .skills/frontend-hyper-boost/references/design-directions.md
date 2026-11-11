@@ -2,6 +2,21 @@
 
 Choose one primary direction and one counterpoint. Do not blend every reference.
 
+## REQUIRED for AI Forge product surfaces
+
+**Primary direction:** Fallout shelter factory  
+**Execution level:** PREMIUM (21st.dev / Behance), never “admin template”.  
+**Grammar library:** `premium-21st-registry.md` (17 anclajes mandatorios de
+Abraham: shader cards, hero futuristic, sphere/swirl de proceso, partículas de
+flujo, orrey, galerías orbitales, barras, círculos de fase).
+
+**Counterpoint under the factory:** Claude-code editorial — only for config,
+protocol text, long reading, and legal. The Factory Floor and agent rooms must
+feel like a live simulator (depth, orbs, lanes, particles), not a wiki.
+
+**Hard rule:** If the UI could be mistaken for a generic SaaS settings page,
+it fails the AI Forge bar. Re-read `premium-21st-registry.md` and raise craft.
+
 ## Retrocyber terminal
 
 - Dark mineral surfaces, terminal typography, vector grids, scanline restraint.
@@ -48,10 +63,13 @@ Purpose:
 Audience and device mix:
 Primary visual direction:
 Counterpoint:
+Premium 21st.dev refs mapped (id → zone):
 One unforgettable interaction:
 Calm core:
 Touch/keyboard/TV equivalent:
 Reduced-motion result:
 Privacy and content boundary:
 Performance ceiling:
+Live agent-state language (sphere/swirl/circles/bars):
+Handoff-flow language (particles/dots/lanes):
 ```

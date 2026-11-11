@@ -16,10 +16,15 @@ work/
 .DS_Store
 Thumbs.db
 
-# Local/private source libraries. Only the reviewed canonical frontend Skill is tracked.
+# Local/private source libraries. Only reviewed canonical entries are tracked.
 /.skills/*
 !/.skills/frontend-hyper-boost/
 !/.skills/frontend-hyper-boost/**
+!/.skills/00_CLAUDE_LIVE/
+!/.skills/00_CLAUDE_LIVE/**
+
+# Claude Code local permissions stay local; mirrored skills are tracked.
+.claude/settings.local.json
 /src/
 *.zip
 *.skill
@@ -32,5 +37,26 @@ Thumbs.db
 # Local MCP policy can expose exact private roots.
 mcp/abraham-os-bridge/config/policy.local.json
 
-# Local operational evidence may contain absolute paths and private project names.
-/.ai-forge/
+# Local operational evidence: runtime/tools stay local, but audit notes ARE the
+# registry of record and travel with the private node repo.
+/.ai-forge/*
+!/.ai-forge/audit/
+!/.ai-forge/audit/**
+
+# Harness runtime/index state is disposable and machine-specific.
+/.harness/
+/.context-mode/
+/.codebase-memory/
+/graphify-out/
+/.scrapling/
+/.browser-use/
+
+build/
+__pycache__/
+*.pyc
+
+# Video stack: heavy upstream engines fetched by scripts/video-stack/bootstrap.sh
+/.video-stack/
+*.mp4
+*.mov
+*.blend1

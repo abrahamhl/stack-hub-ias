@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Hyper Boost"
+  short_description: "Design and ship motion-rich responsive frontends"
+  default_prompt: "Use $frontend-hyper-boost to architect and verify a distinctive responsive frontend."

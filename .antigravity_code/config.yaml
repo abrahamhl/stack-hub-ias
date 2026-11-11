@@ -1,0 +1,33 @@
+# ANTIGRAVITY ENGINE CONFIGURATION (.antigravity_code/config.yaml)
+version: 2.0
+engine_name: Antigravity-AGY-HyperBoost
+updated: 2026-07-29
+
+surface:
+  id: antigravity-code
+  name: Antigravity AI Engine
+  rules: .antigravity_code/RULES.md
+  skills_dir: .antigravity_code/skills/
+  agents_dir: .antigravity_code/agents/
+  hooks_dir: .antigravity_code/hooks/
+  sync_protocol: .antigravity_code/SYNC_PROTOCOL.md
+  writes: git+mcp+hub
+
+integration:
+  github:
+    repo: kinkydisorder/stack-hub-ias
+    branch: feat/hub-v2
+    auto_push: true
+    sync_on_commit: true
+  
+  hub:
+    location: hub/index.html
+    snapshot: hub/live-snapshot.json
+    catalog: hub/catalog.json
+    activations: hub/skill-activations.json
+    registry: hub/agent-registry.json
+
+performance:
+  subagent_concurrency: 4
+  auto_verification: true
+  log_level: info

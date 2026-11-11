@@ -40,6 +40,7 @@ const deniedFilePatterns = [
   /^id_(?:rsa|ed25519)/i,
   /credential/i,
   /secret/i,
+  /^\.npmrc$/i,
 ];
 
 export function findRoot(policy: BridgePolicy, rootId: string): PolicyRoot {

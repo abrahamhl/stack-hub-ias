@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "description": "Uso y créditos por proveedor. Truth model obligatorio: verification_status ∈ verified|manual|estimated. Nunca presentar estimated como uso real.",
+  "last_updated": "2026-07-25",
+  "currency_note": "Valores placeholder. Rellenar in-page y exportar JSON para commit.",
+  "providers": [
+    {
+      "id": "claude",
+      "name": "Claude",
+      "plan": "—",
+      "usage": null,
+      "limit": null,
+      "unit": "USD/mes",
+      "verification_status": "estimated",
+      "last_checked_at": "2026-07-25",
+      "source": "placeholder — sin dato de facturación real",
+      "notes": "Actualizar tras revisar factura o dashboard Anthropic"
+    },
+    {
+      "id": "chatgpt",
+      "name": "ChatGPT / Codex",
+      "plan": "—",
+      "usage": null,
+      "limit": null,
+      "unit": "USD/mes",
+      "verification_status": "estimated",
+      "last_checked_at": "2026-07-25",
+      "source": "placeholder",
+      "notes": ""
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini",
+      "plan": "—",
+      "usage": null,
+      "limit": null,
+      "unit": "USD/mes",
+      "verification_status": "estimated",
+      "last_checked_at": "2026-07-25",
+      "source": "placeholder",
+      "notes": ""
+    },
+    {
+      "id": "grok",
+      "name": "Grok",
+      "plan": "—",
+      "usage": null,
+      "limit": null,
+      "unit": "USD/mes",
+      "verification_status": "estimated",
+      "last_checked_at": "2026-07-25",
+      "source": "placeholder",
+      "notes": ""
+    },
+    {
+      "id": "manus",
+      "name": "Manus",
+      "plan": "—",
+      "usage": null,
+      "limit": null,
+      "unit": "USD/mes",
+      "verification_status": "estimated",
+      "last_checked_at": "2026-07-25",
+      "source": "placeholder",
+      "notes": ""
+    },
+    {
+      "id": "vertex",
+      "name": "Vertex / GCP",
+      "plan": "crédito prepagado",
+      "usage": null,
+      "limit": null,
+      "unit": "EUR crédito",
+      "verification_status": "estimated",
+      "last_checked_at": "2026-07-25",
+      "source": "placeholder — no inventar saldo",
+      "notes": "Solo registrar saldo verificado desde consola GCP"
+    }
+  ]
+}

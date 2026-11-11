@@ -63,6 +63,7 @@ extensión y no se versiona para evitar duplicar peso.
 - [Protocolo multi-IA](workflows/02_MULTI_AI_EXECUTION_PROTOCOL.md)
 - [Benchmark Claude + Fable 5](workflows/03_CLAUDE_FABLE_BENCHMARK.md)
 - [Oleadas, créditos y carriles rojos](workflows/04_PROJECT_WAVES_AND_GATES.md)
+- [Vídeo, animación, 3D y cine](workflows/05_VIDEO_CINEMA_STACK.md) · [procedencia](video-stack/UPSTREAM.md)
 - [Changelog](changelog/AI_FORGE_CHANGELOG.md)
 
 ## Aplicación

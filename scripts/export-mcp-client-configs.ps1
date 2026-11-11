@@ -12,8 +12,11 @@ $policy = Join-Path $bridge "config\policy.local.json"
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
     throw "Node.js no está disponible en PATH."
 }
+if (-not (Get-Command pnpm -ErrorAction SilentlyContinue)) {
+    throw "pnpm no está disponible en PATH. npm/npx/Yarn están prohibidos por la política del nodo."
+}
 if (-not (Test-Path -LiteralPath $server -PathType Leaf)) {
-    throw "Falta $server. Ejecuta npm run build en mcp\abraham-os-bridge."
+    throw "Falta $server. Ejecuta pnpm run build en mcp\abraham-os-bridge."
 }
 if (-not (Test-Path -LiteralPath $policy -PathType Leaf)) {
     throw "Falta policy.local.json. Copia y revisa config\policy.example.json."
@@ -80,10 +83,9 @@ Set-Content -LiteralPath (Join-Path $output "codex-config.toml") -Value $toml -E
         "codex-config.toml", "claude-cursor-lmstudio.json",
         "gemini-settings.json", "vscode-mcp.json"
     )
-    note = "Ejemplos locales; revisión humana obligatoria; no instalados."
+    note = "Legacy abraham-os-only examples. For profile-routed harness configs use scripts/export-harness-client-configs.ps1."
 } | ConvertTo-Json -Depth 5 |
     Set-Content -LiteralPath (Join-Path $output "manifest.json") -Encoding utf8
 
-Write-Host "Configuraciones generadas en: $output"
-Write-Host "No se ha modificado ninguna configuración global."
-
+Write-Host "Configuraciones legacy generadas en: $output"
+Write-Host "No se ha modificado ninguna configuración global. Usa export-harness-client-configs.ps1 para el harness completo."

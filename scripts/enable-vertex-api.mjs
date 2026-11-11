@@ -1,0 +1,71 @@
+import fs from 'fs';
+import crypto from 'crypto';
+
+const saPath = "C:/dev/02_PROJECTS/own-gemini-API-project/anomalyos/secrets/gcp-sa.json";
+if (!fs.existsSync(saPath)) {
+  console.log("❌ Service Account no encontrado.");
+  process.exit(1);
+}
+const sa = JSON.parse(fs.readFileSync(saPath, 'utf8'));
+
+function base64UrlEncode(str) {
+  return Buffer.from(str).toString('base64').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+}
+
+async function getAccessToken() {
+  const now = Math.floor(Date.now() / 1000);
+  const claim = {
+    iss: sa.client_email,
+    scope: "https://www.googleapis.com/auth/cloud-platform",
+    aud: sa.token_uri,
+    exp: now + 3600,
+    iat: now
+  };
+  const header = { alg: "RS256", typ: "JWT" };
+  const encodedHeader = base64UrlEncode(JSON.stringify(header));
+  const encodedClaim = base64UrlEncode(JSON.stringify(claim));
+  const signInput = `${encodedHeader}.${encodedClaim}`;
+
+  const signer = crypto.createSign('RSA-SHA256');
+  signer.update(signInput);
+  const signature = signer.sign(sa.private_key, 'base64').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+  const jwt = `${signInput}.${signature}`;
+
+  const resp = await fetch(sa.token_uri, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+      assertion: jwt
+    })
+  });
+  const data = await resp.json();
+  return data.access_token;
+}
+
+async function enableService() {
+  try {
+    const token = await getAccessToken();
+    console.log("🔑 Intentando habilitar aiplatform.googleapis.com vía Service Usage API...");
+    const url = `https://serviceusage.googleapis.com/v1/projects/${sa.project_id}/services/aiplatform.googleapis.com:enable`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      console.log("🎉 ¡ÉXITO ROTUNDO! API HABILITADA AUTOMÁTICAMENTE:");
+      console.log(JSON.stringify(data, null, 2));
+    } else {
+      console.log("❌ Respuesta API:", JSON.stringify(data, null, 2));
+    }
+  } catch (err) {
+    console.log("❌ Excepción:", err.message);
+  }
+}
+
+enableService();

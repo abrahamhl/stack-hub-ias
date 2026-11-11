@@ -1,0 +1,54 @@
+{
+  "session_id": "sess_12345",
+  "project": "AI Forge",
+  "repository": "abrahamhl/stack-hub-ias",
+  "base_commit": "05b58a1e",
+  "final_commit": "1a2b3c4d",
+  "branch": "jules/session-evidence-fabric",
+  "agent": "Jules",
+  "model": "claude-3.5-sonnet",
+  "provider": "Anthropic",
+  "started_at": "2024-03-24T10:00:00Z",
+  "ended_at": "2024-03-24T11:00:00Z",
+  "objective": "Build evidence fabric",
+  "files_read": ["AGENTS.md"],
+  "files_changed": ["evidence_fabric/capsule.py"],
+  "commits": ["1a2b3c4d"],
+  "decisions": [
+    {
+      "type": "FACT",
+      "text": "Repository contains multiple agent configuration files."
+    }
+  ],
+  "commands": ["git status"],
+  "tests": ["python -m unittest"],
+  "failures": [],
+  "reverts": [],
+  "deployments": [],
+  "artifacts": [],
+  "skills_used": [],
+  "skills_created": ["session-capsule"],
+  "workflows_used": [],
+  "workflows_created": [],
+  "claims": [
+    {
+      "claim_id": "c1",
+      "text": "Implemented python data classes",
+      "category": "Implementation",
+      "status": "VERIFIED",
+      "evidence": [
+        {
+          "git_commit": "1a2b3c4d",
+          "file_path": "evidence_fabric/capsule.py"
+        }
+      ],
+      "origin": "Jules",
+      "confidence": 1.0,
+      "safe_for_public": true,
+      "safe_for_cv": true,
+      "limitations": "Does not support C#"
+    }
+  ],
+  "known_gaps": ["Conflict detection needs semantic analysis"],
+  "next_actions": ["Deploy"]
+}
